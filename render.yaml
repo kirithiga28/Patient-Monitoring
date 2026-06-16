@@ -1,0 +1,38 @@
+services:
+  # 1. Express API Backend Service
+  - type: web
+    name: well-care-node-backend
+    env: node
+    plan: free
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 5000
+
+  # 2. Python FastAPI YOLOv8 AI Microservice
+  - type: web
+    name: well-care-ai-service
+    env: python
+    plan: standard # Requires standard or higher to load PyTorch & YOLOv8 models smoothly
+    rootDir: backend_ai
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port 8000
+    envVars:
+      - key: FIREBASE_SERVICE_ACCOUNT_PATH
+        value: "firebase-credentials.json"
+
+  # 3. Static React Frontend (Vite)
+  - type: web
+    name: well-care-frontend
+    env: static
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    publishDir: dist
+    headers:
+      - path: /*
+        headers:
+          - key: Cache-Control
+            value: public, max-age=31536000, immutable
