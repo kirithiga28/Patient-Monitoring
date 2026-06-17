@@ -4,6 +4,7 @@ import { patientService } from "../services/patientService";
 import { vitalsService } from "../services/vitalsService";
 import { alertService } from "../services/alertService";
 import { formatDateTime } from "../utils/dateFormatter";
+import { activityService } from "../services/activityService";
 import {
   LineChart,
   Line,
@@ -48,26 +49,35 @@ export default function PatientProfile({ patient, onBack }) {
 
   const [savingVitals, setSavingVitals] = useState(false);
 
+  const [patientActivities, setPatientActivities] = useState([]);
+
   useEffect(() => {
-    loadTimelineData();
-  }, [patient.id]);
+    let unsubscribeAlerts;
+    let unsubscribeActivities;
 
-  const loadTimelineData = async () => {
-    try {
-      // 1. Fetch vitals log
-      const vitals = await vitalsService.getVitalsHistory(patient.id);
-      setVitalsHistory(vitals);
-
-      // 2. Listen to alerts for this patient in real-time
-      const unsubscribe = alertService.listenAlerts(role, hospitalId, (alertList) => {
-        setPatientAlerts(alertList.filter(a => a.patientId === patient.id));
-      });
-
-      return () => unsubscribe();
-    } catch (error) {
-      console.error("Error loading profile logs:", error);
+    async function init() {
+      try {
+        const vitals = await vitalsService.getVitalsHistory(patient.id);
+        setVitalsHistory(vitals);
+      } catch (e) {
+        print("Error loading vitals history:", e);
+      }
     }
-  };
+    init();
+
+    unsubscribeAlerts = alertService.listenAlerts(role, hospitalId, (alertList) => {
+      setPatientAlerts(alertList.filter(a => a.patientId === patient.id));
+    });
+
+    unsubscribeActivities = activityService.listenActivities(role, hospitalId, (activitiesList) => {
+      setPatientActivities(activitiesList.filter(a => a.patientId === patient.id));
+    });
+
+    return () => {
+      if (unsubscribeAlerts) unsubscribeAlerts();
+      if (unsubscribeActivities) unsubscribeActivities();
+    };
+  }, [patient.id, role, hospitalId]);
 
   const handleDelete = async () => {
     const confirmDelete = window.confirm("Are you sure you want to delete this patient profile?");
@@ -142,15 +152,22 @@ export default function PatientProfile({ patient, onBack }) {
       type: "alert",
       time: a.timestamp,
       desc: `Severity: ${a.severity} • Status: ${a.status}. Resolution: ${a.notes || "Awaiting action."}`
+    })),
+    ...patientActivities.slice(0, 10).map(act => ({
+      title: `AI Behavior Tracked: ${act.activity}`,
+      type: "activity",
+      time: act.timestamp,
+      desc: `Pose classification: ${act.activity} with ${act.confidence} confidence.`
     }))
-  ].sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
-
-  // Activities logs list matching patient room observations
-  const activityLogs = [
-    { activity: "Sleeping", confidence: "98%", time: "Recent", risk: "Low" },
-    { activity: "Sitting", confidence: "94%", time: "2 hrs ago", risk: "Low" },
-    { activity: "Walking", confidence: "92%", time: "4 hrs ago", risk: "Low" }
-  ];
+  ].sort((a, b) => {
+    const getEventTime = (t) => {
+      if (!t) return 0;
+      if (typeof t === "object" && "seconds" in t) return t.seconds * 1000;
+      if (typeof t === "object" && "_seconds" in t) return t._seconds * 1000;
+      return new Date(t).getTime() || 0;
+    };
+    return getEventTime(b.time) - getEventTime(a.time);
+  });
 
   return (
     <div className="space-y-6 font-sans text-slate-100 animate-fade-in pb-12">
@@ -483,18 +500,28 @@ export default function PatientProfile({ patient, onBack }) {
         <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4">
           <h2 className="text-lg font-bold border-b border-slate-850 pb-2">AI Camera Behavior logs</h2>
           
-          <div className="space-y-3">
-            {activityLogs.map((log, index) => (
-              <div key={index} className="p-4 bg-slate-950/60 border border-slate-850 rounded-xl flex items-center justify-between text-xs">
+          <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
+            {patientActivities.map((log) => (
+              <div key={log.id} className="p-4 bg-slate-950/60 border border-slate-850 rounded-xl flex items-center justify-between text-xs animate-fade-in">
                 <div className="space-y-1">
                   <p className="font-extrabold text-slate-200">Activity Observed: {log.activity}</p>
-                  <p className="text-slate-400">Time: {log.time} • Confidence: {log.confidence}</p>
+                  <p className="text-slate-400">
+                    Recorded: {formatDateTime(log.timestamp)} • Confidence: {log.confidence || "--"}
+                  </p>
                 </div>
-                <span className="text-[10px] font-black uppercase text-green-400 bg-green-500/10 border border-green-500/20 px-2 py-0.5 rounded">
-                  Risk Level: {log.risk}
+                <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded border ${
+                  log.activity === "Fall Detected" ? "text-red-400 bg-red-500/10 border-red-500/20" :
+                  log.activity === "Inactivity Warning" ? "text-yellow-400 bg-yellow-500/10 border-yellow-500/20" :
+                  "text-green-400 bg-green-500/10 border-green-500/20"
+                }`}>
+                  {log.activity === "Fall Detected" ? "Critical" : "Normal"}
                 </span>
               </div>
             ))}
+
+            {patientActivities.length === 0 && (
+              <p className="text-slate-500 text-xs py-8 text-center">No AI camera behavior logs recorded for this patient.</p>
+            )}
           </div>
         </div>
       )}

@@ -35,6 +35,26 @@ export const alertService = {
     });
   },
 
+  // Listen to alerts for a specific patient
+  listenAlertsForPatient(patientId, callback) {
+    if (!patientId) return () => {};
+    let q = query(
+      collection(db, COLLECTION),
+      where("patientId", "==", patientId),
+      orderBy("timestamp", "desc")
+    );
+
+    return onSnapshot(q, (snapshot) => {
+      const alerts = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      callback(alerts);
+    }, (error) => {
+      console.error("Error listening to patient alerts:", error);
+    });
+  },
+
   // Create an alert (used by UI or AI microservice)
   async createAlert(alertData) {
     const docRef = await addDoc(collection(db, COLLECTION), {

@@ -9,6 +9,7 @@ import Cameras from "../pages/Cameras";
 import Doctors from "../pages/Doctors";
 import Nurses from "../pages/Nurses";
 import Settings from "../pages/Settings";
+import PoseTestingSuite from "../pages/PoseTestingSuite";
 
 export const routesConfig = {
   dashboard: { component: Dashboard, roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
@@ -17,10 +18,19 @@ export const routesConfig = {
   alerts: { component: Alerts, roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
   reports: { component: Reports, roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
   predictions: { component: AIPredictions, roles: ["super_admin", "hospital_admin", "doctor"] },
-  cameras: { component: Cameras, roles: ["super_admin", "hospital_admin"] },
+  cameras: {
+    component: Cameras,
+    roles: [
+      "super_admin",
+      "hospital_admin",
+      "doctor",
+      "nurse"
+    ]
+  },
   doctors: { component: Doctors, roles: ["super_admin", "hospital_admin"] },
   nurses: { component: Nurses, roles: ["super_admin", "hospital_admin"] },
-  settings: { component: Settings, roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] }
+  settings: { component: Settings, roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
+  testing: { component: PoseTestingSuite, roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] }
 };
 
 export function getRouteComponent(page, userRole) {

@@ -2,8 +2,8 @@ import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo.png";
 
 export default function Sidebar({ currentPage, setPage }) {
-  const { userData, logout } = useAuth();
-  const role = userData?.role || "caregiver";
+  const { role: authRole, logout, userData } = useAuth();
+  const role = authRole || userData?.role || "caregiver";
 
   // Navigation schema depending on user role permissions
   const navItems = [
@@ -13,7 +13,8 @@ export default function Sidebar({ currentPage, setPage }) {
     { id: "alerts", label: "🚨 Alerts Incident Log", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
     { id: "reports", label: "📄 Reports & Audits", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
     { id: "predictions", label: "🧠 AI Prediction Matrix", roles: ["super_admin", "hospital_admin", "doctor"] },
-    { id: "cameras", label: "📹 Cameras Manager", roles: ["super_admin", "hospital_admin"] },
+    { id: "cameras", label: "📹 Cameras Manager", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
+    { id: "testing", label: "🧪 Pose Testing Suite", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
     { id: "doctors", label: "🩺 Doctor Registry", roles: ["super_admin", "hospital_admin"] },
     { id: "nurses", label: "👩‍⚕️ Nurse Staff Registry", roles: ["super_admin", "hospital_admin"] },
     { id: "settings", label: "⚙️ System Settings", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] }
