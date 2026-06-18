@@ -5,6 +5,7 @@ import { alertService } from "../services/alertService";
 import { cameraService } from "../services/cameraService";
 import WebcamStream from "../components/WebcamStream";
 import { activityService } from "../services/activityService";
+import { API_BASE_URL } from "../config/api";
 import {
   BarChart,
   Bar,
@@ -25,6 +26,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [activeWebcamId, setActiveWebcamId] = useState(null);
   const [activities, setActivities] = useState([]);
+  const [aiHealth, setAiHealth] = useState("Checking...");
 
   useEffect(() => {
     // Real-time patients listener
@@ -61,6 +63,30 @@ export default function Dashboard() {
       unsubActivities();
     };
   }, [role, hospitalId, userData]);
+
+  useEffect(() => {
+    let active = true;
+    const checkHealth = async () => {
+      try {
+        const res = await fetch(API_BASE_URL);
+        if (res.ok) {
+          if (active) setAiHealth("Online");
+        } else {
+          if (active) setAiHealth("Offline");
+        }
+      } catch (err) {
+        if (active) setAiHealth("Offline");
+      }
+    };
+    checkHealth();
+    
+    const interval = setInterval(checkHealth, 10000);
+
+    return () => {
+      active = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   // Auto-start the first configured camera stream if present
   useEffect(() => {
@@ -109,6 +135,9 @@ export default function Dashboard() {
   const stablePatients = patients.filter((p) => p.status === "Stable").length;
 
   const openAlertsCount = alerts.filter((a) => a.status === "Open").length;
+  
+  const activeRoomsCount = [...new Set(cameras.map(c => c.room))].filter(Boolean).length;
+  const activeCamerasCount = cameras.filter(c => c.status === "Active" || c.status === "Streaming").length;
 
   const chartData = [
     { name: "Stable", count: stablePatients, color: "#10b981" },
@@ -185,11 +214,11 @@ export default function Dashboard() {
         </div>
 
         <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl shadow-lg hover:border-yellow-500/50 transition duration-300">
-          <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Last Activity</p>
-          <p className="text-2xl font-extrabold text-slate-300 mt-2 truncate">
-            {activities[1]?.activity || "No Data"}
+          <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Active Rooms & Cameras</p>
+          <p className="text-2xl font-extrabold text-yellow-500 mt-2">
+            {activeRoomsCount} Rooms Active
           </p>
-          <p className="text-[10px] text-slate-500 mt-1">Patient: {activities[1]?.patientName || "N/A"}</p>
+          <p className="text-[10px] text-slate-500 mt-1">{activeCamerasCount} of {cameras.length} Cameras Active</p>
         </div>
 
         <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl shadow-lg hover:border-red-500/50 transition duration-300">
@@ -199,13 +228,11 @@ export default function Dashboard() {
         </div>
 
         <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl shadow-lg hover:border-cyan-500/50 transition duration-300">
-          <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider">AI Tracker Confidence</p>
-          <p className="text-4xl font-extrabold text-cyan-400 mt-2">
-            {activities.length > 0 
-              ? `${Math.round(activities.reduce((acc, a) => acc + parseInt(a.confidence || 0), 0) / activities.length)}%`
-              : "92%"}
+          <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider">AI Health Status</p>
+          <p className={`text-2xl font-extrabold mt-2 ${aiHealth === "Online" ? "text-green-400" : aiHealth === "Offline" ? "text-red-500 animate-pulse" : "text-cyan-400"}`}>
+            {aiHealth}
           </p>
-          <p className="text-[10px] text-slate-500 mt-1">Active MediaPipe tracker</p>
+          <p className="text-[10px] text-slate-500 mt-1">FastAPI Render Endpoint</p>
         </div>
       </div>
       <div className="grid md:grid-cols-3 gap-6">

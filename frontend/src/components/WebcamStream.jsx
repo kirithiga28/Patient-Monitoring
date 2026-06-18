@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { alertService } from "../services/alertService";
 import { activityService } from "../services/activityService";
+import { API_BASE_URL } from "../config/api";
 
 export default function WebcamStream({ patientId, patientName, roomCode, hospitalId, compact = false }) {
   const videoRef = useRef(null);
   const lastFrameTimeRef = useRef(null);
+  const lastAlertSentRef = useRef(null);
   const [localStream, setLocalStream] = useState(null);
   const [activity, setActivity] = useState("Initializing...");
   const [confidence, setConfidence] = useState("--");
@@ -19,7 +21,7 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
   // Advanced telemetry states
   const [fps, setFps] = useState(0);
   const [latency, setLatency] = useState(0);
-  const [aiStatus, setAiStatus] = useState("Offline");
+  const [aiStatus, setAiStatus] = useState("AI Backend Offline");
   const [connectionHealth, setConnectionHealth] = useState("Disconnected");
   const [lastDetectionTime, setLastDetectionTime] = useState("--");
   const [history, setHistory] = useState([]);
@@ -139,7 +141,7 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
             hospital_id: hospitalId || "hosp_default"
           };
 
-          const response = await fetch("http://localhost:8000/analyze", {
+          const response = await fetch(`${API_BASE_URL}/analyze`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
@@ -161,8 +163,8 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
             // Set state updates
             setActivity(data.activity || "Unknown");
             setConfidence(data.confidence || "--");
-            setAiStatus(data.ai_status || "MediaPipe Active");
-            setConnectionHealth("Healthy");
+            setAiStatus("AI Backend Connected");
+            setConnectionHealth("AI Backend Connected");
             setLastDetectionTime(new Date().toLocaleTimeString());
 
             if (data.annotated_frame_base64) {
@@ -170,28 +172,41 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
             }
             
             // Handle automatic alerts checking
-            if (data.alert_created) {
+            const isAlertActivity = data.activity === "Fall Detected" || data.activity === "Inactivity Warning";
+            if (isAlertActivity || data.alert_created) {
               setAlertStatus("CRITICAL");
               playSiren();
+              setIsFallAlert(true);
+
+              // Save to Firestore if it's a new alert type occurrence
+              if (lastAlertSentRef.current !== data.activity) {
+                lastAlertSentRef.current = data.activity;
+                alertService.createAlert({
+                  patientId: patientId || "unassigned",
+                  patientName: patientName || "Unknown Patient",
+                  room: roomCode || "N/A",
+                  alertType: data.activity,
+                  severity: data.activity === "Fall Detected" ? "Critical" : "High",
+                  hospitalId: hospitalId || "hosp_default"
+                }).catch(err => console.error("Error creating alert in Firestore:", err));
+              }
             } else {
               setAlertStatus("Normal");
-            }
-            
-            if (data.activity === "Fall Detected" || data.activity === "Both Hands Raised") {
-              setIsFallAlert(true);
-            } else {
               setIsFallAlert(false);
+              lastAlertSentRef.current = null;
             }
           } else {
-            setAiStatus("Offline");
-            setConnectionHealth("API Connection Failed");
+            setAiStatus("AI Backend Offline");
+            setConnectionHealth("AI Backend Offline");
             setFps(0);
+            setIsFallAlert(false);
           }
         } catch (err) {
           console.warn("AI service analyze call failed:", err);
-          setAiStatus("Offline");
-          setConnectionHealth("API Error");
+          setAiStatus("AI Backend Offline");
+          setConnectionHealth("AI Backend Offline");
           setFps(0);
+          setIsFallAlert(false);
         }
       }, 2000); // 2 seconds interval
     }
@@ -209,9 +224,9 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
             <span>🚨 EMERGENCY ALARM ACTIVE IN ROOM {roomCode}!</span>
           </div>
         )}
-        {aiStatus === "Offline" && (
+        {aiStatus === "AI Backend Offline" && (
           <div className="absolute top-2 left-2 right-2 bg-amber-600/90 text-white font-bold text-[9px] py-1 px-2 rounded z-20 border border-amber-500 flex items-center justify-between">
-            <span>⚠️ AI Offline</span>
+            <span>⚠️ AI Backend Offline</span>
           </div>
         )}
         
@@ -284,10 +299,10 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
       )}
 
       {/* Warning Banner for offline FastAPI server */}
-      {aiStatus === "Offline" && (
+      {aiStatus === "AI Backend Offline" && (
         <div className="bg-amber-600 text-white font-bold text-xs py-3 px-4 rounded-xl flex items-center justify-between shadow-lg border border-amber-500 relative z-20">
           <span className="flex items-center gap-2">
-            <span>⚠️</span> AI Detection Server is offline. Fallback and alerts are running locally.
+            <span>⚠️</span> AI Backend Offline. Fallback and alerts are running locally.
           </span>
           <button
             onClick={startCamera}
@@ -311,9 +326,9 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
                 <span className="font-bold text-slate-300">Device status:</span>
                 <span className="flex items-center gap-1.5 font-semibold">
                   <span className={`w-2 h-2 rounded-full ${
-                    connectionHealth === "Healthy" || connectionHealth === "Connected" ? "bg-green-500 animate-ping" : "bg-red-500"
+                    connectionHealth.includes("Connected") || connectionHealth === "Healthy" || connectionHealth === "Connected" ? "bg-green-500 animate-ping" : "bg-red-500"
                   }`} />
-                  <span className={connectionHealth === "Healthy" || connectionHealth === "Connected" ? "text-green-400" : "text-red-400"}>
+                  <span className={connectionHealth.includes("Connected") || connectionHealth === "Healthy" || connectionHealth === "Connected" ? "text-green-400" : "text-red-400"}>
                     {connectionHealth}
                   </span>
                 </span>
@@ -349,10 +364,8 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
                 <div className="flex items-center gap-1.5">
                   <span className="font-bold">Engine:</span>
                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                    aiStatus === "MediaPipe Active" 
+                    aiStatus.includes("Connected")
                       ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                      : aiStatus === "YOLO Fallback Active"
-                      ? "bg-orange-500/10 text-orange-400 border border-orange-500/20"
                       : "bg-red-500/10 text-red-400 border border-red-500/20"
                   }`}>
                     {aiStatus}

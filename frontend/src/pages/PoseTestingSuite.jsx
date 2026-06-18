@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import { API_BASE_URL } from "../config/api";
 
 export default function PoseTestingSuite() {
   const { hospitalId } = useAuth();
@@ -75,7 +76,7 @@ export default function PoseTestingSuite() {
             hospital_id: hospitalId || "hosp_default"
           };
 
-          const response = await fetch("http://localhost:8000/analyze", {
+          const response = await fetch(`${API_BASE_URL}/analyze`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
@@ -96,7 +97,7 @@ export default function PoseTestingSuite() {
             setActivity(data.activity || "Unknown");
             setConfidence(data.confidence || "--");
             setLandmarksCount(data.landmarks_count || 0);
-            setAiStatus(data.ai_status || "MediaPipe Active");
+            setAiStatus(data.ai_status ? `AI Backend Connected (${data.ai_status})` : "AI Backend Connected");
             setRawLandmarks(data.raw_landmarks || []);
 
             if (data.annotated_frame_base64) {
@@ -111,12 +112,12 @@ export default function PoseTestingSuite() {
               }));
             }
           } else {
-            setAiStatus("Offline");
+            setAiStatus("AI Backend Offline");
             setFps(0);
           }
         } catch (err) {
           console.warn("AI service call failed in test suite:", err);
-          setAiStatus("Offline");
+          setAiStatus("AI Backend Offline");
           setFps(0);
         }
       }, 1000);
@@ -202,7 +203,7 @@ export default function PoseTestingSuite() {
               <div className="flex items-center gap-2">
                 <span className="font-bold">Engine Status:</span>
                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                  aiStatus === "MediaPipe Active" 
+                  aiStatus.includes("Connected") 
                     ? "bg-green-500/10 text-green-400 border border-green-500/20"
                     : "bg-red-500/10 text-red-400 border border-red-500/20"
                 }`}>
