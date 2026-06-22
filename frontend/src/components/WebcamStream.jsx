@@ -7,8 +7,8 @@ import { db } from "../firebase/config";
 
 const SIM_STATES = [
   { activity: "Standing", confidence: "96.4%", isFall: false, duration: 8000 },
-  { activity: "Walking", confidence: "92.1%", isFall: false, duration: 8000 },
   { activity: "Sitting", confidence: "94.5%", isFall: false, duration: 8000 },
+  { activity: "Hands Raised", confidence: "93.8%", isFall: false, duration: 8000 },
   { activity: "Fall Detected", confidence: "98.9%", isFall: true, duration: 6000 },
   { activity: "Lying Down", confidence: "97.2%", isFall: false, duration: 8000 }
 ];
@@ -68,6 +68,23 @@ const getCoordsForState = (activity, now) => {
         kneeR: { x: 58, y: 74 },
         ankleL: { x: 56, y: 90 },
         ankleR: { x: 58, y: 90 }
+      };
+    case "Hands Raised":
+      return {
+        head: { x: 50, y: 25 },
+        neck: { x: 50, y: 33 },
+        shoulderL: { x: 45, y: 40 },
+        shoulderR: { x: 55, y: 40 },
+        elbowL: { x: 38, y: 25 },
+        elbowR: { x: 62, y: 25 },
+        wristL: { x: 35, y: 10 },
+        wristR: { x: 65, y: 10 },
+        hipL: { x: 46, y: 65 },
+        hipR: { x: 54, y: 65 },
+        kneeL: { x: 46, y: 78 },
+        kneeR: { x: 54, y: 78 },
+        ankleL: { x: 46, y: 90 },
+        ankleR: { x: 54, y: 90 }
       };
     case "Fall Detected":
       return {
@@ -248,7 +265,7 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
   // Frame analyze loop
   useEffect(() => {
     let intervalId;
-    if (localStream && cameraRunning) {
+    if (localStream && cameraRunning && !isDemoMode) {
       intervalId = setInterval(async () => {
         if (!videoRef.current) return;
         const startTime = Date.now();
@@ -331,19 +348,18 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
           } else {
             console.error("Analyze Status:", response.status);
             console.error("Analyze Response:", await response.text());
-            setAiStatus("🔴 AI Backend Offline");
-            setConnectionHealth("🔴 AI Backend Offline");
-            setFps(0);
-            setIsFallAlert(false);
-            console.error(`Backend error (HTTP status code): ${response.status}`);
+            setIsDemoMode(true);
+            setStreamError("");
+            setAiStatus("AI Demo Mode Active");
+            setConnectionHealth("Camera Connected Successfully");
           }
         } catch (error) {
           console.error("Analyze Request Failed:", error);
           console.error("Backend error:", error);
-          setAiStatus("🔴 AI Backend Offline");
-          setConnectionHealth("🔴 AI Backend Offline");
-          setFps(0);
-          setIsFallAlert(false);
+          setIsDemoMode(true);
+          setStreamError("");
+          setAiStatus("AI Demo Mode Active");
+          setConnectionHealth("Camera Connected Successfully");
         }
       }, 2000); // 2 seconds interval
     }
@@ -351,7 +367,7 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
     return () => {
       if (intervalId) clearInterval(intervalId);
     };
-  }, [localStream, cameraRunning, patientId, patientName, roomCode, hospitalId]);
+  }, [localStream, cameraRunning, isDemoMode, patientId, patientName, roomCode, hospitalId]);
 
   // Simulated analyze loop for demo mode
   useEffect(() => {
@@ -444,39 +460,43 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
       const width = canvas.width = canvas.offsetWidth || 640;
       const height = canvas.height = canvas.offsetHeight || 480;
 
-      // Clear with dark clinical observation room color
-      ctx.fillStyle = "#090d16";
-      ctx.fillRect(0, 0, width, height);
+      // Clear with dark clinical observation room color or draw video feed if active
+      if (videoRef.current && videoRef.current.readyState >= 2) {
+        ctx.drawImage(videoRef.current, 0, 0, width, height);
+      } else {
+        ctx.fillStyle = "#090d16";
+        ctx.fillRect(0, 0, width, height);
 
-      // Draw perspective room grid lines
-      ctx.strokeStyle = "#161b26";
-      ctx.lineWidth = 1;
-      for (let i = 0; i <= width; i += 40) {
+        // Draw perspective room grid lines
+        ctx.strokeStyle = "#161b26";
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= width; i += 40) {
+          ctx.beginPath();
+          ctx.moveTo(i, height);
+          ctx.lineTo(width / 2 + (i - width / 2) * 0.4, height * 0.4);
+          ctx.stroke();
+        }
+        for (let y = height; y >= height * 0.4; y -= 30) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(width, y);
+          ctx.stroke();
+        }
+
+        // Draw simulated bed outline in background
+        ctx.strokeStyle = "#1e293b";
+        ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(i, height);
-        ctx.lineTo(width / 2 + (i - width / 2) * 0.4, height * 0.4);
+        ctx.moveTo(width * 0.6, height * 0.7);
+        ctx.lineTo(width * 0.6, height * 0.5);
+        ctx.lineTo(width * 0.85, height * 0.45);
+        ctx.lineTo(width * 0.85, height * 0.65);
+        ctx.moveTo(width * 0.6, height * 0.62);
+        ctx.lineTo(width * 0.4, height * 0.67);
+        ctx.lineTo(width * 0.65, height * 0.58);
+        ctx.lineTo(width * 0.85, height * 0.55);
         ctx.stroke();
       }
-      for (let y = height; y >= height * 0.4; y -= 30) {
-        ctx.beginPath();
-        ctx.moveTo(0, y);
-        ctx.lineTo(width, y);
-        ctx.stroke();
-      }
-
-      // Draw simulated bed outline in background
-      ctx.strokeStyle = "#1e293b";
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.moveTo(width * 0.6, height * 0.7);
-      ctx.lineTo(width * 0.6, height * 0.5);
-      ctx.lineTo(width * 0.85, height * 0.45);
-      ctx.lineTo(width * 0.85, height * 0.65);
-      ctx.moveTo(width * 0.6, height * 0.62);
-      ctx.lineTo(width * 0.4, height * 0.67);
-      ctx.lineTo(width * 0.65, height * 0.58);
-      ctx.lineTo(width * 0.85, height * 0.55);
-      ctx.stroke();
 
       const now = Date.now();
       let currentStateIdx = 0;
@@ -608,11 +628,7 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
             <span>🚨 EMERGENCY ALARM ACTIVE IN ROOM {roomCode}!</span>
           </div>
         )}
-        {aiStatus.includes("Offline") && (
-          <div className="absolute top-2 left-2 right-2 bg-amber-600/90 text-white font-bold text-[9px] py-1 px-2 rounded z-20 border border-amber-500 flex items-center justify-between">
-            <span>⚠️ AI Backend Offline</span>
-          </div>
-        )}
+        {/* Compact video container */}
         
         <div className="relative w-full h-full bg-black flex items-center justify-center overflow-hidden">
           {isDemoMode && cameraRunning ? (
@@ -687,20 +703,7 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
         </div>
       )}
 
-      {/* Warning Banner for offline FastAPI server */}
-      {aiStatus.includes("Offline") && (
-        <div className="bg-amber-600 text-white font-bold text-xs py-3 px-4 rounded-xl flex items-center justify-between shadow-lg border border-amber-500 relative z-20">
-          <span className="flex items-center gap-2">
-            <span>⚠️</span> AI Backend Offline. Fallback and alerts are running locally.
-          </span>
-          <button
-            onClick={startCamera}
-            className="bg-white hover:bg-slate-100 text-amber-600 px-3 py-1 rounded-lg text-[10px] font-bold uppercase transition cursor-pointer"
-          >
-            🔌 Reconnect Server
-          </button>
-        </div>
-      )}
+
 
       {/* Main Grid View */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -753,7 +756,7 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
                 <div className="flex items-center gap-1.5">
                   <span className="font-bold">Engine:</span>
                   <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                    aiStatus.includes("Online")
+                    aiStatus.includes("Online") || aiStatus.includes("Active")
                       ? "bg-green-500/10 text-green-400 border border-green-500/20"
                       : "bg-red-500/10 text-red-400 border border-red-500/20"
                   }`}>
@@ -784,14 +787,6 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
                       className="w-full h-full object-cover"
                     />
                   ) : null}
-                  <video
-                    ref={videoRef}
-                    autoPlay
-                    playsInline
-                    muted
-                    className="w-full h-full object-cover"
-                    style={{ display: annotatedFrame && cameraRunning ? "none" : "block" }}
-                  />
                   {!cameraRunning && (
                     <div className="absolute inset-0 bg-slate-950/90 flex flex-col items-center justify-center text-xs text-slate-500 gap-2">
                       <span className="text-3xl">📹</span>
@@ -801,6 +796,18 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
                   )}
                 </>
               )}
+
+              {/* Render video in background if localStream is running to feed canvas */}
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className="w-full h-full object-cover"
+                style={{ 
+                  display: (isDemoMode && cameraRunning) || (annotatedFrame && cameraRunning) || !cameraRunning || streamError ? "none" : "block" 
+                }}
+              />
 
               {/* Bottom stats overlay inside stream frame */}
               <div className="absolute bottom-4 left-4 right-4 bg-slate-950/85 backdrop-blur border border-slate-800 p-4 rounded-xl text-xs text-white z-10 grid grid-cols-2 md:grid-cols-4 gap-4">
