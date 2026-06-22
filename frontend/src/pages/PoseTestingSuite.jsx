@@ -119,8 +119,9 @@ export default function PoseTestingSuite() {
         }
         console.log("Camera initialized");
       } catch (err) {
-        console.error("Camera access error:", err);
-        setStreamError("Webcam hardware is locked or permission denied.");
+        console.warn("Camera access failed. Fallback to AI simulation test mode activated:", err);
+        setIsTestMode(true);
+        setStreamError("");
       }
     }
     startCamera();
