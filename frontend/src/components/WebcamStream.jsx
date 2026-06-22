@@ -329,14 +329,17 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
               lastAlertSentRef.current = null;
             }
           } else {
+            console.error("Analyze Status:", response.status);
+            console.error("Analyze Response:", await response.text());
             setAiStatus("🔴 AI Backend Offline");
             setConnectionHealth("🔴 AI Backend Offline");
             setFps(0);
             setIsFallAlert(false);
             console.error(`Backend error (HTTP status code): ${response.status}`);
           }
-        } catch (err) {
-          console.error("Backend error:", err);
+        } catch (error) {
+          console.error("Analyze Request Failed:", error);
+          console.error("Backend error:", error);
           setAiStatus("🔴 AI Backend Offline");
           setConnectionHealth("🔴 AI Backend Offline");
           setFps(0);
