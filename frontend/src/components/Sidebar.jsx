@@ -74,6 +74,7 @@ export default function Sidebar({ currentPage, setPage }) {
       roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"],
       items: [
         { id: "settings", label: "⚙️ Settings", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
+        { id: "mobileqr", label: "📱 Mobile Access QR", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
         { id: "auditlogs", label: "📝 Audit Logs", roles: ["super_admin", "hospital_admin"] },
         { id: "systemoverview", label: "💾 System Overview", roles: ["super_admin", "hospital_admin"] }
       ]

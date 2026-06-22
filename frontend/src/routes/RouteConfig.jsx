@@ -10,6 +10,7 @@ import Doctors from "../pages/Doctors";
 import Nurses from "../pages/Nurses";
 import Settings from "../pages/Settings";
 import PoseTestingSuite from "../pages/PoseTestingSuite";
+import MobileAccessQR from "../pages/system/MobileAccessQR";
 
 // Import modules
 import {
@@ -86,7 +87,8 @@ export const routesConfig = {
 
   // System
   auditlogs: { component: AuditLogs, roles: ["super_admin", "hospital_admin"] },
-  systemoverview: { component: SystemOverview, roles: ["super_admin", "hospital_admin"] }
+  systemoverview: { component: SystemOverview, roles: ["super_admin", "hospital_admin"] },
+  mobileqr: { component: MobileAccessQR, roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] }
 };
 
 export function getRouteComponent(page, userRole) {
