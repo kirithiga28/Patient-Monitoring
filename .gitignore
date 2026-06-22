@@ -1,4 +1,5 @@
+backend_ai/firebase-credentials.json
+backend/node_modules/
+frontend/node_modules/
+mobile/node_modules/
 node_modules/
-dist/
-.env
-.vscode/
