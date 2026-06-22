@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { emergencyService } from "../../services/emergencyService";
+import { staffService } from "../../services/staffService";
+import { alertService } from "../../services/alertService";
 import { Card, CardHeader, CardTitle, CardContent } from "../../components/ui/Card";
 import { StatCard } from "../../components/ui/StatCard";
 import { DataTable } from "../../components/ui/DataTable";
 
-// 31. Emergency Response Center
-export function EmergencyResponseCenter() {
+// 1. Emergency Alerts
+export function EmergencyAlerts() {
   const { hospitalId } = useAuth();
   const [codeBlues, setCodeBlues] = useState([]);
   const [ambulances, setAmbulances] = useState([]);
@@ -27,12 +29,12 @@ export function EmergencyResponseCenter() {
   return (
     <div className="space-y-6">
       <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg border-l-4 border-l-red-600">
-        <h1 className="text-3xl font-extrabold tracking-tight text-white">Emergency Response Control Desk</h1>
+        <h1 className="text-3xl font-extrabold tracking-tight text-white">Emergency Alerts Command</h1>
         <p className="text-slate-400 text-xs mt-1">Real-time status of critical room emergencies, active Code Blue alarms, and en-route ambulances.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <StatCard title="Active Code Blue Incidents" value={codeBlues.filter(c => c.status !== "Resolved").length} icon="🚨" color="red" />
+        <StatCard title="Active Code Blue Alerts" value={codeBlues.filter(c => c.status !== "Resolved").length} icon="🚨" color="red" />
         <StatCard title="En-Route Ambulances" value={ambulances.filter(a => a.status === "En Route").length} icon="🚑" color="amber" />
       </div>
 
@@ -80,82 +82,29 @@ export function EmergencyResponseCenter() {
   );
 }
 
-// 32. Code Blue Alerts
-export function CodeBlueAlerts() {
+// 2. Notification Center
+export function NotificationCenter() {
   const { hospitalId } = useAuth();
-  const [codeBlues, setCodeBlues] = useState([]);
+  const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    return emergencyService.listenCodeBlue(hospitalId, (list) => {
-      setCodeBlues(list);
+    return alertService.listenAlerts("doctor", hospitalId, (list) => {
+      setAlerts(list);
       setLoading(false);
     });
   }, [hospitalId]);
 
   const columns = [
-    { key: "location", label: "Location/Ward Room" },
-    { key: "responseTeam", label: "Assigned Response Team", className: "font-bold text-red-400" },
-    { key: "startTime", label: "Incident Start Time" },
-    { key: "duration", label: "Response Duration" },
-    {
-      key: "status",
-      label: "Alert Status",
-      render: (row) => (
-        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-          row.status === "Resolved" ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-red-500/10 text-red-400 border border-red-500/20 animate-pulse"
-        }`}>
-          {row.status}
-        </span>
-      )
-    },
-    { key: "notes", label: "Notes" }
-  ];
-
-  return (
-    <div className="space-y-6">
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg border-l-4 border-l-red-600">
-        <h1 className="text-3xl font-extrabold tracking-tight text-white">Code Blue Alerts Registry</h1>
-        <p className="text-slate-400 text-xs mt-1">Audit active alarms, response durations, and clinical notes logs.</p>
-      </div>
-
-      <DataTable
-        columns={columns}
-        data={codeBlues}
-        searchKey="location"
-        searchPlaceholder="Search location..."
-        loading={loading}
-      />
-    </div>
-  );
-}
-
-// 33. Ambulance Coordination
-export function AmbulanceCoordination() {
-  const { hospitalId } = useAuth();
-  const [ambulances, setAmbulances] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    return emergencyService.listenAmbulances(hospitalId, (list) => {
-      setAmbulances(list);
-      setLoading(false);
-    });
-  }, [hospitalId]);
-
-  const columns = [
-    { key: "vehicleNumber", label: "Ambulance Vehicle ID" },
-    { key: "driver", label: "Driver Name" },
-    { key: "currentLocation", label: "Current Location Track" },
-    { key: "ETA", label: "ETA to Destination" },
-    { key: "destination", label: "Hospital Destination Bay" },
+    { key: "patientName", label: "Patient" },
+    { key: "alertType", label: "Incident Alert Title", className: "font-bold text-red-400 animate-pulse" },
+    { key: "room", label: "Room" },
+    { key: "severity", label: "Severity" },
     {
       key: "status",
       label: "Status",
       render: (row) => (
-        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-          row.status === "En Route" ? "bg-amber-500/10 text-amber-400 border border-amber-500/20 animate-pulse" : "bg-slate-950 text-slate-400 border border-slate-850"
-        }`}>
+        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-950 text-slate-400 border border-slate-850">
           {row.status}
         </span>
       )
@@ -165,17 +114,66 @@ export function AmbulanceCoordination() {
   return (
     <div className="space-y-6">
       <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
-        <h1 className="text-3xl font-extrabold tracking-tight text-white">Ambulance Dispatch & Coordination</h1>
-        <p className="text-slate-400 text-xs mt-1">Dispatch vehicles, check current GPS logs, and view ETA status cards.</p>
+        <h1 className="text-3xl font-extrabold tracking-tight text-white">System Notification Center</h1>
+        <p className="text-slate-400 text-xs mt-1">Consolidated hub tracking all dispatch notifications and telemetry alarms.</p>
       </div>
 
       <DataTable
         columns={columns}
-        data={ambulances}
-        searchKey="vehicleNumber"
-        searchPlaceholder="Search vehicle ID..."
+        data={alerts}
+        searchKey="patientName"
+        searchPlaceholder="Search notifications..."
         loading={loading}
       />
     </div>
   );
 }
+
+// 3. Appointment Management
+export function AppointmentManagement() {
+  const { hospitalId } = useAuth();
+  const [appointments, setAppointments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    return staffService.listenAppointments(hospitalId, (list) => {
+      setAppointments(list);
+      setLoading(false);
+    });
+  }, [hospitalId]);
+
+  const columns = [
+    { key: "patientName", label: "Patient" },
+    { key: "doctorName", label: "Physician" },
+    { key: "time", label: "Appointment Time", className: "font-mono font-bold text-cyan-400" },
+    { key: "reason", label: "Consultation Indication" },
+    {
+      key: "status",
+      label: "Status",
+      render: (row) => (
+        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+          {row.status}
+        </span>
+      )
+    }
+  ];
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
+        <h1 className="text-3xl font-extrabold tracking-tight text-white">Appointment Management</h1>
+        <p className="text-slate-400 text-xs mt-1">Monitor scheduled consultations, reason logs, and status updates.</p>
+      </div>
+
+      <DataTable
+        columns={columns}
+        data={appointments}
+        searchKey="patientName"
+        searchPlaceholder="Search appointments..."
+        loading={loading}
+      />
+    </div>
+  );
+}
+
+

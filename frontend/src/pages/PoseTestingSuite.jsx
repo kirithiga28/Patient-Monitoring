@@ -11,7 +11,7 @@ export default function PoseTestingSuite() {
   const [activity, setActivity] = useState("Standing");
   const [confidence, setConfidence] = useState("--");
   const [landmarksCount, setLandmarksCount] = useState(0);
-  const [engineStatus, setEngineStatus] = useState("OFFLINE");
+  const [engineStatus, setEngineStatus] = useState("🔴 OFFLINE");
   const [latency, setLatency] = useState(0);
   const [fps, setFps] = useState(0);
   const [annotatedFrame, setAnnotatedFrame] = useState(null);
@@ -78,17 +78,24 @@ export default function PoseTestingSuite() {
         console.log("Checking backend connectivity...");
         const response = await fetch(`${API_BASE_URL}/`);
         if (response.ok) {
-          console.log("Backend connectivity check succeeded.");
-          setEngineStatus("ONLINE");
-          setApiError("");
+          const data = await response.json();
+          if (data && data.status === "Active") {
+            console.log("Backend connectivity check succeeded.");
+            setEngineStatus("🟢 ONLINE");
+            setApiError("");
+          } else {
+            console.error("Backend connectivity check failed: status response is not Active", data);
+            setEngineStatus("🔴 OFFLINE");
+            setApiError(`Unexpected status response: ${JSON.stringify(data)}`);
+          }
         } else {
-          console.warn("Backend connectivity check returned non-200 status:", response.status);
-          setEngineStatus("OFFLINE");
+          console.error("Backend connectivity check returned non-200 status:", response.status);
+          setEngineStatus("🔴 OFFLINE");
           setApiError(`HTTP status code ${response.status} from health endpoint`);
         }
       } catch (err) {
         console.error("Backend connectivity check failed:", err);
-        setEngineStatus("OFFLINE");
+        setEngineStatus("🔴 OFFLINE");
         setApiError(err.message || "Failed to reach AI Backend health endpoint");
       }
     }
@@ -96,7 +103,7 @@ export default function PoseTestingSuite() {
     if (!isTestMode) {
       checkConnectivity();
     } else {
-      setEngineStatus("ONLINE");
+      setEngineStatus("🟢 ONLINE");
       setApiError("");
     }
   }, [isTestMode]);
@@ -306,7 +313,7 @@ export default function PoseTestingSuite() {
           setActivity(mockResponse.activity);
           setConfidence(mockResponse.confidence);
           setLandmarksCount(mockResponse.landmarks_count);
-          setEngineStatus("ONLINE");
+          setEngineStatus("🟢 ONLINE");
           setRawLandmarks(mockResponse.raw_landmarks);
           setAnnotatedFrame(mockResponse.annotated_frame_base64);
           setLastApiResponse(mockResponse);
@@ -328,7 +335,7 @@ export default function PoseTestingSuite() {
             hospital_id: hospitalId || "hosp_default"
           };
 
-          console.log("Frame sent to backend");
+          console.log("Sending frame to backend...");
 
           const response = await fetch(`${API_BASE_URL}/analyze`, {
             method: "POST",
@@ -348,14 +355,14 @@ export default function PoseTestingSuite() {
             }
             lastFrameTimeRef.current = now;
 
-            console.log("Backend response received", data);
+            console.log("Backend response received:", data);
             console.log("Activity detected:", data.activity);
 
             const mapped = mapActivity(data.activity);
             setActivity(data.activity || "Unknown");
             setConfidence(data.confidence || "--");
             setLandmarksCount(data.landmarks_count || 0);
-            setEngineStatus("ONLINE");
+            setEngineStatus("🟢 ONLINE");
             setRawLandmarks(data.raw_landmarks || []);
             setAnnotatedFrame(data.annotated_frame_base64 || null);
             setLastApiResponse(data);
@@ -368,15 +375,15 @@ export default function PoseTestingSuite() {
               }));
             }
           } else {
-            console.warn("Backend response failure status code:", response.status);
-            setEngineStatus("OFFLINE");
+            console.error("Backend error (HTTP status code):", response.status);
+            setEngineStatus("🔴 OFFLINE");
             setFps(0);
             setApiError(`HTTP Status Code ${response.status} from /analyze`);
           }
         }
       } catch (err) {
-        console.warn("AI service call failed in test suite:", err);
-        setEngineStatus("OFFLINE");
+        console.error("Backend error:", err);
+        setEngineStatus("🔴 OFFLINE");
         setFps(0);
         setApiError(err.message || "Failed to call backend AI /analyze endpoint");
       } finally {
@@ -512,25 +519,27 @@ export default function PoseTestingSuite() {
               <div className="flex items-center gap-2">
                 <span className="font-bold">Engine Status:</span>
                 <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                  engineStatus === "ONLINE" 
+                  engineStatus.includes("ONLINE") 
                     ? "bg-green-500/10 text-green-400 border border-green-500/20"
                     : "bg-red-500/10 text-red-400 border border-red-500/20"
                 }`}>
                   {engineStatus}
                 </span>
               </div>
-              <div className="flex gap-4">
+              <div className="flex gap-4 flex-wrap">
                 <div>
                   <span className="font-bold">Landmarks Extracted:</span>{" "}
-                  <span className="font-bold text-slate-200">{landmarksCount} / 33</span>
+                  <span className="font-bold text-slate-200">
+                    {landmarksCount > 0 ? `${landmarksCount} / 33` : "MediaPipe unavailable - YOLO fallback active"}
+                  </span>
                 </div>
                 <div>
                   <span className="font-bold">Rate:</span>{" "}
-                  <span className="font-semibold text-slate-200">{fps} FPS</span>
+                  <span className="font-semibold text-slate-200">{fps > 0 ? `${fps} FPS` : "--"}</span>
                 </div>
                 <div>
                   <span className="font-bold">Latency:</span>{" "}
-                  <span className="font-semibold text-slate-200">{latency} ms</span>
+                  <span className="font-semibold text-slate-200">{latency > 0 ? `${latency} ms` : "--"}</span>
                 </div>
               </div>
             </div>
@@ -714,7 +723,7 @@ export default function PoseTestingSuite() {
                   {rawLandmarks.length === 0 && (
                     <tr>
                       <td colSpan="6" className="p-12 text-center text-slate-500 text-xs font-semibold">
-                        No active pose landmarks. Make sure the webcam has visual line of sight or Test Mode is active.
+                        MediaPipe unavailable - YOLO fallback active
                       </td>
                     </tr>
                   )}

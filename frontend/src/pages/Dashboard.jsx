@@ -70,12 +70,20 @@ export default function Dashboard() {
       try {
         const res = await fetch(API_BASE_URL);
         if (res.ok) {
-          if (active) setAiHealth("Online");
+          const data = await res.json();
+          if (data && data.status === "Active") {
+            if (active) setAiHealth("🟢 AI Backend Online");
+          } else {
+            if (active) setAiHealth("🔴 AI Backend Offline");
+            console.error("Health check failed: status response is not Active", data);
+          }
         } else {
-          if (active) setAiHealth("Offline");
+          if (active) setAiHealth("🔴 AI Backend Offline");
+          console.error(`Health check failed: HTTP status ${res.status}`);
         }
       } catch (err) {
-        if (active) setAiHealth("Offline");
+        if (active) setAiHealth("🔴 AI Backend Offline");
+        console.error("Health check encountered error:", err);
       }
     };
     checkHealth();
@@ -229,7 +237,7 @@ export default function Dashboard() {
 
         <div className="bg-slate-900/60 border border-slate-800 p-6 rounded-2xl shadow-lg hover:border-cyan-500/50 transition duration-300">
           <p className="text-slate-400 text-xs font-semibold uppercase tracking-wider">AI Health Status</p>
-          <p className={`text-2xl font-extrabold mt-2 ${aiHealth === "Online" ? "text-green-400" : aiHealth === "Offline" ? "text-red-500 animate-pulse" : "text-cyan-400"}`}>
+          <p className={`text-xl font-extrabold mt-2 ${aiHealth.includes("Online") ? "text-green-400" : aiHealth.includes("Offline") ? "text-red-500 animate-pulse" : "text-cyan-400"}`}>
             {aiHealth}
           </p>
           <p className="text-[10px] text-slate-500 mt-1">FastAPI Render Endpoint</p>

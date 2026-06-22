@@ -6,9 +6,9 @@ export default function Sidebar({ currentPage, setPage }) {
   const { role: authRole, logout, userData } = useAuth();
   const role = authRole || userData?.role || "caregiver";
 
-  // Collapsible categories state (first folder is open by default)
   const [openCategories, setOpenCategories] = useState({
-    "🏥 Hospital Core": true
+    "Patient Management": true,
+    "Monitoring & AI": true
   });
 
   const toggleCategory = (title) => {
@@ -18,119 +18,68 @@ export default function Sidebar({ currentPage, setPage }) {
     }));
   };
 
-  // Nav schema grouped in collapsible categories
   const categories = [
     {
-      title: "🏥 Hospital Core",
+      title: "Patient Management",
+      roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"],
+      items: [
+        { id: "patients", label: "👨‍⚕️ Patients Directory", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
+        { id: "patientprofile", label: "👤 Patient Profile", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
+        { id: "addpatient", label: "➕ Register Patient", roles: ["super_admin", "hospital_admin", "nurse"] },
+        { id: "medicalrecords", label: "📋 Medical Records", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
+        { id: "patientvitals", label: "🩺 Patient Vitals", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] }
+      ]
+    },
+    {
+      title: "Monitoring & AI",
+      roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"],
+      items: [
+        { id: "livecameras", label: "📺 Live Monitoring", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
+        { id: "testing", label: "🧪 Pose Testing Suite", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
+        { id: "predictions", label: "🧠 AI Prediction Matrix", roles: ["super_admin", "hospital_admin", "doctor"] },
+        { id: "icumonitoring", label: "🏥 ICU Monitoring", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
+        { id: "observationward", label: "🚪 Observation Ward", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
+        { id: "criticalpatient", label: "🚨 Critical Patient Monitor", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
+        { id: "activityhistory", label: "🗄️ Activity History", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] }
+      ]
+    },
+    {
+      title: "Clinical Operations",
       roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"],
       items: [
         { id: "dashboard", label: "📊 Dashboard", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
-        { id: "patients", label: "👨‍⚕️ Patients Directory", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
-        { id: "alerts", label: "🚨 Alerts Incident Log", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
         { id: "cameras", label: "📹 Cameras Manager", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
-        { id: "testing", label: "🧪 Pose Testing Suite", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
-        { id: "settings", label: "⚙️ System Settings", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] }
+        { id: "alerts", label: "🚨 Alerts Incident Log", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
+        { id: "emergencyalerts", label: "🆘 Emergency Alerts", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
+        { id: "notificationcenter", label: "🔔 Notification Center", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
+        { id: "appointments", label: "📅 Appointments Book", roles: ["super_admin", "hospital_admin", "doctor"] }
       ]
     },
     {
-      title: "🏢 Hospital Administration",
-      roles: ["super_admin", "hospital_admin"],
-      items: [
-        { id: "admindashboard", label: "📊 Admin Dashboard", roles: ["super_admin", "hospital_admin"] },
-        { id: "hospitalmanagement", label: "🏨 Hospital Config", roles: ["super_admin", "hospital_admin"] },
-        { id: "departmentmanagement", label: "🏬 Department Registry", roles: ["super_admin", "hospital_admin"] },
-        { id: "roommanagement", label: "🚪 Room Management", roles: ["super_admin", "hospital_admin"] },
-        { id: "bedmanagement", label: "🛏️ Bed Inventory", roles: ["super_admin", "hospital_admin"] },
-        { id: "usermanagement", label: "👥 User Accounts", roles: ["super_admin", "hospital_admin"] },
-        { id: "rolepermissions", label: "🔑 Permission Matrix", roles: ["super_admin", "hospital_admin"] }
-      ]
-    },
-    {
-      title: "⚕️ Clinical Patient Care",
-      roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"],
-      items: [
-        { id: "admission", label: "➕ Admission Records", roles: ["super_admin", "hospital_admin", "nurse"] },
-        { id: "discharge", label: "➖ Clinical Discharges", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
-        { id: "transfer", label: "🔄 Room Transfers", roles: ["super_admin", "hospital_admin", "nurse"] },
-        { id: "medicalhistory", label: "📋 Medical Histories", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
-        { id: "vitalsmonitoring", label: "🩺 Vitals Telemetry", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
-        { id: "prescriptions", label: "💊 Prescriptions List", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
-        { id: "treatmentplan", label: "📝 Treatment Programs", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
-        { id: "labreports", label: "🔬 Lab Diagnostics", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
-        { id: "scanreports", label: "📷 Imaging Scans", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
-        { id: "emergencyprofile", label: "🚨 Resuscitation Cards", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] }
-      ]
-    },
-    {
-      title: "🩺 Medical Staff Console",
-      roles: ["super_admin", "hospital_admin", "doctor", "nurse"],
-      items: [
-        { id: "doctors", label: "👨‍⚕️ Doctors Directory", roles: ["super_admin", "hospital_admin"] },
-        { id: "nurses", label: "👩‍⚕️ Nurses Directory", roles: ["super_admin", "hospital_admin"] },
-        { id: "doctorschedule", label: "📅 Physician Schedules", roles: ["super_admin", "hospital_admin", "doctor"] },
-        { id: "doctorappointments", label: "👥 Appointments Book", roles: ["super_admin", "hospital_admin", "doctor"] },
-        { id: "doctornotes", label: "✍️ Daily Round Notes", roles: ["super_admin", "hospital_admin", "doctor"] },
-        { id: "consultations", label: "🗂️ Case Consultations", roles: ["super_admin", "hospital_admin", "doctor"] },
-        { id: "nurseassignments", label: "📋 Nurse Board", roles: ["super_admin", "hospital_admin", "nurse"] },
-        { id: "nurseshifts", label: "⏰ Nurse Shift Rosters", roles: ["super_admin", "hospital_admin", "nurse"] },
-        { id: "mar", label: "📒 MAR Med Records", roles: ["super_admin", "hospital_admin", "nurse"] }
-      ]
-    },
-    {
-      title: "🤖 AI Monitoring Telemetry",
-      roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"],
-      items: [
-        { id: "predictions", label: "🧠 AI Prediction Matrix", roles: ["super_admin", "hospital_admin", "doctor"] },
-        { id: "activityanalytics", label: "📊 Pose Analytics", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
-        { id: "fallcenter", label: "🚨 Fall Control Center", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
-        { id: "abnormalreview", label: "⚠️ Anomaly Reviews", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
-        { id: "incidentinvestigation", label: "🔍 Incident Audits", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
-        { id: "camera-wall", label: "🖼️ Multi-Camera Wall", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
-        { id: "detectionhistory", label: "🗄️ AI Detection Log", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] }
-      ]
-    },
-    {
-      title: "🚨 Emergency Bay",
-      roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"],
-      items: [
-        { id: "emergencycenter", label: "🆘 Emergency Desk", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
-        { id: "codeblue", label: "🔴 Code Blue Alerts", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
-        { id: "ambulances", label: "🚑 Ambulance Tracker", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] }
-      ]
-    },
-    {
-      title: "📈 Hospital Analytics",
+      title: "Administration",
       roles: ["super_admin", "hospital_admin", "doctor"],
       items: [
-        { id: "reports", label: "📄 Reports & Audits", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] },
-        { id: "hospitalanalytics", label: "📈 Clinical Metrics", roles: ["super_admin", "hospital_admin", "doctor"] },
-        { id: "occupancyanalytics", label: "📊 Occupancy Trends", roles: ["super_admin", "hospital_admin"] },
-        { id: "recoveryanalytics", label: "🌱 Recovery Stats", roles: ["super_admin", "hospital_admin", "doctor"] },
-        { id: "accuracyanalytics", label: "🤖 AI Accuracy Hub", roles: ["super_admin", "hospital_admin"] }
+        { id: "doctors", label: "👨‍⚕️ Doctor Registry", roles: ["super_admin", "hospital_admin"] },
+        { id: "nurses", label: "👩‍⚕️ Nurse Staff Registry", roles: ["super_admin", "hospital_admin"] },
+        { id: "bedmanagement", label: "🛏️ Bed Management", roles: ["super_admin", "hospital_admin"] },
+        { id: "staffmanagement", label: "👥 Staff Management", roles: ["super_admin", "hospital_admin"] },
+        { id: "usermanagement", label: "👤 User Management", roles: ["super_admin", "hospital_admin"] },
+        { id: "devicemanagement", label: "🔌 Device Management", roles: ["super_admin", "hospital_admin"] },
+        { id: "analytics", label: "📈 Analytics Dashboard", roles: ["super_admin", "hospital_admin", "doctor"] },
+        { id: "reports", label: "📄 Reports & Audits", roles: ["super_admin", "hospital_admin", "doctor", "nurse"] }
       ]
     },
     {
-      title: "💬 Communication",
+      title: "System",
       roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"],
       items: [
-        { id: "messaging", label: "💬 Rounding Chat", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
-        { id: "announcements", label: "📢 Board Announcements", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
-        { id: "notificationcenter", label: "🔔 System Notifications", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] }
-      ]
-    },
-    {
-      title: "⚙️ System Configs",
-      roles: ["super_admin", "hospital_admin"],
-      items: [
-        { id: "auditlogs", label: "📝 Audit Logs Trail", roles: ["super_admin", "hospital_admin"] },
-        { id: "backups", label: "💾 Backup Archives", roles: ["super_admin", "hospital_admin"] },
-        { id: "apiconfig", label: "🔌 System API Keys", roles: ["super_admin", "hospital_admin"] },
-        { id: "securitymonitoring", label: "🛡️ Firewall Logs", roles: ["super_admin", "hospital_admin"] }
+        { id: "settings", label: "⚙️ Settings", roles: ["super_admin", "hospital_admin", "doctor", "nurse", "caregiver"] },
+        { id: "auditlogs", label: "📝 Audit Logs", roles: ["super_admin", "hospital_admin"] },
+        { id: "systemoverview", label: "💾 System Overview", roles: ["super_admin", "hospital_admin"] }
       ]
     }
   ];
 
-  // Filter categories by user role access
   const visibleCategories = categories.filter(cat => cat.roles.includes(role));
 
   return (
