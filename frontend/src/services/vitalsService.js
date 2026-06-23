@@ -5,8 +5,6 @@ import {
   getDocs, 
   query, 
   where, 
-  orderBy, 
-  limit, 
   updateDoc 
 } from "firebase/firestore";
 import { db } from "../firebase/config";
@@ -18,17 +16,23 @@ export const vitalsService = {
   async getVitalsHistory(patientId, maxCount = 20) {
     const q = query(
       collection(db, HISTORY_COLLECTION),
-      where("patientId", "==", patientId),
-      orderBy("timestamp", "desc"),
-      limit(maxCount)
+      where("patientId", "==", patientId)
     );
     const snapshot = await getDocs(q);
-    const history = snapshot.docs.map(doc => ({
+    let history = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }));
-    // Return in chronological order
-    return history.reverse();
+    
+    // Sort in chronological order (oldest first for line graphs)
+    history.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+    
+    // Limit count client-side
+    if (history.length > maxCount) {
+      history = history.slice(history.length - maxCount);
+    }
+    
+    return history;
   },
 
   // Record vitals and update the current vitals in patient record

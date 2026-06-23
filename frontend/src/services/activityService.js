@@ -2,9 +2,7 @@ import {
   collection, 
   query, 
   where, 
-  onSnapshot,
-  orderBy,
-  limit
+  onSnapshot
 } from "firebase/firestore";
 import { db } from "../firebase/config";
 
@@ -17,17 +15,22 @@ export const activityService = {
     if (userRole !== "super_admin" && hospitalId) {
       q = query(q, where("hospitalId", "==", hospitalId));
     }
-    
-    q = query(q, orderBy("timestamp", "desc"), limit(limitCount));
 
     return onSnapshot(q, (snapshot) => {
-      const activities = snapshot.docs.map(doc => ({
+      let activities = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
+      // Sort client-side
+      activities.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+      // Limit client-side
+      if (activities.length > limitCount) {
+        activities = activities.slice(0, limitCount);
+      }
       callback(activities);
     }, (error) => {
       console.error("Error listening to activities:", error);
+      callback([]);
     });
   },
 
@@ -35,19 +38,24 @@ export const activityService = {
     if (!patientId) return () => {};
     let q = query(
       collection(db, COLLECTION),
-      where("patientId", "==", patientId),
-      orderBy("timestamp", "desc"),
-      limit(limitCount)
+      where("patientId", "==", patientId)
     );
 
     return onSnapshot(q, (snapshot) => {
-      const activities = snapshot.docs.map(doc => ({
+      let activities = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
+      // Sort client-side
+      activities.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+      // Limit client-side
+      if (activities.length > limitCount) {
+        activities = activities.slice(0, limitCount);
+      }
       callback(activities);
     }, (error) => {
       console.error("Error listening to patient activities:", error);
+      callback([]);
     });
   }
 };

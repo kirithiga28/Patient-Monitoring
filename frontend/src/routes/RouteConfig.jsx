@@ -5,9 +5,8 @@ import Reports from "../pages/Reports";
 import Cameras from "../pages/Cameras";
 import Settings from "../pages/Settings";
 
-// Import modules
+import PatientProfile from "../pages/PatientProfile";
 import {
-  PatientProfile,
   MedicalRecords,
   PatientVitals,
   ICUMonitoring,

@@ -64,6 +64,7 @@ export const patientService = {
       doctor: patientData.doctor || "Unassigned",
       room: patientData.room || "Unassigned",
       contact: patientData.contact || "N/A",
+      address: patientData.address || "N/A",
       diagnosis: patientData.diagnosis || "No Diagnosis",
       history: patientData.history || "",
       status: patientData.status || "Stable",

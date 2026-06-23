@@ -5,8 +5,7 @@ import {
   updateDoc, 
   query, 
   where, 
-  onSnapshot,
-  orderBy
+  onSnapshot
 } from "firebase/firestore";
 import { db } from "../firebase/config";
 
@@ -21,17 +20,17 @@ export const alertService = {
       q = query(q, where("hospitalId", "==", hospitalId));
     }
 
-    // Sort by timestamp descending
-    q = query(q, orderBy("timestamp", "desc"));
-
     return onSnapshot(q, (snapshot) => {
       const alerts = snapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data()
       }));
+      // Sort chronologically desc on client side
+      alerts.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
       callback(alerts);
     }, (error) => {
       console.error("Error listening to alerts:", error);
+      callback([]);
     });
   },
 
@@ -40,8 +39,7 @@ export const alertService = {
     if (!patientId) return () => {};
     let q = query(
       collection(db, COLLECTION),
-      where("patientId", "==", patientId),
-      orderBy("timestamp", "desc")
+      where("patientId", "==", patientId)
     );
 
     return onSnapshot(q, (snapshot) => {
@@ -49,9 +47,12 @@ export const alertService = {
         id: doc.id,
         ...doc.data()
       }));
+      // Sort chronologically desc on client side
+      alerts.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
       callback(alerts);
     }, (error) => {
       console.error("Error listening to patient alerts:", error);
+      callback([]);
     });
   },
 

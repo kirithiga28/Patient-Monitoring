@@ -26,12 +26,19 @@ export default function Patients() {
     doctor: "",
     room: "",
     contact: "",
+    address: "",
     diagnosis: "",
     history: "",
     status: "Stable",
     riskScore: 10,
     admissionDate: new Date().toISOString().split("T")[0]
   });
+
+  useEffect(() => {
+    if (userData?.name) {
+      setNewPatient(prev => ({ ...prev, doctor: userData.name }));
+    }
+  }, [userData]);
 
   useEffect(() => {
     const unsubscribe = patientService.listenPatients(
@@ -59,9 +66,10 @@ export default function Patients() {
         age: "",
         gender: "Male",
         bloodGroup: "O+",
-        doctor: "",
+        doctor: userData?.name || "",
         room: "",
         contact: "",
+        address: "",
         diagnosis: "",
         history: "",
         status: "Stable",
@@ -249,6 +257,18 @@ export default function Patients() {
                 required
                 placeholder="555-0199"
                 value={newPatient.contact}
+                onChange={handleFieldChange}
+                className="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-lg text-white outline-none focus:border-blue-500"
+              />
+            </div>
+
+            <div>
+              <label className="text-slate-400 block mb-1">Address</label>
+              <input
+                name="address"
+                required
+                placeholder="123 Health Ave, Medical City"
+                value={newPatient.address || ""}
                 onChange={handleFieldChange}
                 className="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-lg text-white outline-none focus:border-blue-500"
               />

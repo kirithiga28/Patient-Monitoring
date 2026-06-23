@@ -135,7 +135,7 @@ export default function Dashboard() {
             Clinical Dashboard
           </h1>
           <p className="text-slate-400 text-xs mt-1">
-            Current Session: {userData?.name || "Dr. Rajesh Mehta"} • {new Date().toLocaleDateString()}
+            Current Session: {userData?.name || "Doctor"} • {new Date().toLocaleDateString()}
           </p>
         </div>
 
