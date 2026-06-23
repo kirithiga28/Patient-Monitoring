@@ -110,7 +110,7 @@ export default function Cameras() {
       {isAdding && (
         <form onSubmit={handleAddCamera} className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl space-y-4 max-w-2xl">
           <h2 className="text-lg font-bold">Register Camera Mapping</h2>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-xs font-semibold text-slate-400 block mb-1">Camera Name</label>
               <input
@@ -162,7 +162,7 @@ export default function Cameras() {
               />
             </div>
 
-            <div className="col-span-2">
+            <div className="sm:col-span-2">
               <label className="text-xs font-semibold text-slate-400 block mb-1">Assign Patient Link</label>
               <select
                 value={formData.patientId}
@@ -194,7 +194,7 @@ export default function Cameras() {
             Live Telemetry View - {cameras.find(c => c.id === activePreviewId)?.name}
           </h2>
           
-          <div className="relative aspect-video max-w-3xl bg-black rounded-xl overflow-hidden border border-slate-800 mx-auto flex items-center justify-center">
+          <div className="relative aspect-video max-w-3xl w-full bg-black rounded-xl overflow-hidden border border-slate-800 mx-auto flex items-center justify-center">
             {cameras.find(c => c.id === activePreviewId)?.type === "Webcam" || cameras.find(c => c.id === activePreviewId)?.type === "USB" ? (
               <WebcamStream
                 patientId={cameras.find(c => c.id === activePreviewId)?.patientId}

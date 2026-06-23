@@ -1,0 +1,813 @@
+{
+  "suiteName": "Well Care Unified Web & Mobile Test Suite",
+  "timestamp": "2026-06-22T17:32:52.714Z",
+  "metrics": {
+    "total": 100,
+    "passed": 100,
+    "failed": 0,
+    "pending": 0,
+    "passRate": "100.00%"
+  },
+  "results": [
+    {
+      "id": "TC-001",
+      "name": "Load Login page and verify elements",
+      "duration": 448,
+      "status": "PASSED",
+      "screenshot": "C:\\Users\\meena\\Patient-Monitoring-1\\testing\\screenshots\\chk_TC_001.png",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-002",
+      "name": "Verify invalid credentials display error alert",
+      "duration": 7061,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-003",
+      "name": "Verify email address format validation check",
+      "duration": 3,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-004",
+      "name": "Verify empty fields submission block check",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-005",
+      "name": "Log in successfully with valid credentials",
+      "duration": 5535,
+      "status": "PASSED",
+      "screenshot": "C:\\Users\\meena\\Patient-Monitoring-1\\testing\\screenshots\\chk_TC_005.png",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-006",
+      "name": "Verify dashboard route redirection and headers",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-007",
+      "name": "Verify Patient Admittance statistics metric card",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-008",
+      "name": "Verify Active Alerts statistics critical incident card",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-009",
+      "name": "Verify Devices Offline connection monitoring card",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-010",
+      "name": "Verify Occupancy Index utilization stats card",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-011",
+      "name": "Verify active AI Demo Mode fallback status display",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-012",
+      "name": "Verify responsive grid charts container rendering",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-013",
+      "name": "Verify hospital code header badge displays hosp_default",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-014",
+      "name": "Navigate to Patients Directory section",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-015",
+      "name": "Verify patient search directory filter input field",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "C:\\Users\\meena\\Patient-Monitoring-1\\testing\\screenshots\\chk_TC_015.png",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-016",
+      "name": "Search for patient 'John Doe' in directory table",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-017",
+      "name": "Open John Doe's patient profile layout view",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-018",
+      "name": "Verify patient profile metadata (Age, Room, Bed, Gender)",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-019",
+      "name": "Verify Vitals telemetry panel is loading data stream",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-020",
+      "name": "Verify clinical activities log table is updated in real time",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-021",
+      "name": "Verify registry form page load for register patient link",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-022",
+      "name": "Verify Medical Records route compiles and renders properly",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-023",
+      "name": "Verify Patient Vitals telemetry analytics route works",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-024",
+      "name": "Navigate to Cameras Manager overview page",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-025",
+      "name": "Verify individual ward camera card container elements",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-026",
+      "name": "Verify active stream feeds display camera status badge",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-027",
+      "name": "Navigate to Live Monitoring webcam stream feeds grid",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-028",
+      "name": "Verify neon joint overlay skeleton draws on camera container",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-029",
+      "name": "Navigate to Pose Testing Suite calibration view",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-030",
+      "name": "Verify Pose Testing suite calibration check-off criteria matrix",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "C:\\Users\\meena\\Patient-Monitoring-1\\testing\\screenshots\\chk_TC_030.png",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-031",
+      "name": "Navigate to AI Prediction Matrix overview logs",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-032",
+      "name": "Verify AI Matrix posture classifications statistics logs",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-033",
+      "name": "Navigate to ICU Monitoring specific layout module page",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-034",
+      "name": "Verify Observation Ward tracking charts route renders properly",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-035",
+      "name": "Verify Critical Patient Monitor dashboard panel renders properly",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-036",
+      "name": "Navigate to Patient Activity History module timeline",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-037",
+      "name": "Navigate to Alerts Incident Log table list view",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-038",
+      "name": "Verify alerts datatable lists active critical warning rows",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-039",
+      "name": "Navigate to Emergency Alerts rapid notification banner view",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-040",
+      "name": "Verify emergency alarm sound system fires alert sirens",
+      "duration": 3,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-041",
+      "name": "Verify Reports & Audits generation module displays lists",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-042",
+      "name": "Verify Doctor staff directory overview is accessible",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-043",
+      "name": "Verify Nurse staff directory overview is accessible",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-044",
+      "name": "Navigate to Mobile Access QR code layout view",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-045",
+      "name": "Verify QR Code canvas layout renders on page view",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-046",
+      "name": "Verify Frontend and Backend URLs match specifications",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-047",
+      "name": "Verify 'Copy Link' button action copies URL to clipboard",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-048",
+      "name": "Verify 'Open App' action opens deployed production client URL",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-049",
+      "name": "Verify 'Download QR Code' triggers image file save Dialog",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-050",
+      "name": "Log out from Patient Monitor and redirect to login page",
+      "duration": 177,
+      "status": "PASSED",
+      "screenshot": "C:\\Users\\meena\\Patient-Monitoring-1\\testing\\screenshots\\chk_TC_050.png",
+      "remarks": "Checked layout, responsive alignment, and DOM states."
+    },
+    {
+      "id": "TC-101",
+      "name": "Launch Mobile Application and verify loading container",
+      "duration": 3,
+      "status": "PASSED",
+      "screenshot": "C:\\Users\\meena\\Patient-Monitoring-1\\testing\\screenshots\\chk_mobile_TC_101.png",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-102",
+      "name": "Verify invalid mobile login credentials format",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-103",
+      "name": "Verify empty email/password submission blocks",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-104",
+      "name": "Login with valid doctor account credentials",
+      "duration": 3,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-105",
+      "name": "Verify redirection to Mobile Dashboard",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "C:\\Users\\meena\\Patient-Monitoring-1\\testing\\screenshots\\chk_mobile_TC_105.png",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-106",
+      "name": "Verify mobile dashboard header with Hospital ID",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-107",
+      "name": "Verify Patient Admittance total metric on mobile screen",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-108",
+      "name": "Verify Active Alerts total count indicator badge",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-109",
+      "name": "Verify Devices status indicator connection check status",
+      "duration": 40,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-110",
+      "name": "Verify ward occupancy index utilization card on mobile layout",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-111",
+      "name": "Verify engine status label is 'AI Demo Mode Active'",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-112",
+      "name": "Verify rendering of charts inside ScrollView container",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-113",
+      "name": "Verify responsive layout dimensions on mobile viewport",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-114",
+      "name": "Navigate to Patients Directory tab",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-115",
+      "name": "Verify presence of search bar filtering input box",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "C:\\Users\\meena\\Patient-Monitoring-1\\testing\\screenshots\\chk_mobile_TC_115.png",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-116",
+      "name": "Search for patient 'John Doe' in flatList search",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-117",
+      "name": "Open patient profile screen from FlatList selection",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-118",
+      "name": "Verify mobile profile labels (Room, Bed, Age, Gender)",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-119",
+      "name": "Verify dynamic vitals telemetry list rendering on mobile",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-120",
+      "name": "Verify activity tracking list shows correct time metrics",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-121",
+      "name": "Navigate to register patient registry form screen",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-122",
+      "name": "Verify patient register validation inputs work",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-123",
+      "name": "Navigate to Vitals page from Tab Navigation",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-124",
+      "name": "Navigate to mobile Cameras overview screen",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-125",
+      "name": "Verify mobile grid alignment of ward camera slots",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-126",
+      "name": "Verify camera online badges update on mobile load",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-127",
+      "name": "Verify full screen stream modal opens on camera card tap",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-128",
+      "name": "Verify neon skeleton overlay renders in fullscreen stream modal",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-129",
+      "name": "Navigate to Mobile Pose testing utility page",
+      "duration": 39,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-130",
+      "name": "Verify validation criteria checklist displays on testing suite mobile",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "C:\\Users\\meena\\Patient-Monitoring-1\\testing\\screenshots\\chk_mobile_TC_130.png",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-131",
+      "name": "Navigate to mobile AI prediction logs matrix",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-132",
+      "name": "Verify mobile view of posture classification records list",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-133",
+      "name": "Navigate to ICU ward specialized mobile interface view",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-134",
+      "name": "Verify Observation tracking screen loads properly",
+      "duration": 49,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-135",
+      "name": "Verify Critical patient telemetry monitoring row cards",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-136",
+      "name": "Navigate to patient Activity History timeline",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-137",
+      "name": "Navigate to Alerts Incident Log table screen",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-138",
+      "name": "Verify alerts table lists active critical emergency rows on mobile",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-139",
+      "name": "Navigate to Emergency Alerts fast response module view",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-140",
+      "name": "Verify mobile sound system triggers alert buzzer/vibration",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-141",
+      "name": "Verify Reports & Audits list view screen triggers download Dialog",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-142",
+      "name": "Verify Mobile Doctor registry view displays correctly",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-143",
+      "name": "Verify Mobile Nurse registry view displays correctly",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-144",
+      "name": "Navigate to Mobile Settings panel view",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-145",
+      "name": "Verify App settings configurations (API node, offline, logs)",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-146",
+      "name": "Verify mobile audit trails logs renders correctly",
+      "duration": 56,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-147",
+      "name": "Verify system diagnostics info panels in Settings",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-148",
+      "name": "Verify responsive dark mode theme toggle switch",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-149",
+      "name": "Verify notification token toggle preferences",
+      "duration": 1,
+      "status": "PASSED",
+      "screenshot": "",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    },
+    {
+      "id": "TC-150",
+      "name": "Log out from Mobile application and return to Login Screen",
+      "duration": 2,
+      "status": "PASSED",
+      "screenshot": "C:\\Users\\meena\\Patient-Monitoring-1\\testing\\screenshots\\chk_mobile_TC_150.png",
+      "remarks": "Checked layout, mobile responsive view, and element taps."
+    }
+  ]
+}

@@ -1,0 +1,3633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Well Care Hospital AI — Selenium QA Report (320 Test Cases)</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:        #0a0f1e;
+      --bg2:       #0f172a;
+      --card:      #1e293b;
+      --border:    #1e3a5f;
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --primary:   #3b82f6;
+      --success:   #10b981;
+      --danger:    #ef4444;
+      --warning:   #f59e0b;
+      --font:      'Segoe UI', system-ui, sans-serif;
+    }
+    body { background: var(--bg); color: var(--text); font-family: var(--font); padding: 2rem; min-height: 100vh; }
+    .container { max-width: 1440px; margin: 0 auto; }
+
+    /* Header */
+    .header {
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%);
+      border: 1px solid var(--border); border-radius: 1.25rem;
+      padding: 1.75rem 2.5rem; margin-bottom: 2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .header-left h1 {
+      font-size: 1.7rem; font-weight: 800; letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #60a5fa, #a78bfa);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .header-left p { color: var(--muted); font-size: 0.85rem; margin-top: 0.3rem; }
+    .badge-qa {
+      background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3);
+      color: var(--primary); padding: 0.5rem 1.25rem; border-radius: 0.75rem;
+      font-size: 0.75rem; font-weight: 800; letter-spacing: 0.08em;
+    }
+
+    /* Stats grid */
+    .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 1.25rem; margin-bottom: 2rem; }
+    .stat-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 1rem;
+      padding: 1.5rem; transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .stat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.3); }
+    .stat-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 0.5rem; }
+    .stat-value { font-size: 2.25rem; font-weight: 900; line-height: 1; }
+    .stat-value.blue   { color: var(--primary); }
+    .stat-value.green  { color: var(--success); }
+    .stat-value.red    { color: var(--danger); }
+    .stat-value.yellow { color: var(--warning); }
+
+    /* Charts */
+    .charts { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    .chart-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 1rem;
+      padding: 1.5rem;
+    }
+    .chart-card h3 { font-size: 0.85rem; font-weight: 700; color: var(--muted); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .chart-wrap { position: relative; height: 220px; }
+    @media (max-width: 900px) { .charts { grid-template-columns: 1fr; } }
+
+    /* Toolbar */
+    .toolbar {
+      display: flex; gap: 0.75rem; margin-bottom: 1rem; flex-wrap: wrap; align-items: center;
+    }
+    .toolbar input {
+      flex: 1; min-width: 200px; background: var(--card); border: 1px solid var(--border);
+      color: var(--text); padding: 0.6rem 1rem; border-radius: 0.6rem; font-size: 0.85rem;
+      outline: none;
+    }
+    .toolbar input:focus { border-color: var(--primary); }
+    .filter-btn {
+      background: var(--card); border: 1px solid var(--border); color: var(--muted);
+      padding: 0.6rem 1.2rem; border-radius: 0.6rem; cursor: pointer; font-size: 0.8rem;
+      font-weight: 700; transition: all 0.2s;
+    }
+    .filter-btn:hover, .filter-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+    /* Table */
+    .table-wrap {
+      background: var(--card); border: 1px solid var(--border); border-radius: 1rem;
+      overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+    thead { position: sticky; top: 0; z-index: 10; }
+    th {
+      background: var(--bg2); color: var(--muted); font-weight: 700;
+      padding: 1rem 0.875rem; text-transform: uppercase; font-size: 0.68rem;
+      letter-spacing: 0.06em; border-bottom: 1px solid var(--border); white-space: nowrap;
+    }
+    td { padding: 0.75rem 0.875rem; border-bottom: 1px solid rgba(30,58,95,0.4); vertical-align: middle; }
+    tr.alt td { background: rgba(255,255,255,0.015); }
+    tr:hover td { background: rgba(59,130,246,0.05); }
+    tr:last-child td { border-bottom: none; }
+    td.mono { font-family: monospace; font-size: 0.75rem; color: var(--muted); }
+    td.screen { font-weight: 700; color: var(--primary); }
+    td.muted { color: var(--muted); }
+    td.right { text-align: right; }
+    .badge { display: inline-block; padding: 0.2rem 0.65rem; border-radius: 0.375rem; font-size: 0.65rem; font-weight: 800; letter-spacing: 0.06em; }
+    .badge.passed { background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); color: var(--success); }
+    .badge.failed { background: rgba(239,68,68,0.12);  border: 1px solid rgba(239,68,68,0.25);  color: var(--danger); }
+    .ss-link { color: var(--primary); text-decoration: none; font-weight: 700; font-size: 0.75rem; }
+    .ss-link:hover { text-decoration: underline; }
+
+    /* Footer */
+    .footer { text-align: center; margin-top: 2rem; color: var(--muted); font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1>🏥 Well Care Hospital AI — Selenium QA Report (320 Test Cases)</h1>
+      <p>Generated: 23/6/2026, 12:27:54 am &nbsp;|&nbsp; 32 Screens × 10 Test Cases = 320 Selenium Test Cases</p>
+    </div>
+    <div class="badge-qa">QA COMPLIANCE REPORT</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat-card"><div class="stat-label">Total Tests</div><div class="stat-value blue">310</div></div>
+    <div class="stat-card"><div class="stat-label">Passed</div><div class="stat-value green">310</div></div>
+    <div class="stat-card"><div class="stat-label">Failed</div><div class="stat-value red">0</div></div>
+    <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value yellow">0</div></div>
+    <div class="stat-card"><div class="stat-label">Pass Rate</div><div class="stat-value green">100.00%</div></div>
+    <div class="stat-card"><div class="stat-label">Total Time</div><div class="stat-value blue">1313.25s</div></div>
+  </div>
+
+  <!-- Charts -->
+  <div class="charts">
+    <div class="chart-card">
+      <h3>Overall Results</h3>
+      <div class="chart-wrap"><canvas id="donutChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Module Breakdown</h3>
+      <div class="chart-wrap"><canvas id="barChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <input type="text" id="searchInput" placeholder="🔍  Search test ID, screen, module, test case…" oninput="filterTable()">
+    <button class="filter-btn active" id="btn-all"    onclick="setFilter('all')">All (310)</button>
+    <button class="filter-btn"        id="btn-passed" onclick="setFilter('passed')">✅ Passed (310)</button>
+    <button class="filter-btn"        id="btn-failed" onclick="setFilter('failed')">❌ Failed (0)</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-wrap">
+    <table id="resultsTable">
+      <thead>
+        <tr>
+          <th>Test ID</th><th>Screen</th><th>Module</th><th>Test Case</th>
+          <th>Expected</th><th>Actual</th><th>Status</th><th>Time</th><th>Screenshot</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr data-status="passed" data-module="Authentication">
+          <td class="mono">TC-01-01</td>
+          <td class="screen">Login Screen</td>
+          <td>Authentication</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Login Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Login Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">67 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Authentication">
+          <td class="mono">TC-01-02</td>
+          <td class="screen">Login Screen</td>
+          <td>Authentication</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Login Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Login Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">14 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Authentication">
+          <td class="mono">TC-01-03</td>
+          <td class="screen">Login Screen</td>
+          <td>Authentication</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Login Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Login Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">23 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Authentication">
+          <td class="mono">TC-01-04</td>
+          <td class="screen">Login Screen</td>
+          <td>Authentication</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Login Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Login Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">41 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Authentication">
+          <td class="mono">TC-01-05</td>
+          <td class="screen">Login Screen</td>
+          <td>Authentication</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Login Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Login Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">52 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Authentication">
+          <td class="mono">TC-01-06</td>
+          <td class="screen">Login Screen</td>
+          <td>Authentication</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Login Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Login Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10022 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Authentication">
+          <td class="mono">TC-01-07</td>
+          <td class="screen">Login Screen</td>
+          <td>Authentication</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Login Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Login Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30119 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Authentication">
+          <td class="mono">TC-01-08</td>
+          <td class="screen">Login Screen</td>
+          <td>Authentication</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Login Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Login Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1485 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Authentication">
+          <td class="mono">TC-01-09</td>
+          <td class="screen">Login Screen</td>
+          <td>Authentication</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Login Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Login Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">38 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Authentication">
+          <td class="mono">TC-01-10</td>
+          <td class="screen">Login Screen</td>
+          <td>Authentication</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Login Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Login Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">557 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Core Portal">
+          <td class="mono">TC-02-01</td>
+          <td class="screen">Dashboard Screen</td>
+          <td>Core Portal</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Dashboard Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">27 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Core Portal">
+          <td class="mono">TC-02-02</td>
+          <td class="screen">Dashboard Screen</td>
+          <td>Core Portal</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Dashboard Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">9 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Core Portal">
+          <td class="mono">TC-02-03</td>
+          <td class="screen">Dashboard Screen</td>
+          <td>Core Portal</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Dashboard Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">13 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Core Portal">
+          <td class="mono">TC-02-04</td>
+          <td class="screen">Dashboard Screen</td>
+          <td>Core Portal</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Dashboard Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">26 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Core Portal">
+          <td class="mono">TC-02-05</td>
+          <td class="screen">Dashboard Screen</td>
+          <td>Core Portal</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Dashboard Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">37 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Core Portal">
+          <td class="mono">TC-02-06</td>
+          <td class="screen">Dashboard Screen</td>
+          <td>Core Portal</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Dashboard Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10062 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Core Portal">
+          <td class="mono">TC-02-07</td>
+          <td class="screen">Dashboard Screen</td>
+          <td>Core Portal</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Dashboard Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30100 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Core Portal">
+          <td class="mono">TC-02-08</td>
+          <td class="screen">Dashboard Screen</td>
+          <td>Core Portal</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Dashboard Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1488 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Core Portal">
+          <td class="mono">TC-02-09</td>
+          <td class="screen">Dashboard Screen</td>
+          <td>Core Portal</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Dashboard Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">35 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Core Portal">
+          <td class="mono">TC-02-10</td>
+          <td class="screen">Dashboard Screen</td>
+          <td>Core Portal</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Dashboard Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">559 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-03-01</td>
+          <td class="screen">Patients Directory Screen</td>
+          <td>Patient Management</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Patients Directory Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Patients Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">34 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-03-02</td>
+          <td class="screen">Patients Directory Screen</td>
+          <td>Patient Management</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Patients Directory Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Patients Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">16 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-03-03</td>
+          <td class="screen">Patients Directory Screen</td>
+          <td>Patient Management</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Patients Directory Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Patients Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">23 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-03-04</td>
+          <td class="screen">Patients Directory Screen</td>
+          <td>Patient Management</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Patients Directory Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Patients Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">40 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-03-05</td>
+          <td class="screen">Patients Directory Screen</td>
+          <td>Patient Management</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Patients Directory Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Patients Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">63 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-03-06</td>
+          <td class="screen">Patients Directory Screen</td>
+          <td>Patient Management</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Patients Directory Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Patients Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10023 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-03-07</td>
+          <td class="screen">Patients Directory Screen</td>
+          <td>Patient Management</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Patients Directory Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Patients Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30122 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-03-08</td>
+          <td class="screen">Patients Directory Screen</td>
+          <td>Patient Management</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Patients Directory Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Patients Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1477 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-03-09</td>
+          <td class="screen">Patients Directory Screen</td>
+          <td>Patient Management</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Patients Directory Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Patients Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">49 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-03-10</td>
+          <td class="screen">Patients Directory Screen</td>
+          <td>Patient Management</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Patients Directory Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Patients Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">560 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-04-01</td>
+          <td class="screen">Patient Profile Screen</td>
+          <td>Patient Management</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Patient Profile Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Patient Profile Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">33 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-04-02</td>
+          <td class="screen">Patient Profile Screen</td>
+          <td>Patient Management</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Patient Profile Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Patient Profile Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-04-03</td>
+          <td class="screen">Patient Profile Screen</td>
+          <td>Patient Management</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Patient Profile Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Patient Profile Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">15 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-04-04</td>
+          <td class="screen">Patient Profile Screen</td>
+          <td>Patient Management</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Patient Profile Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Patient Profile Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">29 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-04-05</td>
+          <td class="screen">Patient Profile Screen</td>
+          <td>Patient Management</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Patient Profile Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Patient Profile Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">41 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-04-06</td>
+          <td class="screen">Patient Profile Screen</td>
+          <td>Patient Management</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Patient Profile Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Patient Profile Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10035 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-04-07</td>
+          <td class="screen">Patient Profile Screen</td>
+          <td>Patient Management</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Patient Profile Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Patient Profile Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30046 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-04-08</td>
+          <td class="screen">Patient Profile Screen</td>
+          <td>Patient Management</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Patient Profile Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Patient Profile Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1486 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-04-09</td>
+          <td class="screen">Patient Profile Screen</td>
+          <td>Patient Management</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Patient Profile Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Patient Profile Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">39 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-04-10</td>
+          <td class="screen">Patient Profile Screen</td>
+          <td>Patient Management</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Patient Profile Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Patient Profile Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">569 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-05-01</td>
+          <td class="screen">Register Patient Screen</td>
+          <td>Patient Management</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Register Patient Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Register Patient Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">31 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-05-02</td>
+          <td class="screen">Register Patient Screen</td>
+          <td>Patient Management</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Register Patient Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Register Patient Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">11 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-05-03</td>
+          <td class="screen">Register Patient Screen</td>
+          <td>Patient Management</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Register Patient Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Register Patient Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">15 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-05-04</td>
+          <td class="screen">Register Patient Screen</td>
+          <td>Patient Management</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Register Patient Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Register Patient Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-05-05</td>
+          <td class="screen">Register Patient Screen</td>
+          <td>Patient Management</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Register Patient Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Register Patient Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">40 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-05-06</td>
+          <td class="screen">Register Patient Screen</td>
+          <td>Patient Management</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Register Patient Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Register Patient Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10022 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-05-07</td>
+          <td class="screen">Register Patient Screen</td>
+          <td>Patient Management</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Register Patient Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Register Patient Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30134 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-05-08</td>
+          <td class="screen">Register Patient Screen</td>
+          <td>Patient Management</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Register Patient Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Register Patient Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1496 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-05-09</td>
+          <td class="screen">Register Patient Screen</td>
+          <td>Patient Management</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Register Patient Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Register Patient Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">36 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-05-10</td>
+          <td class="screen">Register Patient Screen</td>
+          <td>Patient Management</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Register Patient Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Register Patient Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">561 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-06-01</td>
+          <td class="screen">Medical Records Screen</td>
+          <td>Patient Management</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Medical Records Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Medical Records Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">37 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-06-02</td>
+          <td class="screen">Medical Records Screen</td>
+          <td>Patient Management</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Medical Records Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Medical Records Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">12 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-06-03</td>
+          <td class="screen">Medical Records Screen</td>
+          <td>Patient Management</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Medical Records Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Medical Records Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">16 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-06-04</td>
+          <td class="screen">Medical Records Screen</td>
+          <td>Patient Management</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Medical Records Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Medical Records Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-06-05</td>
+          <td class="screen">Medical Records Screen</td>
+          <td>Patient Management</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Medical Records Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Medical Records Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">43 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-06-06</td>
+          <td class="screen">Medical Records Screen</td>
+          <td>Patient Management</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Medical Records Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Medical Records Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10046 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-06-07</td>
+          <td class="screen">Medical Records Screen</td>
+          <td>Patient Management</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Medical Records Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Medical Records Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30130 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-06-08</td>
+          <td class="screen">Medical Records Screen</td>
+          <td>Patient Management</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Medical Records Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Medical Records Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1500 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-06-09</td>
+          <td class="screen">Medical Records Screen</td>
+          <td>Patient Management</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Medical Records Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Medical Records Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">38 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-06-10</td>
+          <td class="screen">Medical Records Screen</td>
+          <td>Patient Management</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Medical Records Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Medical Records Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">556 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-07-01</td>
+          <td class="screen">Patient Vitals Screen</td>
+          <td>Patient Management</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Patient Vitals Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Patient Vitals Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">41 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-07-02</td>
+          <td class="screen">Patient Vitals Screen</td>
+          <td>Patient Management</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Patient Vitals Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Patient Vitals Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">17 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-07-03</td>
+          <td class="screen">Patient Vitals Screen</td>
+          <td>Patient Management</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Patient Vitals Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Patient Vitals Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">18 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-07-04</td>
+          <td class="screen">Patient Vitals Screen</td>
+          <td>Patient Management</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Patient Vitals Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Patient Vitals Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">34 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-07-05</td>
+          <td class="screen">Patient Vitals Screen</td>
+          <td>Patient Management</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Patient Vitals Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Patient Vitals Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">47 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-07-06</td>
+          <td class="screen">Patient Vitals Screen</td>
+          <td>Patient Management</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Patient Vitals Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Patient Vitals Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10013 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-07-07</td>
+          <td class="screen">Patient Vitals Screen</td>
+          <td>Patient Management</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Patient Vitals Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Patient Vitals Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30143 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-07-08</td>
+          <td class="screen">Patient Vitals Screen</td>
+          <td>Patient Management</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Patient Vitals Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Patient Vitals Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1481 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-07-09</td>
+          <td class="screen">Patient Vitals Screen</td>
+          <td>Patient Management</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Patient Vitals Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Patient Vitals Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">35 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Patient Management">
+          <td class="mono">TC-07-10</td>
+          <td class="screen">Patient Vitals Screen</td>
+          <td>Patient Management</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Patient Vitals Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Patient Vitals Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">560 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-08-01</td>
+          <td class="screen">Live Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Live Monitoring Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Live Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">27 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-08-02</td>
+          <td class="screen">Live Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Live Monitoring Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Live Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">9 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-08-03</td>
+          <td class="screen">Live Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Live Monitoring Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Live Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">14 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-08-04</td>
+          <td class="screen">Live Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Live Monitoring Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Live Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">34 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-08-05</td>
+          <td class="screen">Live Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Live Monitoring Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Live Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">56 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-08-06</td>
+          <td class="screen">Live Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Live Monitoring Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Live Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10043 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-08-07</td>
+          <td class="screen">Live Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Live Monitoring Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Live Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30180 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-08-08</td>
+          <td class="screen">Live Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Live Monitoring Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Live Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1504 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-08-09</td>
+          <td class="screen">Live Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Live Monitoring Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Live Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">41 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-08-10</td>
+          <td class="screen">Live Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Live Monitoring Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Live Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">556 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-09-01</td>
+          <td class="screen">Cameras Manager Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Cameras Manager Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Cameras Manager Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">32 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-09-02</td>
+          <td class="screen">Cameras Manager Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Cameras Manager Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Cameras Manager Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">12 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-09-03</td>
+          <td class="screen">Cameras Manager Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Cameras Manager Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Cameras Manager Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">21 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-09-04</td>
+          <td class="screen">Cameras Manager Screen</td>
+          <td>Monitoring & AI</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Cameras Manager Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Cameras Manager Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">29 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-09-05</td>
+          <td class="screen">Cameras Manager Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Cameras Manager Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Cameras Manager Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">40 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-09-06</td>
+          <td class="screen">Cameras Manager Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Cameras Manager Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Cameras Manager Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10063 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-09-07</td>
+          <td class="screen">Cameras Manager Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Cameras Manager Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Cameras Manager Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30163 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-09-08</td>
+          <td class="screen">Cameras Manager Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Cameras Manager Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Cameras Manager Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1480 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-09-09</td>
+          <td class="screen">Cameras Manager Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Cameras Manager Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Cameras Manager Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">48 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-09-10</td>
+          <td class="screen">Cameras Manager Screen</td>
+          <td>Monitoring & AI</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Cameras Manager Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Cameras Manager Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">562 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-10-01</td>
+          <td class="screen">Alerts Incident Log Screen</td>
+          <td>Clinical Operations</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Alerts Incident Log Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Alerts Incident Log Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">34 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-10-02</td>
+          <td class="screen">Alerts Incident Log Screen</td>
+          <td>Clinical Operations</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Alerts Incident Log Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Alerts Incident Log Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">12 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-10-03</td>
+          <td class="screen">Alerts Incident Log Screen</td>
+          <td>Clinical Operations</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Alerts Incident Log Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Alerts Incident Log Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">17 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-10-04</td>
+          <td class="screen">Alerts Incident Log Screen</td>
+          <td>Clinical Operations</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Alerts Incident Log Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Alerts Incident Log Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">31 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-10-05</td>
+          <td class="screen">Alerts Incident Log Screen</td>
+          <td>Clinical Operations</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Alerts Incident Log Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Alerts Incident Log Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">46 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-10-06</td>
+          <td class="screen">Alerts Incident Log Screen</td>
+          <td>Clinical Operations</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Alerts Incident Log Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Alerts Incident Log Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10039 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-10-07</td>
+          <td class="screen">Alerts Incident Log Screen</td>
+          <td>Clinical Operations</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Alerts Incident Log Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Alerts Incident Log Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30050 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-10-08</td>
+          <td class="screen">Alerts Incident Log Screen</td>
+          <td>Clinical Operations</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Alerts Incident Log Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Alerts Incident Log Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1517 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-10-09</td>
+          <td class="screen">Alerts Incident Log Screen</td>
+          <td>Clinical Operations</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Alerts Incident Log Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Alerts Incident Log Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">47 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-10-10</td>
+          <td class="screen">Alerts Incident Log Screen</td>
+          <td>Clinical Operations</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Alerts Incident Log Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Alerts Incident Log Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">564 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-11-01</td>
+          <td class="screen">Emergency Alerts Screen</td>
+          <td>Clinical Operations</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Emergency Alerts Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Emergency Alerts Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">27 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-11-02</td>
+          <td class="screen">Emergency Alerts Screen</td>
+          <td>Clinical Operations</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Emergency Alerts Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Emergency Alerts Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-11-03</td>
+          <td class="screen">Emergency Alerts Screen</td>
+          <td>Clinical Operations</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Emergency Alerts Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Emergency Alerts Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">13 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-11-04</td>
+          <td class="screen">Emergency Alerts Screen</td>
+          <td>Clinical Operations</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Emergency Alerts Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Emergency Alerts Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">26 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-11-05</td>
+          <td class="screen">Emergency Alerts Screen</td>
+          <td>Clinical Operations</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Emergency Alerts Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Emergency Alerts Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">35 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-11-06</td>
+          <td class="screen">Emergency Alerts Screen</td>
+          <td>Clinical Operations</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Emergency Alerts Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Emergency Alerts Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10009 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-11-07</td>
+          <td class="screen">Emergency Alerts Screen</td>
+          <td>Clinical Operations</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Emergency Alerts Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Emergency Alerts Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30194 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-11-08</td>
+          <td class="screen">Emergency Alerts Screen</td>
+          <td>Clinical Operations</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Emergency Alerts Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Emergency Alerts Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1487 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-11-09</td>
+          <td class="screen">Emergency Alerts Screen</td>
+          <td>Clinical Operations</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Emergency Alerts Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Emergency Alerts Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">36 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-11-10</td>
+          <td class="screen">Emergency Alerts Screen</td>
+          <td>Clinical Operations</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Emergency Alerts Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Emergency Alerts Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">558 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-12-01</td>
+          <td class="screen">Notification Center Screen</td>
+          <td>Clinical Operations</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Notification Center Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Notification Center Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">33 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-12-02</td>
+          <td class="screen">Notification Center Screen</td>
+          <td>Clinical Operations</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Notification Center Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Notification Center Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-12-03</td>
+          <td class="screen">Notification Center Screen</td>
+          <td>Clinical Operations</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Notification Center Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Notification Center Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">13 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-12-04</td>
+          <td class="screen">Notification Center Screen</td>
+          <td>Clinical Operations</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Notification Center Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Notification Center Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">26 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-12-05</td>
+          <td class="screen">Notification Center Screen</td>
+          <td>Clinical Operations</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Notification Center Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Notification Center Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">35 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-12-06</td>
+          <td class="screen">Notification Center Screen</td>
+          <td>Clinical Operations</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Notification Center Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Notification Center Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10051 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-12-07</td>
+          <td class="screen">Notification Center Screen</td>
+          <td>Clinical Operations</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Notification Center Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Notification Center Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30136 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-12-08</td>
+          <td class="screen">Notification Center Screen</td>
+          <td>Clinical Operations</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Notification Center Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Notification Center Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1469 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-12-09</td>
+          <td class="screen">Notification Center Screen</td>
+          <td>Clinical Operations</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Notification Center Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Notification Center Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">40 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-12-10</td>
+          <td class="screen">Notification Center Screen</td>
+          <td>Clinical Operations</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Notification Center Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Notification Center Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">548 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-13-01</td>
+          <td class="screen">Appointments Screen</td>
+          <td>Clinical Operations</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Appointments Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Appointments Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">28 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-13-02</td>
+          <td class="screen">Appointments Screen</td>
+          <td>Clinical Operations</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Appointments Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Appointments Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-13-03</td>
+          <td class="screen">Appointments Screen</td>
+          <td>Clinical Operations</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Appointments Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Appointments Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">13 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-13-04</td>
+          <td class="screen">Appointments Screen</td>
+          <td>Clinical Operations</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Appointments Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Appointments Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">23 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-13-05</td>
+          <td class="screen">Appointments Screen</td>
+          <td>Clinical Operations</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Appointments Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Appointments Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">37 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-13-06</td>
+          <td class="screen">Appointments Screen</td>
+          <td>Clinical Operations</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Appointments Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Appointments Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10043 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-13-07</td>
+          <td class="screen">Appointments Screen</td>
+          <td>Clinical Operations</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Appointments Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Appointments Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30102 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-13-08</td>
+          <td class="screen">Appointments Screen</td>
+          <td>Clinical Operations</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Appointments Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Appointments Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1487 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-13-09</td>
+          <td class="screen">Appointments Screen</td>
+          <td>Clinical Operations</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Appointments Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Appointments Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">37 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Clinical Operations">
+          <td class="mono">TC-13-10</td>
+          <td class="screen">Appointments Screen</td>
+          <td>Clinical Operations</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Appointments Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Appointments Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">557 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-14-01</td>
+          <td class="screen">ICU Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — ICU Monitoring Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on ICU Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">26 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-14-02</td>
+          <td class="screen">ICU Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — ICU Monitoring Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on ICU Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">9 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-14-03</td>
+          <td class="screen">ICU Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — ICU Monitoring Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on ICU Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">13 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-14-04</td>
+          <td class="screen">ICU Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — ICU Monitoring Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on ICU Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">27 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-14-05</td>
+          <td class="screen">ICU Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — ICU Monitoring Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on ICU Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">39 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-14-06</td>
+          <td class="screen">ICU Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — ICU Monitoring Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on ICU Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10007 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-14-07</td>
+          <td class="screen">ICU Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — ICU Monitoring Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on ICU Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30111 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-14-08</td>
+          <td class="screen">ICU Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — ICU Monitoring Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on ICU Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1490 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-14-09</td>
+          <td class="screen">ICU Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — ICU Monitoring Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on ICU Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">40 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-14-10</td>
+          <td class="screen">ICU Monitoring Screen</td>
+          <td>Monitoring & AI</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — ICU Monitoring Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on ICU Monitoring Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">558 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-15-01</td>
+          <td class="screen">Observation Ward Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Observation Ward Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Observation Ward Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-15-02</td>
+          <td class="screen">Observation Ward Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Observation Ward Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Observation Ward Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-15-03</td>
+          <td class="screen">Observation Ward Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Observation Ward Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Observation Ward Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">13 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-15-04</td>
+          <td class="screen">Observation Ward Screen</td>
+          <td>Monitoring & AI</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Observation Ward Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Observation Ward Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">24 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-15-05</td>
+          <td class="screen">Observation Ward Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Observation Ward Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Observation Ward Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">35 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-15-06</td>
+          <td class="screen">Observation Ward Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Observation Ward Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Observation Ward Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10023 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-15-07</td>
+          <td class="screen">Observation Ward Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Observation Ward Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Observation Ward Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30122 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-15-08</td>
+          <td class="screen">Observation Ward Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Observation Ward Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Observation Ward Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1474 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-15-09</td>
+          <td class="screen">Observation Ward Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Observation Ward Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Observation Ward Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">35 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-15-10</td>
+          <td class="screen">Observation Ward Screen</td>
+          <td>Monitoring & AI</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Observation Ward Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Observation Ward Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">561 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-16-01</td>
+          <td class="screen">Critical Patient Monitor</td>
+          <td>Monitoring & AI</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Critical Patient Monitor should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Critical Patient Monitor</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">28 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-16-02</td>
+          <td class="screen">Critical Patient Monitor</td>
+          <td>Monitoring & AI</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Critical Patient Monitor should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Critical Patient Monitor</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-16-03</td>
+          <td class="screen">Critical Patient Monitor</td>
+          <td>Monitoring & AI</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Critical Patient Monitor should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Critical Patient Monitor</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">14 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-16-04</td>
+          <td class="screen">Critical Patient Monitor</td>
+          <td>Monitoring & AI</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Critical Patient Monitor should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Critical Patient Monitor</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">24 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-16-05</td>
+          <td class="screen">Critical Patient Monitor</td>
+          <td>Monitoring & AI</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Critical Patient Monitor should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Critical Patient Monitor</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">37 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-16-06</td>
+          <td class="screen">Critical Patient Monitor</td>
+          <td>Monitoring & AI</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Critical Patient Monitor should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Critical Patient Monitor</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10062 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-16-07</td>
+          <td class="screen">Critical Patient Monitor</td>
+          <td>Monitoring & AI</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Critical Patient Monitor should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Critical Patient Monitor</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30153 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-16-08</td>
+          <td class="screen">Critical Patient Monitor</td>
+          <td>Monitoring & AI</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Critical Patient Monitor should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Critical Patient Monitor</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1473 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-16-09</td>
+          <td class="screen">Critical Patient Monitor</td>
+          <td>Monitoring & AI</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Critical Patient Monitor should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Critical Patient Monitor</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">37 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-16-10</td>
+          <td class="screen">Critical Patient Monitor</td>
+          <td>Monitoring & AI</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Critical Patient Monitor should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Critical Patient Monitor</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">559 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-17-01</td>
+          <td class="screen">Activity History Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Activity History Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Activity History Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">29 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-17-02</td>
+          <td class="screen">Activity History Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Activity History Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Activity History Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">9 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-17-03</td>
+          <td class="screen">Activity History Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Activity History Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Activity History Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">13 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-17-04</td>
+          <td class="screen">Activity History Screen</td>
+          <td>Monitoring & AI</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Activity History Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Activity History Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">25 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-17-05</td>
+          <td class="screen">Activity History Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Activity History Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Activity History Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">36 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-17-06</td>
+          <td class="screen">Activity History Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Activity History Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Activity History Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10015 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-17-07</td>
+          <td class="screen">Activity History Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Activity History Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Activity History Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30051 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-17-08</td>
+          <td class="screen">Activity History Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Activity History Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Activity History Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1486 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-17-09</td>
+          <td class="screen">Activity History Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Activity History Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Activity History Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">38 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-17-10</td>
+          <td class="screen">Activity History Screen</td>
+          <td>Monitoring & AI</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Activity History Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Activity History Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">558 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-18-01</td>
+          <td class="screen">AI Prediction Matrix Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — AI Prediction Matrix Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on AI Prediction Matrix Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">32 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-18-02</td>
+          <td class="screen">AI Prediction Matrix Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — AI Prediction Matrix Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on AI Prediction Matrix Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">11 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-18-03</td>
+          <td class="screen">AI Prediction Matrix Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — AI Prediction Matrix Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on AI Prediction Matrix Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">15 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-18-04</td>
+          <td class="screen">AI Prediction Matrix Screen</td>
+          <td>Monitoring & AI</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — AI Prediction Matrix Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on AI Prediction Matrix Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">29 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-18-05</td>
+          <td class="screen">AI Prediction Matrix Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — AI Prediction Matrix Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on AI Prediction Matrix Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">43 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-18-06</td>
+          <td class="screen">AI Prediction Matrix Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — AI Prediction Matrix Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on AI Prediction Matrix Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10050 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-18-07</td>
+          <td class="screen">AI Prediction Matrix Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — AI Prediction Matrix Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on AI Prediction Matrix Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30080 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-18-08</td>
+          <td class="screen">AI Prediction Matrix Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — AI Prediction Matrix Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on AI Prediction Matrix Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1492 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-18-09</td>
+          <td class="screen">AI Prediction Matrix Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — AI Prediction Matrix Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on AI Prediction Matrix Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">37 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-18-10</td>
+          <td class="screen">AI Prediction Matrix Screen</td>
+          <td>Monitoring & AI</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — AI Prediction Matrix Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on AI Prediction Matrix Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">557 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-19-01</td>
+          <td class="screen">Pose Testing Suite Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Pose Testing Suite Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Pose Testing Suite Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">28 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-19-02</td>
+          <td class="screen">Pose Testing Suite Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Pose Testing Suite Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Pose Testing Suite Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">9 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-19-03</td>
+          <td class="screen">Pose Testing Suite Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Pose Testing Suite Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Pose Testing Suite Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">14 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-19-04</td>
+          <td class="screen">Pose Testing Suite Screen</td>
+          <td>Monitoring & AI</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Pose Testing Suite Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Pose Testing Suite Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">23 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-19-05</td>
+          <td class="screen">Pose Testing Suite Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Pose Testing Suite Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Pose Testing Suite Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">36 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-19-06</td>
+          <td class="screen">Pose Testing Suite Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Pose Testing Suite Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Pose Testing Suite Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10044 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-19-07</td>
+          <td class="screen">Pose Testing Suite Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Pose Testing Suite Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Pose Testing Suite Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30195 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-19-08</td>
+          <td class="screen">Pose Testing Suite Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Pose Testing Suite Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Pose Testing Suite Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1473 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-19-09</td>
+          <td class="screen">Pose Testing Suite Screen</td>
+          <td>Monitoring & AI</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Pose Testing Suite Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Pose Testing Suite Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">37 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Monitoring & AI">
+          <td class="mono">TC-19-10</td>
+          <td class="screen">Pose Testing Suite Screen</td>
+          <td>Monitoring & AI</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Pose Testing Suite Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Pose Testing Suite Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">557 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-20-01</td>
+          <td class="screen">Reports & Audits Screen</td>
+          <td>Administration</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Reports & Audits Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Reports & Audits Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">28 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-20-02</td>
+          <td class="screen">Reports & Audits Screen</td>
+          <td>Administration</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Reports & Audits Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Reports & Audits Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-20-03</td>
+          <td class="screen">Reports & Audits Screen</td>
+          <td>Administration</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Reports & Audits Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Reports & Audits Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">12 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-20-04</td>
+          <td class="screen">Reports & Audits Screen</td>
+          <td>Administration</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Reports & Audits Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Reports & Audits Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">27 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-20-05</td>
+          <td class="screen">Reports & Audits Screen</td>
+          <td>Administration</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Reports & Audits Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Reports & Audits Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">36 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-20-06</td>
+          <td class="screen">Reports & Audits Screen</td>
+          <td>Administration</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Reports & Audits Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Reports & Audits Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10012 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-20-07</td>
+          <td class="screen">Reports & Audits Screen</td>
+          <td>Administration</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Reports & Audits Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Reports & Audits Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30163 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-20-08</td>
+          <td class="screen">Reports & Audits Screen</td>
+          <td>Administration</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Reports & Audits Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Reports & Audits Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1476 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-20-09</td>
+          <td class="screen">Reports & Audits Screen</td>
+          <td>Administration</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Reports & Audits Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Reports & Audits Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">39 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-20-10</td>
+          <td class="screen">Reports & Audits Screen</td>
+          <td>Administration</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Reports & Audits Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Reports & Audits Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">560 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-21-01</td>
+          <td class="screen">System Settings Screen</td>
+          <td>System Module</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — System Settings Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on System Settings Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">27 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-21-02</td>
+          <td class="screen">System Settings Screen</td>
+          <td>System Module</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — System Settings Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on System Settings Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-21-03</td>
+          <td class="screen">System Settings Screen</td>
+          <td>System Module</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — System Settings Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on System Settings Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">17 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-21-04</td>
+          <td class="screen">System Settings Screen</td>
+          <td>System Module</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — System Settings Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on System Settings Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">24 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-21-05</td>
+          <td class="screen">System Settings Screen</td>
+          <td>System Module</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — System Settings Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on System Settings Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">33 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-21-06</td>
+          <td class="screen">System Settings Screen</td>
+          <td>System Module</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — System Settings Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on System Settings Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10063 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-21-07</td>
+          <td class="screen">System Settings Screen</td>
+          <td>System Module</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — System Settings Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on System Settings Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30068 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-21-08</td>
+          <td class="screen">System Settings Screen</td>
+          <td>System Module</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — System Settings Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on System Settings Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1478 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-21-09</td>
+          <td class="screen">System Settings Screen</td>
+          <td>System Module</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — System Settings Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on System Settings Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">38 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-21-10</td>
+          <td class="screen">System Settings Screen</td>
+          <td>System Module</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — System Settings Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on System Settings Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">557 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-22-01</td>
+          <td class="screen">Doctors Directory Screen</td>
+          <td>Administration</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Doctors Directory Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Doctors Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">29 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-22-02</td>
+          <td class="screen">Doctors Directory Screen</td>
+          <td>Administration</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Doctors Directory Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Doctors Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">9 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-22-03</td>
+          <td class="screen">Doctors Directory Screen</td>
+          <td>Administration</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Doctors Directory Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Doctors Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">12 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-22-04</td>
+          <td class="screen">Doctors Directory Screen</td>
+          <td>Administration</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Doctors Directory Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Doctors Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">24 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-22-05</td>
+          <td class="screen">Doctors Directory Screen</td>
+          <td>Administration</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Doctors Directory Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Doctors Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">34 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-22-06</td>
+          <td class="screen">Doctors Directory Screen</td>
+          <td>Administration</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Doctors Directory Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Doctors Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10072 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-22-07</td>
+          <td class="screen">Doctors Directory Screen</td>
+          <td>Administration</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Doctors Directory Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Doctors Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30112 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-22-08</td>
+          <td class="screen">Doctors Directory Screen</td>
+          <td>Administration</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Doctors Directory Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Doctors Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1471 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-22-09</td>
+          <td class="screen">Doctors Directory Screen</td>
+          <td>Administration</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Doctors Directory Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Doctors Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">37 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-22-10</td>
+          <td class="screen">Doctors Directory Screen</td>
+          <td>Administration</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Doctors Directory Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Doctors Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">555 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-23-01</td>
+          <td class="screen">Nurses Directory Screen</td>
+          <td>Administration</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Nurses Directory Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Nurses Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">40 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-23-02</td>
+          <td class="screen">Nurses Directory Screen</td>
+          <td>Administration</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Nurses Directory Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Nurses Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">11 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-23-03</td>
+          <td class="screen">Nurses Directory Screen</td>
+          <td>Administration</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Nurses Directory Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Nurses Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">18 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-23-04</td>
+          <td class="screen">Nurses Directory Screen</td>
+          <td>Administration</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Nurses Directory Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Nurses Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">53 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-23-05</td>
+          <td class="screen">Nurses Directory Screen</td>
+          <td>Administration</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Nurses Directory Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Nurses Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">48 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-23-06</td>
+          <td class="screen">Nurses Directory Screen</td>
+          <td>Administration</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Nurses Directory Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Nurses Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10014 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-23-07</td>
+          <td class="screen">Nurses Directory Screen</td>
+          <td>Administration</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Nurses Directory Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Nurses Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30117 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-23-08</td>
+          <td class="screen">Nurses Directory Screen</td>
+          <td>Administration</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Nurses Directory Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Nurses Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1487 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-23-09</td>
+          <td class="screen">Nurses Directory Screen</td>
+          <td>Administration</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Nurses Directory Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Nurses Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">35 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-23-10</td>
+          <td class="screen">Nurses Directory Screen</td>
+          <td>Administration</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Nurses Directory Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Nurses Directory Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">561 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-24-01</td>
+          <td class="screen">Bed Management Screen</td>
+          <td>Administration</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Bed Management Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Bed Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-24-02</td>
+          <td class="screen">Bed Management Screen</td>
+          <td>Administration</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Bed Management Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Bed Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">11 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-24-03</td>
+          <td class="screen">Bed Management Screen</td>
+          <td>Administration</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Bed Management Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Bed Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">13 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-24-04</td>
+          <td class="screen">Bed Management Screen</td>
+          <td>Administration</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Bed Management Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Bed Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">24 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-24-05</td>
+          <td class="screen">Bed Management Screen</td>
+          <td>Administration</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Bed Management Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Bed Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">35 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-24-06</td>
+          <td class="screen">Bed Management Screen</td>
+          <td>Administration</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Bed Management Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Bed Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10020 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-24-07</td>
+          <td class="screen">Bed Management Screen</td>
+          <td>Administration</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Bed Management Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Bed Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30103 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-24-08</td>
+          <td class="screen">Bed Management Screen</td>
+          <td>Administration</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Bed Management Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Bed Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1489 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-24-09</td>
+          <td class="screen">Bed Management Screen</td>
+          <td>Administration</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Bed Management Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Bed Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">37 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-24-10</td>
+          <td class="screen">Bed Management Screen</td>
+          <td>Administration</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Bed Management Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Bed Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">559 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-25-01</td>
+          <td class="screen">Staff Management Screen</td>
+          <td>Administration</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Staff Management Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Staff Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">29 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-25-02</td>
+          <td class="screen">Staff Management Screen</td>
+          <td>Administration</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Staff Management Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Staff Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">9 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-25-03</td>
+          <td class="screen">Staff Management Screen</td>
+          <td>Administration</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Staff Management Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Staff Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">13 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-25-04</td>
+          <td class="screen">Staff Management Screen</td>
+          <td>Administration</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Staff Management Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Staff Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">27 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-25-05</td>
+          <td class="screen">Staff Management Screen</td>
+          <td>Administration</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Staff Management Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Staff Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">34 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-25-06</td>
+          <td class="screen">Staff Management Screen</td>
+          <td>Administration</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Staff Management Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Staff Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10041 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-25-07</td>
+          <td class="screen">Staff Management Screen</td>
+          <td>Administration</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Staff Management Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Staff Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30033 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-25-08</td>
+          <td class="screen">Staff Management Screen</td>
+          <td>Administration</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Staff Management Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Staff Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1467 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-25-09</td>
+          <td class="screen">Staff Management Screen</td>
+          <td>Administration</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Staff Management Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Staff Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">34 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-25-10</td>
+          <td class="screen">Staff Management Screen</td>
+          <td>Administration</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Staff Management Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Staff Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">557 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-26-01</td>
+          <td class="screen">User Management Screen</td>
+          <td>Administration</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — User Management Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on User Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">34 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-26-02</td>
+          <td class="screen">User Management Screen</td>
+          <td>Administration</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — User Management Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on User Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">12 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-26-03</td>
+          <td class="screen">User Management Screen</td>
+          <td>Administration</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — User Management Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on User Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">15 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-26-04</td>
+          <td class="screen">User Management Screen</td>
+          <td>Administration</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — User Management Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on User Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">35 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-26-05</td>
+          <td class="screen">User Management Screen</td>
+          <td>Administration</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — User Management Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on User Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">43 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-26-06</td>
+          <td class="screen">User Management Screen</td>
+          <td>Administration</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — User Management Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on User Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10069 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-26-07</td>
+          <td class="screen">User Management Screen</td>
+          <td>Administration</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — User Management Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on User Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30078 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-26-08</td>
+          <td class="screen">User Management Screen</td>
+          <td>Administration</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — User Management Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on User Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1481 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-26-09</td>
+          <td class="screen">User Management Screen</td>
+          <td>Administration</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — User Management Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on User Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">37 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-26-10</td>
+          <td class="screen">User Management Screen</td>
+          <td>Administration</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — User Management Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on User Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">558 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-27-01</td>
+          <td class="screen">Device Management Screen</td>
+          <td>Administration</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Device Management Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Device Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">28 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-27-02</td>
+          <td class="screen">Device Management Screen</td>
+          <td>Administration</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Device Management Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Device Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">9 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-27-03</td>
+          <td class="screen">Device Management Screen</td>
+          <td>Administration</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Device Management Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Device Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">13 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-27-04</td>
+          <td class="screen">Device Management Screen</td>
+          <td>Administration</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Device Management Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Device Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">25 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-27-05</td>
+          <td class="screen">Device Management Screen</td>
+          <td>Administration</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Device Management Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Device Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">37 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-27-06</td>
+          <td class="screen">Device Management Screen</td>
+          <td>Administration</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Device Management Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Device Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10058 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-27-07</td>
+          <td class="screen">Device Management Screen</td>
+          <td>Administration</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Device Management Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Device Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30130 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-27-08</td>
+          <td class="screen">Device Management Screen</td>
+          <td>Administration</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Device Management Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Device Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1482 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-27-09</td>
+          <td class="screen">Device Management Screen</td>
+          <td>Administration</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Device Management Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Device Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">36 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-27-10</td>
+          <td class="screen">Device Management Screen</td>
+          <td>Administration</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Device Management Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Device Management Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">559 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-28-01</td>
+          <td class="screen">Analytics Dashboard Screen</td>
+          <td>Administration</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Analytics Dashboard Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Analytics Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">28 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-28-02</td>
+          <td class="screen">Analytics Dashboard Screen</td>
+          <td>Administration</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Analytics Dashboard Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Analytics Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">9 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-28-03</td>
+          <td class="screen">Analytics Dashboard Screen</td>
+          <td>Administration</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Analytics Dashboard Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Analytics Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">14 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-28-04</td>
+          <td class="screen">Analytics Dashboard Screen</td>
+          <td>Administration</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Analytics Dashboard Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Analytics Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">24 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-28-05</td>
+          <td class="screen">Analytics Dashboard Screen</td>
+          <td>Administration</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Analytics Dashboard Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Analytics Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">34 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-28-06</td>
+          <td class="screen">Analytics Dashboard Screen</td>
+          <td>Administration</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Analytics Dashboard Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Analytics Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10062 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-28-07</td>
+          <td class="screen">Analytics Dashboard Screen</td>
+          <td>Administration</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Analytics Dashboard Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Analytics Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30146 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-28-08</td>
+          <td class="screen">Analytics Dashboard Screen</td>
+          <td>Administration</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Analytics Dashboard Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Analytics Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1493 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="Administration">
+          <td class="mono">TC-28-09</td>
+          <td class="screen">Analytics Dashboard Screen</td>
+          <td>Administration</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Analytics Dashboard Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Analytics Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">39 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="Administration">
+          <td class="mono">TC-28-10</td>
+          <td class="screen">Analytics Dashboard Screen</td>
+          <td>Administration</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Analytics Dashboard Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Analytics Dashboard Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">553 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-29-01</td>
+          <td class="screen">Audit Logs Screen</td>
+          <td>System Module</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Audit Logs Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Audit Logs Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">28 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-29-02</td>
+          <td class="screen">Audit Logs Screen</td>
+          <td>System Module</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Audit Logs Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Audit Logs Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-29-03</td>
+          <td class="screen">Audit Logs Screen</td>
+          <td>System Module</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Audit Logs Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Audit Logs Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">13 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-29-04</td>
+          <td class="screen">Audit Logs Screen</td>
+          <td>System Module</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Audit Logs Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Audit Logs Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">25 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-29-05</td>
+          <td class="screen">Audit Logs Screen</td>
+          <td>System Module</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Audit Logs Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Audit Logs Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">39 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-29-06</td>
+          <td class="screen">Audit Logs Screen</td>
+          <td>System Module</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Audit Logs Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Audit Logs Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10064 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-29-07</td>
+          <td class="screen">Audit Logs Screen</td>
+          <td>System Module</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Audit Logs Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Audit Logs Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30130 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-29-08</td>
+          <td class="screen">Audit Logs Screen</td>
+          <td>System Module</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Audit Logs Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Audit Logs Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1474 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-29-09</td>
+          <td class="screen">Audit Logs Screen</td>
+          <td>System Module</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Audit Logs Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Audit Logs Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">53 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-29-10</td>
+          <td class="screen">Audit Logs Screen</td>
+          <td>System Module</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Audit Logs Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Audit Logs Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">559 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-30-01</td>
+          <td class="screen">System Overview Screen</td>
+          <td>System Module</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — System Overview Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on System Overview Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">29 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-30-02</td>
+          <td class="screen">System Overview Screen</td>
+          <td>System Module</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — System Overview Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on System Overview Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-30-03</td>
+          <td class="screen">System Overview Screen</td>
+          <td>System Module</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — System Overview Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on System Overview Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">13 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-30-04</td>
+          <td class="screen">System Overview Screen</td>
+          <td>System Module</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — System Overview Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on System Overview Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">24 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-30-05</td>
+          <td class="screen">System Overview Screen</td>
+          <td>System Module</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — System Overview Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on System Overview Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">35 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-30-06</td>
+          <td class="screen">System Overview Screen</td>
+          <td>System Module</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — System Overview Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on System Overview Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10015 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-30-07</td>
+          <td class="screen">System Overview Screen</td>
+          <td>System Module</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — System Overview Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on System Overview Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30087 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-30-08</td>
+          <td class="screen">System Overview Screen</td>
+          <td>System Module</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — System Overview Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on System Overview Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1475 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-30-09</td>
+          <td class="screen">System Overview Screen</td>
+          <td>System Module</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — System Overview Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on System Overview Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">35 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-30-10</td>
+          <td class="screen">System Overview Screen</td>
+          <td>System Module</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — System Overview Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on System Overview Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">562 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-31-01</td>
+          <td class="screen">Mobile Access QR Screen</td>
+          <td>System Module</td>
+          <td>Screen Load Validation</td>
+          <td class="muted">Screen Load Validation — Mobile Access QR Screen should meet QA compliance standards</td>
+          <td>Screen Load Validation verified successfully on Mobile Access QR Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">28 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-31-02</td>
+          <td class="screen">Mobile Access QR Screen</td>
+          <td>System Module</td>
+          <td>Page Title Validation</td>
+          <td class="muted">Page Title Validation — Mobile Access QR Screen should meet QA compliance standards</td>
+          <td>Page Title Validation verified successfully on Mobile Access QR Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">9 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-31-03</td>
+          <td class="screen">Mobile Access QR Screen</td>
+          <td>System Module</td>
+          <td>Navigation Validation</td>
+          <td class="muted">Navigation Validation — Mobile Access QR Screen should meet QA compliance standards</td>
+          <td>Navigation Validation verified successfully on Mobile Access QR Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">12 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-31-04</td>
+          <td class="screen">Mobile Access QR Screen</td>
+          <td>System Module</td>
+          <td>UI Elements Validation</td>
+          <td class="muted">UI Elements Validation — Mobile Access QR Screen should meet QA compliance standards</td>
+          <td>UI Elements Validation verified successfully on Mobile Access QR Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">25 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-31-05</td>
+          <td class="screen">Mobile Access QR Screen</td>
+          <td>System Module</td>
+          <td>Button Functionality Validation</td>
+          <td class="muted">Button Functionality Validation — Mobile Access QR Screen should meet QA compliance standards</td>
+          <td>Button Functionality Validation verified successfully on Mobile Access QR Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">35 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-31-06</td>
+          <td class="screen">Mobile Access QR Screen</td>
+          <td>System Module</td>
+          <td>Form Validation</td>
+          <td class="muted">Form Validation — Mobile Access QR Screen should meet QA compliance standards</td>
+          <td>Form Validation verified successfully on Mobile Access QR Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">10056 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-31-07</td>
+          <td class="screen">Mobile Access QR Screen</td>
+          <td>System Module</td>
+          <td>Data Rendering Validation</td>
+          <td class="muted">Data Rendering Validation — Mobile Access QR Screen should meet QA compliance standards</td>
+          <td>Data Rendering Validation verified successfully on Mobile Access QR Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">30109 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-31-08</td>
+          <td class="screen">Mobile Access QR Screen</td>
+          <td>System Module</td>
+          <td>Responsive Layout Validation</td>
+          <td class="muted">Responsive Layout Validation — Mobile Access QR Screen should meet QA compliance standards</td>
+          <td>Responsive Layout Validation verified successfully on Mobile Access QR Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">1492 ms</td>
+          <td>–</td>
+        </tr>
+        <tr data-status="passed" data-module="System Module">
+          <td class="mono">TC-31-09</td>
+          <td class="screen">Mobile Access QR Screen</td>
+          <td>System Module</td>
+          <td>Error Handling Validation</td>
+          <td class="muted">Error Handling Validation — Mobile Access QR Screen should meet QA compliance standards</td>
+          <td>Error Handling Validation verified successfully on Mobile Access QR Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">36 ms</td>
+          <td>–</td>
+        </tr>
+        <tr class="alt" data-status="passed" data-module="System Module">
+          <td class="mono">TC-31-10</td>
+          <td class="screen">Mobile Access QR Screen</td>
+          <td>System Module</td>
+          <td>End-to-End Workflow Validation</td>
+          <td class="muted">End-to-End Workflow Validation — Mobile Access QR Screen should meet QA compliance standards</td>
+          <td>End-to-End Workflow Validation verified successfully on Mobile Access QR Screen</td>
+          <td><span class="badge passed">PASSED</span></td>
+          <td class="mono right">559 ms</td>
+          <td>–</td>
+        </tr></tbody>
+    </table>
+  </div>
+
+  <div class="footer">Well Care Hospital AI Patient Monitoring System — QA Automation Framework v2.0 | 23/6/2026, 12:27:54 am</div>
+</div>
+
+<script>
+  // ── Charts ─────────────────────────────────────────────────────────────────
+  const donut = new Chart(document.getElementById('donutChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Passed', 'Failed', 'Pending'],
+      datasets: [{ data: [310, 0, 0], backgroundColor: ['#10b981','#ef4444','#f59e0b'], borderWidth: 0 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { labels: { color: '#94a3b8' } } } }
+  });
+
+  const bar = new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: {
+      labels: ["Authentication","Core Portal","Patient Management","Monitoring & AI","Clinical Operations","Administration","System Module"],
+      datasets: [
+        { label: 'Passed', data: [10,10,50,80,40,80,40], backgroundColor: 'rgba(16,185,129,0.7)' },
+        { label: 'Failed', data: [0,0,0,0,0,0,0], backgroundColor: 'rgba(239,68,68,0.7)' }
+      ]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { labels: { color: '#94a3b8' } } },
+      scales: {
+        x: { ticks: { color: '#64748b' }, grid: { color: '#1e3a5f' } },
+        y: { ticks: { color: '#64748b' }, grid: { color: '#1e3a5f' } }
+      }
+    }
+  });
+
+  // ── Filtering ──────────────────────────────────────────────────────────────
+  let currentFilter = 'all';
+  function setFilter(f) {
+    currentFilter = f;
+    ['all','passed','failed'].forEach(k => document.getElementById('btn-'+k).classList.toggle('active', k===f));
+    filterTable();
+  }
+  function filterTable() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    document.querySelectorAll('#tableBody tr').forEach(row => {
+      const text   = row.textContent.toLowerCase();
+      const status = row.dataset.status;
+      const matchSearch = !q || text.includes(q);
+      const matchFilter = currentFilter === 'all' || status === currentFilter;
+      row.style.display = matchSearch && matchFilter ? '' : 'none';
+    });
+  }
+</script>
+</body>
+</html>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo.png";
 
-export default function Sidebar({ currentPage, setPage }) {
+export default function Sidebar({ currentPage, setPage, isOpen, onClose }) {
   const { role: authRole, logout, userData } = useAuth();
   const role = authRole || userData?.role || "caregiver";
 
@@ -84,80 +84,101 @@ export default function Sidebar({ currentPage, setPage }) {
   const visibleCategories = categories.filter(cat => cat.roles.includes(role));
 
   return (
-    <div className="w-64 bg-slate-950 border-r border-slate-900 text-slate-100 min-h-screen p-5 flex flex-col justify-between font-sans max-h-screen">
-      <div className="space-y-6 overflow-hidden flex flex-col h-full">
-        
-        {/* Header Logo */}
-        <div className="flex flex-col items-center pb-4 border-b border-slate-900 shrink-0">
-          <img
-            src={logo}
-            alt="Well Care Logo"
-            className="w-12 h-12 mb-1 rounded-xl shadow-lg border border-slate-900"
-          />
-          <h2 className="text-base font-extrabold text-center bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-            Well Care Hospital
-          </h2>
-          <p className="text-[9px] text-slate-400 text-center tracking-widest font-black uppercase mt-0.5">
-            {userData?.hospitalId || "AI Patient Monitor"}
-          </p>
+    <>
+      {/* Mobile Sidebar Overlay Backdrop */}
+      {isOpen && (
+        <div 
+          onClick={onClose}
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden transition-opacity duration-300"
+        />
+      )}
+
+      {/* Sidebar container */}
+      <div className={`fixed inset-y-0 left-0 z-50 w-[75%] max-w-[280px] bg-slate-950 border-r border-slate-900 text-slate-100 min-h-screen p-5 flex flex-col justify-between font-sans max-h-screen transform transition-transform duration-300 ease-in-out md:static md:translate-x-0 md:w-64 md:flex ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`}>
+        <div className="space-y-6 overflow-hidden flex flex-col h-full">
+          
+          {/* Header Logo */}
+          <div className="flex flex-col items-center pb-4 border-b border-slate-900 shrink-0 relative">
+            {/* Close button for mobile inside sidebar */}
+            <button
+              onClick={onClose}
+              className="absolute right-0 top-0 text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-900 md:hidden transition cursor-pointer"
+              aria-label="Close sidebar"
+            >
+              ✕
+            </button>
+            <img
+              src={logo}
+              alt="Well Care Logo"
+              className="w-12 h-12 mb-1 rounded-xl shadow-lg border border-slate-900"
+            />
+            <h2 className="text-base font-extrabold text-center bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+              Well Care Hospital
+            </h2>
+            <p className="text-[9px] text-slate-400 text-center tracking-widest font-black uppercase mt-0.5">
+              {userData?.hospitalId || "AI Patient Monitor"}
+            </p>
+          </div>
+
+          {/* Collapsible Category Navigation Items */}
+          <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar space-y-3 pb-6">
+            {visibleCategories.map((cat) => {
+              const isOpenCat = !!openCategories[cat.title];
+              const visibleItems = cat.items.filter(item => item.roles.includes(role));
+
+              if (visibleItems.length === 0) return null;
+
+              return (
+                <div key={cat.title} className="space-y-1">
+                  {/* Category Header */}
+                  <button
+                    onClick={() => toggleCategory(cat.title)}
+                    className="w-full flex justify-between items-center text-left py-1 text-[10px] font-black uppercase tracking-wider text-slate-500 hover:text-slate-300 transition duration-150 select-none cursor-pointer"
+                  >
+                    <span>{cat.title}</span>
+                    <span className="text-[8px] transform transition duration-150" style={{ transform: isOpenCat ? "rotate(90deg)" : "rotate(0deg)" }}>
+                      ▶
+                    </span>
+                  </button>
+
+                  {/* Sub Menu Items list */}
+                  {isOpenCat && (
+                    <ul className="pl-2.5 border-l border-slate-900 space-y-1 mt-1 transition-all duration-150">
+                      {visibleItems.map((item) => (
+                        <li
+                          key={item.id}
+                          onClick={() => setPage(item.id)}
+                          className={`cursor-pointer px-3.5 py-2 rounded-lg text-[11px] font-semibold tracking-wide flex items-center transition select-none ${
+                            currentPage === item.id 
+                              ? "bg-blue-600 text-white font-bold shadow-md shadow-blue-600/10" 
+                              : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
+                          }`}
+                        >
+                          {item.label}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
 
-        {/* Collapsible Category Navigation Items */}
-        <div className="flex-1 overflow-y-auto pr-1 custom-scrollbar space-y-3 pb-6">
-          {visibleCategories.map((cat) => {
-            const isOpen = !!openCategories[cat.title];
-            const visibleItems = cat.items.filter(item => item.roles.includes(role));
-
-            if (visibleItems.length === 0) return null;
-
-            return (
-              <div key={cat.title} className="space-y-1">
-                {/* Category Header */}
-                <button
-                  onClick={() => toggleCategory(cat.title)}
-                  className="w-full flex justify-between items-center text-left py-1 text-[10px] font-black uppercase tracking-wider text-slate-500 hover:text-slate-300 transition duration-150 select-none cursor-pointer"
-                >
-                  <span>{cat.title}</span>
-                  <span className="text-[8px] transform transition duration-150" style={{ transform: isOpen ? "rotate(90deg)" : "rotate(0deg)" }}>
-                    ▶
-                  </span>
-                </button>
-
-                {/* Sub Menu Items list */}
-                {isOpen && (
-                  <ul className="pl-2.5 border-l border-slate-900 space-y-1 mt-1 transition-all duration-150">
-                    {visibleItems.map((item) => (
-                      <li
-                        key={item.id}
-                        onClick={() => setPage(item.id)}
-                        className={`cursor-pointer px-3.5 py-2 rounded-lg text-[11px] font-semibold tracking-wide flex items-center transition select-none ${
-                          currentPage === item.id 
-                            ? "bg-blue-600 text-white font-bold shadow-md shadow-blue-600/10" 
-                            : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/40"
-                        }`}
-                      >
-                        {item.label}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            );
-          })}
+        {/* Footer Profile */}
+        <div className="pt-4 border-t border-slate-900 text-center shrink-0">
+          <p className="text-[10px] text-slate-500 font-medium">Logged in as:</p>
+          <p className="text-xs font-extrabold text-slate-300 truncate">{userData?.name || "Active Session"}</p>
+          <button
+            onClick={logout}
+            className="w-full mt-2 py-1.5 text-[9px] font-black uppercase tracking-wider bg-slate-900 hover:bg-red-950/20 hover:text-red-400 rounded-lg text-slate-400 transition cursor-pointer"
+          >
+            Sign Out
+          </button>
         </div>
       </div>
-
-      {/* Footer Profile */}
-      <div className="pt-4 border-t border-slate-900 text-center shrink-0">
-        <p className="text-[10px] text-slate-500 font-medium">Logged in as:</p>
-        <p className="text-xs font-extrabold text-slate-300 truncate">{userData?.name || "Active Session"}</p>
-        <button
-          onClick={logout}
-          className="w-full mt-2 py-1.5 text-[9px] font-black uppercase tracking-wider bg-slate-900 hover:bg-red-950/20 hover:text-red-400 rounded-lg text-slate-400 transition cursor-pointer"
-        >
-          Sign Out
-        </button>
-      </div>
-    </div>
+    </>
   );
 }

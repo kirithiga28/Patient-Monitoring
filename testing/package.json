@@ -1,0 +1,27 @@
+{
+  "name": "wellcare-hospital-testing-framework",
+  "version": "2.0.0",
+  "description": "Enterprise-grade Selenium WebDriver + Appium Automation Framework — Well Care Hospital AI Patient Monitoring System | 320 Selenium + 320 Appium = 640 Test Cases",
+  "main": "reporter.js",
+  "type": "module",
+  "scripts": {
+    "test:selenium": "mocha selenium/tests/webTests.js --timeout 120000 --exit --reporter mochawesome --reporter-options reportDir=selenium/reports,reportFilename=mochawesome-selenium,quiet=false",
+    "test:login": "mocha selenium/tests/LoginTest.js --timeout 60000 --exit",
+    "test:appium": "mocha appium/tests/mobileTests.js --timeout 180000 --exit --reporter mochawesome --reporter-options reportDir=appium/reports,reportFilename=mochawesome-appium,quiet=false",
+    "test:all": "mocha selenium/tests/webTests.js appium/tests/mobileTests.js --timeout 180000 --exit",
+    "test:parallel": "node selenium/utils/ParallelRunner.js",
+    "report": "node reporter.js",
+    "dashboard": "node common/Dashboard.js"
+  },
+  "dependencies": {
+    "appium": "^2.11.3",
+    "chai": "^5.1.1",
+    "exceljs": "^4.4.0",
+    "mocha": "^10.4.0",
+    "mochawesome": "^7.1.3",
+    "mochawesome-merge": "^4.3.0",
+    "mochawesome-report-generator": "^6.2.0",
+    "selenium-webdriver": "^4.22.0",
+    "webdriverio": "^8.39.1"
+  }
+}

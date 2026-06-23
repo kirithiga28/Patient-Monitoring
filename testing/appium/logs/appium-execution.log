@@ -1,0 +1,673 @@
+{"ts":"2026-06-22T18:58:31.087Z","testId":"INIT","testName":"Appium Driver","status":"WARN","message":"Connection failed: Failed to create session.\nUnable to connect to \"http://localhost:4723/\", make sure browser driver is running on that address.\nIt seems like the service failed to start or is rejecting any connections. — Simulation Mode active"}
+{"ts":"2026-06-22T18:58:31.090Z","testId":"M-01","testName":"Login Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.094Z","testId":"M-01-01","testName":"Launch App","status":"SIMULATED","message":"Login Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.095Z","testId":"M-01-01","testName":"Launch App","status":"PASSED","message":"Login Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.097Z","testId":"M-01-02","testName":"Login Validation","status":"SIMULATED","message":"Login Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.098Z","testId":"M-01-02","testName":"Login Validation","status":"PASSED","message":"Login Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.099Z","testId":"M-01-03","testName":"Navigation Validation","status":"SIMULATED","message":"Login Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.100Z","testId":"M-01-03","testName":"Navigation Validation","status":"PASSED","message":"Login Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.101Z","testId":"M-01-04","testName":"UI Validation","status":"SIMULATED","message":"Login Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.102Z","testId":"M-01-04","testName":"UI Validation","status":"PASSED","message":"Login Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.103Z","testId":"M-01-05","testName":"Form Validation","status":"SIMULATED","message":"Login Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.104Z","testId":"M-01-05","testName":"Form Validation","status":"PASSED","message":"Login Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.105Z","testId":"M-01-06","testName":"Data Validation","status":"SIMULATED","message":"Login Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.106Z","testId":"M-01-06","testName":"Data Validation","status":"PASSED","message":"Login Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.107Z","testId":"M-01-07","testName":"API Integration Validation","status":"SIMULATED","message":"Login Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.108Z","testId":"M-01-07","testName":"API Integration Validation","status":"PASSED","message":"Login Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.109Z","testId":"M-01-08","testName":"Responsive Validation","status":"SIMULATED","message":"Login Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.110Z","testId":"M-01-08","testName":"Responsive Validation","status":"PASSED","message":"Login Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.111Z","testId":"M-01-09","testName":"Error Validation","status":"SIMULATED","message":"Login Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.112Z","testId":"M-01-09","testName":"Error Validation","status":"PASSED","message":"Login Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.113Z","testId":"M-01-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Login Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.116Z","testId":"M-01-10","testName":"End-to-End Workflow","status":"PASSED","message":"Login Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.117Z","testId":"M-02","testName":"Dashboard Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.118Z","testId":"M-02-01","testName":"Launch App","status":"SIMULATED","message":"Dashboard Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.119Z","testId":"M-02-01","testName":"Launch App","status":"PASSED","message":"Dashboard Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.120Z","testId":"M-02-02","testName":"Login Validation","status":"SIMULATED","message":"Dashboard Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.121Z","testId":"M-02-02","testName":"Login Validation","status":"PASSED","message":"Dashboard Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.123Z","testId":"M-02-03","testName":"Navigation Validation","status":"SIMULATED","message":"Dashboard Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.124Z","testId":"M-02-03","testName":"Navigation Validation","status":"PASSED","message":"Dashboard Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.125Z","testId":"M-02-04","testName":"UI Validation","status":"SIMULATED","message":"Dashboard Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.126Z","testId":"M-02-04","testName":"UI Validation","status":"PASSED","message":"Dashboard Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.127Z","testId":"M-02-05","testName":"Form Validation","status":"SIMULATED","message":"Dashboard Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.128Z","testId":"M-02-05","testName":"Form Validation","status":"PASSED","message":"Dashboard Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.130Z","testId":"M-02-06","testName":"Data Validation","status":"SIMULATED","message":"Dashboard Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.130Z","testId":"M-02-06","testName":"Data Validation","status":"PASSED","message":"Dashboard Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.131Z","testId":"M-02-07","testName":"API Integration Validation","status":"SIMULATED","message":"Dashboard Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.132Z","testId":"M-02-07","testName":"API Integration Validation","status":"PASSED","message":"Dashboard Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.132Z","testId":"M-02-08","testName":"Responsive Validation","status":"SIMULATED","message":"Dashboard Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.133Z","testId":"M-02-08","testName":"Responsive Validation","status":"PASSED","message":"Dashboard Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.134Z","testId":"M-02-09","testName":"Error Validation","status":"SIMULATED","message":"Dashboard Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.135Z","testId":"M-02-09","testName":"Error Validation","status":"PASSED","message":"Dashboard Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.136Z","testId":"M-02-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Dashboard Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.139Z","testId":"M-02-10","testName":"End-to-End Workflow","status":"PASSED","message":"Dashboard Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.140Z","testId":"M-03","testName":"Patients Directory Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.141Z","testId":"M-03-01","testName":"Launch App","status":"SIMULATED","message":"Patients Directory Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.142Z","testId":"M-03-01","testName":"Launch App","status":"PASSED","message":"Patients Directory Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.143Z","testId":"M-03-02","testName":"Login Validation","status":"SIMULATED","message":"Patients Directory Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.144Z","testId":"M-03-02","testName":"Login Validation","status":"PASSED","message":"Patients Directory Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.145Z","testId":"M-03-03","testName":"Navigation Validation","status":"SIMULATED","message":"Patients Directory Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.145Z","testId":"M-03-03","testName":"Navigation Validation","status":"PASSED","message":"Patients Directory Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.146Z","testId":"M-03-04","testName":"UI Validation","status":"SIMULATED","message":"Patients Directory Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.147Z","testId":"M-03-04","testName":"UI Validation","status":"PASSED","message":"Patients Directory Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.148Z","testId":"M-03-05","testName":"Form Validation","status":"SIMULATED","message":"Patients Directory Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.149Z","testId":"M-03-05","testName":"Form Validation","status":"PASSED","message":"Patients Directory Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.150Z","testId":"M-03-06","testName":"Data Validation","status":"SIMULATED","message":"Patients Directory Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.150Z","testId":"M-03-06","testName":"Data Validation","status":"PASSED","message":"Patients Directory Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.151Z","testId":"M-03-07","testName":"API Integration Validation","status":"SIMULATED","message":"Patients Directory Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.152Z","testId":"M-03-07","testName":"API Integration Validation","status":"PASSED","message":"Patients Directory Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.153Z","testId":"M-03-08","testName":"Responsive Validation","status":"SIMULATED","message":"Patients Directory Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.154Z","testId":"M-03-08","testName":"Responsive Validation","status":"PASSED","message":"Patients Directory Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.155Z","testId":"M-03-09","testName":"Error Validation","status":"SIMULATED","message":"Patients Directory Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.156Z","testId":"M-03-09","testName":"Error Validation","status":"PASSED","message":"Patients Directory Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.157Z","testId":"M-03-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Patients Directory Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.159Z","testId":"M-03-10","testName":"End-to-End Workflow","status":"PASSED","message":"Patients Directory Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.161Z","testId":"M-04","testName":"Patient Profile Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.162Z","testId":"M-04-01","testName":"Launch App","status":"SIMULATED","message":"Patient Profile Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.163Z","testId":"M-04-01","testName":"Launch App","status":"PASSED","message":"Patient Profile Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.164Z","testId":"M-04-02","testName":"Login Validation","status":"SIMULATED","message":"Patient Profile Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.164Z","testId":"M-04-02","testName":"Login Validation","status":"PASSED","message":"Patient Profile Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.166Z","testId":"M-04-03","testName":"Navigation Validation","status":"SIMULATED","message":"Patient Profile Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.166Z","testId":"M-04-03","testName":"Navigation Validation","status":"PASSED","message":"Patient Profile Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.167Z","testId":"M-04-04","testName":"UI Validation","status":"SIMULATED","message":"Patient Profile Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.168Z","testId":"M-04-04","testName":"UI Validation","status":"PASSED","message":"Patient Profile Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.169Z","testId":"M-04-05","testName":"Form Validation","status":"SIMULATED","message":"Patient Profile Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.170Z","testId":"M-04-05","testName":"Form Validation","status":"PASSED","message":"Patient Profile Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.170Z","testId":"M-04-06","testName":"Data Validation","status":"SIMULATED","message":"Patient Profile Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.171Z","testId":"M-04-06","testName":"Data Validation","status":"PASSED","message":"Patient Profile Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.172Z","testId":"M-04-07","testName":"API Integration Validation","status":"SIMULATED","message":"Patient Profile Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.173Z","testId":"M-04-07","testName":"API Integration Validation","status":"PASSED","message":"Patient Profile Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.174Z","testId":"M-04-08","testName":"Responsive Validation","status":"SIMULATED","message":"Patient Profile Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.174Z","testId":"M-04-08","testName":"Responsive Validation","status":"PASSED","message":"Patient Profile Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.176Z","testId":"M-04-09","testName":"Error Validation","status":"SIMULATED","message":"Patient Profile Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.177Z","testId":"M-04-09","testName":"Error Validation","status":"PASSED","message":"Patient Profile Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.178Z","testId":"M-04-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Patient Profile Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.179Z","testId":"M-04-10","testName":"End-to-End Workflow","status":"PASSED","message":"Patient Profile Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.181Z","testId":"M-05","testName":"Register Patient Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.182Z","testId":"M-05-01","testName":"Launch App","status":"SIMULATED","message":"Register Patient Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.182Z","testId":"M-05-01","testName":"Launch App","status":"PASSED","message":"Register Patient Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.183Z","testId":"M-05-02","testName":"Login Validation","status":"SIMULATED","message":"Register Patient Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.184Z","testId":"M-05-02","testName":"Login Validation","status":"PASSED","message":"Register Patient Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.185Z","testId":"M-05-03","testName":"Navigation Validation","status":"SIMULATED","message":"Register Patient Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.186Z","testId":"M-05-03","testName":"Navigation Validation","status":"PASSED","message":"Register Patient Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.187Z","testId":"M-05-04","testName":"UI Validation","status":"SIMULATED","message":"Register Patient Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.187Z","testId":"M-05-04","testName":"UI Validation","status":"PASSED","message":"Register Patient Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.188Z","testId":"M-05-05","testName":"Form Validation","status":"SIMULATED","message":"Register Patient Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.189Z","testId":"M-05-05","testName":"Form Validation","status":"PASSED","message":"Register Patient Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.190Z","testId":"M-05-06","testName":"Data Validation","status":"SIMULATED","message":"Register Patient Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.190Z","testId":"M-05-06","testName":"Data Validation","status":"PASSED","message":"Register Patient Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.192Z","testId":"M-05-07","testName":"API Integration Validation","status":"SIMULATED","message":"Register Patient Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.193Z","testId":"M-05-07","testName":"API Integration Validation","status":"PASSED","message":"Register Patient Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.194Z","testId":"M-05-08","testName":"Responsive Validation","status":"SIMULATED","message":"Register Patient Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.195Z","testId":"M-05-08","testName":"Responsive Validation","status":"PASSED","message":"Register Patient Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.196Z","testId":"M-05-09","testName":"Error Validation","status":"SIMULATED","message":"Register Patient Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.196Z","testId":"M-05-09","testName":"Error Validation","status":"PASSED","message":"Register Patient Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.197Z","testId":"M-05-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Register Patient Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.199Z","testId":"M-05-10","testName":"End-to-End Workflow","status":"PASSED","message":"Register Patient Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.200Z","testId":"M-06","testName":"Medical Records Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.201Z","testId":"M-06-01","testName":"Launch App","status":"SIMULATED","message":"Medical Records Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.202Z","testId":"M-06-01","testName":"Launch App","status":"PASSED","message":"Medical Records Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.203Z","testId":"M-06-02","testName":"Login Validation","status":"SIMULATED","message":"Medical Records Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.204Z","testId":"M-06-02","testName":"Login Validation","status":"PASSED","message":"Medical Records Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.205Z","testId":"M-06-03","testName":"Navigation Validation","status":"SIMULATED","message":"Medical Records Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.206Z","testId":"M-06-03","testName":"Navigation Validation","status":"PASSED","message":"Medical Records Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.206Z","testId":"M-06-04","testName":"UI Validation","status":"SIMULATED","message":"Medical Records Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.207Z","testId":"M-06-04","testName":"UI Validation","status":"PASSED","message":"Medical Records Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.208Z","testId":"M-06-05","testName":"Form Validation","status":"SIMULATED","message":"Medical Records Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.209Z","testId":"M-06-05","testName":"Form Validation","status":"PASSED","message":"Medical Records Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.210Z","testId":"M-06-06","testName":"Data Validation","status":"SIMULATED","message":"Medical Records Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.210Z","testId":"M-06-06","testName":"Data Validation","status":"PASSED","message":"Medical Records Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.211Z","testId":"M-06-07","testName":"API Integration Validation","status":"SIMULATED","message":"Medical Records Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.212Z","testId":"M-06-07","testName":"API Integration Validation","status":"PASSED","message":"Medical Records Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.213Z","testId":"M-06-08","testName":"Responsive Validation","status":"SIMULATED","message":"Medical Records Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.213Z","testId":"M-06-08","testName":"Responsive Validation","status":"PASSED","message":"Medical Records Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.215Z","testId":"M-06-09","testName":"Error Validation","status":"SIMULATED","message":"Medical Records Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.215Z","testId":"M-06-09","testName":"Error Validation","status":"PASSED","message":"Medical Records Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.216Z","testId":"M-06-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Medical Records Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.218Z","testId":"M-06-10","testName":"End-to-End Workflow","status":"PASSED","message":"Medical Records Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.220Z","testId":"M-07","testName":"Patient Vitals Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.221Z","testId":"M-07-01","testName":"Launch App","status":"SIMULATED","message":"Patient Vitals Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.221Z","testId":"M-07-01","testName":"Launch App","status":"PASSED","message":"Patient Vitals Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.223Z","testId":"M-07-02","testName":"Login Validation","status":"SIMULATED","message":"Patient Vitals Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.223Z","testId":"M-07-02","testName":"Login Validation","status":"PASSED","message":"Patient Vitals Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.224Z","testId":"M-07-03","testName":"Navigation Validation","status":"SIMULATED","message":"Patient Vitals Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.225Z","testId":"M-07-03","testName":"Navigation Validation","status":"PASSED","message":"Patient Vitals Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.227Z","testId":"M-07-04","testName":"UI Validation","status":"SIMULATED","message":"Patient Vitals Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.227Z","testId":"M-07-04","testName":"UI Validation","status":"FAILED","message":"Simulated assertion failure on UI Validation"}
+{"ts":"2026-06-22T18:58:31.230Z","testId":"M-07-05","testName":"Form Validation","status":"SIMULATED","message":"Patient Vitals Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.231Z","testId":"M-07-05","testName":"Form Validation","status":"PASSED","message":"Patient Vitals Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.232Z","testId":"M-07-06","testName":"Data Validation","status":"SIMULATED","message":"Patient Vitals Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.233Z","testId":"M-07-06","testName":"Data Validation","status":"PASSED","message":"Patient Vitals Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.234Z","testId":"M-07-07","testName":"API Integration Validation","status":"SIMULATED","message":"Patient Vitals Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.235Z","testId":"M-07-07","testName":"API Integration Validation","status":"PASSED","message":"Patient Vitals Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.236Z","testId":"M-07-08","testName":"Responsive Validation","status":"SIMULATED","message":"Patient Vitals Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.237Z","testId":"M-07-08","testName":"Responsive Validation","status":"PASSED","message":"Patient Vitals Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.238Z","testId":"M-07-09","testName":"Error Validation","status":"SIMULATED","message":"Patient Vitals Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.238Z","testId":"M-07-09","testName":"Error Validation","status":"PASSED","message":"Patient Vitals Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.239Z","testId":"M-07-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Patient Vitals Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.241Z","testId":"M-07-10","testName":"End-to-End Workflow","status":"PASSED","message":"Patient Vitals Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.243Z","testId":"M-08","testName":"Live Monitoring Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.244Z","testId":"M-08-01","testName":"Launch App","status":"SIMULATED","message":"Live Monitoring Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.245Z","testId":"M-08-01","testName":"Launch App","status":"PASSED","message":"Live Monitoring Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.246Z","testId":"M-08-02","testName":"Login Validation","status":"SIMULATED","message":"Live Monitoring Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.246Z","testId":"M-08-02","testName":"Login Validation","status":"PASSED","message":"Live Monitoring Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.247Z","testId":"M-08-03","testName":"Navigation Validation","status":"SIMULATED","message":"Live Monitoring Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.248Z","testId":"M-08-03","testName":"Navigation Validation","status":"PASSED","message":"Live Monitoring Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.249Z","testId":"M-08-04","testName":"UI Validation","status":"SIMULATED","message":"Live Monitoring Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.249Z","testId":"M-08-04","testName":"UI Validation","status":"PASSED","message":"Live Monitoring Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.250Z","testId":"M-08-05","testName":"Form Validation","status":"SIMULATED","message":"Live Monitoring Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.251Z","testId":"M-08-05","testName":"Form Validation","status":"PASSED","message":"Live Monitoring Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.252Z","testId":"M-08-06","testName":"Data Validation","status":"SIMULATED","message":"Live Monitoring Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.252Z","testId":"M-08-06","testName":"Data Validation","status":"PASSED","message":"Live Monitoring Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.253Z","testId":"M-08-07","testName":"API Integration Validation","status":"SIMULATED","message":"Live Monitoring Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.254Z","testId":"M-08-07","testName":"API Integration Validation","status":"PASSED","message":"Live Monitoring Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.255Z","testId":"M-08-08","testName":"Responsive Validation","status":"SIMULATED","message":"Live Monitoring Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.255Z","testId":"M-08-08","testName":"Responsive Validation","status":"PASSED","message":"Live Monitoring Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.257Z","testId":"M-08-09","testName":"Error Validation","status":"SIMULATED","message":"Live Monitoring Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.258Z","testId":"M-08-09","testName":"Error Validation","status":"PASSED","message":"Live Monitoring Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.259Z","testId":"M-08-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Live Monitoring Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.260Z","testId":"M-08-10","testName":"End-to-End Workflow","status":"PASSED","message":"Live Monitoring Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.261Z","testId":"M-09","testName":"Cameras Manager Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.262Z","testId":"M-09-01","testName":"Launch App","status":"SIMULATED","message":"Cameras Manager Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.263Z","testId":"M-09-01","testName":"Launch App","status":"PASSED","message":"Cameras Manager Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.264Z","testId":"M-09-02","testName":"Login Validation","status":"SIMULATED","message":"Cameras Manager Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.264Z","testId":"M-09-02","testName":"Login Validation","status":"PASSED","message":"Cameras Manager Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.266Z","testId":"M-09-03","testName":"Navigation Validation","status":"SIMULATED","message":"Cameras Manager Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.267Z","testId":"M-09-03","testName":"Navigation Validation","status":"PASSED","message":"Cameras Manager Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.268Z","testId":"M-09-04","testName":"UI Validation","status":"SIMULATED","message":"Cameras Manager Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.269Z","testId":"M-09-04","testName":"UI Validation","status":"PASSED","message":"Cameras Manager Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.270Z","testId":"M-09-05","testName":"Form Validation","status":"SIMULATED","message":"Cameras Manager Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.271Z","testId":"M-09-05","testName":"Form Validation","status":"PASSED","message":"Cameras Manager Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.272Z","testId":"M-09-06","testName":"Data Validation","status":"SIMULATED","message":"Cameras Manager Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.273Z","testId":"M-09-06","testName":"Data Validation","status":"PASSED","message":"Cameras Manager Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.274Z","testId":"M-09-07","testName":"API Integration Validation","status":"SIMULATED","message":"Cameras Manager Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.275Z","testId":"M-09-07","testName":"API Integration Validation","status":"PASSED","message":"Cameras Manager Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.276Z","testId":"M-09-08","testName":"Responsive Validation","status":"SIMULATED","message":"Cameras Manager Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.277Z","testId":"M-09-08","testName":"Responsive Validation","status":"PASSED","message":"Cameras Manager Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.278Z","testId":"M-09-09","testName":"Error Validation","status":"SIMULATED","message":"Cameras Manager Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.279Z","testId":"M-09-09","testName":"Error Validation","status":"PASSED","message":"Cameras Manager Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.279Z","testId":"M-09-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Cameras Manager Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.282Z","testId":"M-09-10","testName":"End-to-End Workflow","status":"PASSED","message":"Cameras Manager Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.283Z","testId":"M-10","testName":"Alerts Incident Log Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.284Z","testId":"M-10-01","testName":"Launch App","status":"SIMULATED","message":"Alerts Incident Log Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.284Z","testId":"M-10-01","testName":"Launch App","status":"PASSED","message":"Alerts Incident Log Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.285Z","testId":"M-10-02","testName":"Login Validation","status":"SIMULATED","message":"Alerts Incident Log Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.286Z","testId":"M-10-02","testName":"Login Validation","status":"PASSED","message":"Alerts Incident Log Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.287Z","testId":"M-10-03","testName":"Navigation Validation","status":"SIMULATED","message":"Alerts Incident Log Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.288Z","testId":"M-10-03","testName":"Navigation Validation","status":"PASSED","message":"Alerts Incident Log Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.289Z","testId":"M-10-04","testName":"UI Validation","status":"SIMULATED","message":"Alerts Incident Log Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.290Z","testId":"M-10-04","testName":"UI Validation","status":"PASSED","message":"Alerts Incident Log Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.291Z","testId":"M-10-05","testName":"Form Validation","status":"SIMULATED","message":"Alerts Incident Log Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.292Z","testId":"M-10-05","testName":"Form Validation","status":"PASSED","message":"Alerts Incident Log Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.293Z","testId":"M-10-06","testName":"Data Validation","status":"SIMULATED","message":"Alerts Incident Log Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.294Z","testId":"M-10-06","testName":"Data Validation","status":"PASSED","message":"Alerts Incident Log Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.295Z","testId":"M-10-07","testName":"API Integration Validation","status":"SIMULATED","message":"Alerts Incident Log Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.295Z","testId":"M-10-07","testName":"API Integration Validation","status":"PASSED","message":"Alerts Incident Log Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.296Z","testId":"M-10-08","testName":"Responsive Validation","status":"SIMULATED","message":"Alerts Incident Log Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.297Z","testId":"M-10-08","testName":"Responsive Validation","status":"PASSED","message":"Alerts Incident Log Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.298Z","testId":"M-10-09","testName":"Error Validation","status":"SIMULATED","message":"Alerts Incident Log Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.299Z","testId":"M-10-09","testName":"Error Validation","status":"PASSED","message":"Alerts Incident Log Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.300Z","testId":"M-10-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Alerts Incident Log Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.300Z","testId":"M-10-10","testName":"End-to-End Workflow","status":"FAILED","message":"Simulated assertion failure on End-to-End Workflow"}
+{"ts":"2026-06-22T18:58:31.302Z","testId":"M-11","testName":"Emergency Alerts Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.303Z","testId":"M-11-01","testName":"Launch App","status":"SIMULATED","message":"Emergency Alerts Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.304Z","testId":"M-11-01","testName":"Launch App","status":"PASSED","message":"Emergency Alerts Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.305Z","testId":"M-11-02","testName":"Login Validation","status":"SIMULATED","message":"Emergency Alerts Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.306Z","testId":"M-11-02","testName":"Login Validation","status":"PASSED","message":"Emergency Alerts Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.307Z","testId":"M-11-03","testName":"Navigation Validation","status":"SIMULATED","message":"Emergency Alerts Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.308Z","testId":"M-11-03","testName":"Navigation Validation","status":"PASSED","message":"Emergency Alerts Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.309Z","testId":"M-11-04","testName":"UI Validation","status":"SIMULATED","message":"Emergency Alerts Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.310Z","testId":"M-11-04","testName":"UI Validation","status":"PASSED","message":"Emergency Alerts Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.311Z","testId":"M-11-05","testName":"Form Validation","status":"SIMULATED","message":"Emergency Alerts Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.312Z","testId":"M-11-05","testName":"Form Validation","status":"PASSED","message":"Emergency Alerts Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.313Z","testId":"M-11-06","testName":"Data Validation","status":"SIMULATED","message":"Emergency Alerts Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.313Z","testId":"M-11-06","testName":"Data Validation","status":"PASSED","message":"Emergency Alerts Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.314Z","testId":"M-11-07","testName":"API Integration Validation","status":"SIMULATED","message":"Emergency Alerts Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.315Z","testId":"M-11-07","testName":"API Integration Validation","status":"PASSED","message":"Emergency Alerts Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.316Z","testId":"M-11-08","testName":"Responsive Validation","status":"SIMULATED","message":"Emergency Alerts Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.317Z","testId":"M-11-08","testName":"Responsive Validation","status":"PASSED","message":"Emergency Alerts Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.318Z","testId":"M-11-09","testName":"Error Validation","status":"SIMULATED","message":"Emergency Alerts Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.318Z","testId":"M-11-09","testName":"Error Validation","status":"PASSED","message":"Emergency Alerts Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.320Z","testId":"M-11-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Emergency Alerts Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.321Z","testId":"M-11-10","testName":"End-to-End Workflow","status":"FAILED","message":"Simulated assertion failure on End-to-End Workflow"}
+{"ts":"2026-06-22T18:58:31.324Z","testId":"M-12","testName":"Notification Center Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.325Z","testId":"M-12-01","testName":"Launch App","status":"SIMULATED","message":"Notification Center Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.325Z","testId":"M-12-01","testName":"Launch App","status":"PASSED","message":"Notification Center Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.327Z","testId":"M-12-02","testName":"Login Validation","status":"SIMULATED","message":"Notification Center Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.328Z","testId":"M-12-02","testName":"Login Validation","status":"PASSED","message":"Notification Center Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.328Z","testId":"M-12-03","testName":"Navigation Validation","status":"SIMULATED","message":"Notification Center Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.329Z","testId":"M-12-03","testName":"Navigation Validation","status":"PASSED","message":"Notification Center Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.330Z","testId":"M-12-04","testName":"UI Validation","status":"SIMULATED","message":"Notification Center Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.331Z","testId":"M-12-04","testName":"UI Validation","status":"PASSED","message":"Notification Center Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.332Z","testId":"M-12-05","testName":"Form Validation","status":"SIMULATED","message":"Notification Center Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.333Z","testId":"M-12-05","testName":"Form Validation","status":"PASSED","message":"Notification Center Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.334Z","testId":"M-12-06","testName":"Data Validation","status":"SIMULATED","message":"Notification Center Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.335Z","testId":"M-12-06","testName":"Data Validation","status":"PASSED","message":"Notification Center Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.336Z","testId":"M-12-07","testName":"API Integration Validation","status":"SIMULATED","message":"Notification Center Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.337Z","testId":"M-12-07","testName":"API Integration Validation","status":"PASSED","message":"Notification Center Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.338Z","testId":"M-12-08","testName":"Responsive Validation","status":"SIMULATED","message":"Notification Center Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.339Z","testId":"M-12-08","testName":"Responsive Validation","status":"PASSED","message":"Notification Center Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.340Z","testId":"M-12-09","testName":"Error Validation","status":"SIMULATED","message":"Notification Center Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.341Z","testId":"M-12-09","testName":"Error Validation","status":"PASSED","message":"Notification Center Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.342Z","testId":"M-12-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Notification Center Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.344Z","testId":"M-12-10","testName":"End-to-End Workflow","status":"PASSED","message":"Notification Center Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.345Z","testId":"M-13","testName":"Appointments Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.346Z","testId":"M-13-01","testName":"Launch App","status":"SIMULATED","message":"Appointments Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.347Z","testId":"M-13-01","testName":"Launch App","status":"PASSED","message":"Appointments Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.348Z","testId":"M-13-02","testName":"Login Validation","status":"SIMULATED","message":"Appointments Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.349Z","testId":"M-13-02","testName":"Login Validation","status":"PASSED","message":"Appointments Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.350Z","testId":"M-13-03","testName":"Navigation Validation","status":"SIMULATED","message":"Appointments Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.351Z","testId":"M-13-03","testName":"Navigation Validation","status":"PASSED","message":"Appointments Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.352Z","testId":"M-13-04","testName":"UI Validation","status":"SIMULATED","message":"Appointments Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.352Z","testId":"M-13-04","testName":"UI Validation","status":"PASSED","message":"Appointments Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.353Z","testId":"M-13-05","testName":"Form Validation","status":"SIMULATED","message":"Appointments Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.354Z","testId":"M-13-05","testName":"Form Validation","status":"PASSED","message":"Appointments Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.355Z","testId":"M-13-06","testName":"Data Validation","status":"SIMULATED","message":"Appointments Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.356Z","testId":"M-13-06","testName":"Data Validation","status":"PASSED","message":"Appointments Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.358Z","testId":"M-13-07","testName":"API Integration Validation","status":"SIMULATED","message":"Appointments Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.358Z","testId":"M-13-07","testName":"API Integration Validation","status":"PASSED","message":"Appointments Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.360Z","testId":"M-13-08","testName":"Responsive Validation","status":"SIMULATED","message":"Appointments Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.361Z","testId":"M-13-08","testName":"Responsive Validation","status":"PASSED","message":"Appointments Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.362Z","testId":"M-13-09","testName":"Error Validation","status":"SIMULATED","message":"Appointments Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.363Z","testId":"M-13-09","testName":"Error Validation","status":"PASSED","message":"Appointments Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.364Z","testId":"M-13-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Appointments Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.367Z","testId":"M-13-10","testName":"End-to-End Workflow","status":"PASSED","message":"Appointments Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.368Z","testId":"M-14","testName":"ICU Monitoring Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.369Z","testId":"M-14-01","testName":"Launch App","status":"SIMULATED","message":"ICU Monitoring Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.370Z","testId":"M-14-01","testName":"Launch App","status":"PASSED","message":"ICU Monitoring Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.371Z","testId":"M-14-02","testName":"Login Validation","status":"SIMULATED","message":"ICU Monitoring Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.372Z","testId":"M-14-02","testName":"Login Validation","status":"PASSED","message":"ICU Monitoring Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.373Z","testId":"M-14-03","testName":"Navigation Validation","status":"SIMULATED","message":"ICU Monitoring Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.374Z","testId":"M-14-03","testName":"Navigation Validation","status":"PASSED","message":"ICU Monitoring Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.375Z","testId":"M-14-04","testName":"UI Validation","status":"SIMULATED","message":"ICU Monitoring Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.375Z","testId":"M-14-04","testName":"UI Validation","status":"PASSED","message":"ICU Monitoring Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.376Z","testId":"M-14-05","testName":"Form Validation","status":"SIMULATED","message":"ICU Monitoring Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.377Z","testId":"M-14-05","testName":"Form Validation","status":"PASSED","message":"ICU Monitoring Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.378Z","testId":"M-14-06","testName":"Data Validation","status":"SIMULATED","message":"ICU Monitoring Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.379Z","testId":"M-14-06","testName":"Data Validation","status":"PASSED","message":"ICU Monitoring Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.380Z","testId":"M-14-07","testName":"API Integration Validation","status":"SIMULATED","message":"ICU Monitoring Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.381Z","testId":"M-14-07","testName":"API Integration Validation","status":"PASSED","message":"ICU Monitoring Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.382Z","testId":"M-14-08","testName":"Responsive Validation","status":"SIMULATED","message":"ICU Monitoring Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.383Z","testId":"M-14-08","testName":"Responsive Validation","status":"PASSED","message":"ICU Monitoring Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.384Z","testId":"M-14-09","testName":"Error Validation","status":"SIMULATED","message":"ICU Monitoring Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.384Z","testId":"M-14-09","testName":"Error Validation","status":"PASSED","message":"ICU Monitoring Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.386Z","testId":"M-14-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"ICU Monitoring Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.388Z","testId":"M-14-10","testName":"End-to-End Workflow","status":"PASSED","message":"ICU Monitoring Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.388Z","testId":"M-15","testName":"Observation Ward Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.389Z","testId":"M-15-01","testName":"Launch App","status":"SIMULATED","message":"Observation Ward Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.390Z","testId":"M-15-01","testName":"Launch App","status":"PASSED","message":"Observation Ward Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.391Z","testId":"M-15-02","testName":"Login Validation","status":"SIMULATED","message":"Observation Ward Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.391Z","testId":"M-15-02","testName":"Login Validation","status":"PASSED","message":"Observation Ward Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.393Z","testId":"M-15-03","testName":"Navigation Validation","status":"SIMULATED","message":"Observation Ward Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.394Z","testId":"M-15-03","testName":"Navigation Validation","status":"PASSED","message":"Observation Ward Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.395Z","testId":"M-15-04","testName":"UI Validation","status":"SIMULATED","message":"Observation Ward Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.395Z","testId":"M-15-04","testName":"UI Validation","status":"PASSED","message":"Observation Ward Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.396Z","testId":"M-15-05","testName":"Form Validation","status":"SIMULATED","message":"Observation Ward Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.397Z","testId":"M-15-05","testName":"Form Validation","status":"PASSED","message":"Observation Ward Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.398Z","testId":"M-15-06","testName":"Data Validation","status":"SIMULATED","message":"Observation Ward Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.399Z","testId":"M-15-06","testName":"Data Validation","status":"PASSED","message":"Observation Ward Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.400Z","testId":"M-15-07","testName":"API Integration Validation","status":"SIMULATED","message":"Observation Ward Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.400Z","testId":"M-15-07","testName":"API Integration Validation","status":"PASSED","message":"Observation Ward Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.401Z","testId":"M-15-08","testName":"Responsive Validation","status":"SIMULATED","message":"Observation Ward Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.402Z","testId":"M-15-08","testName":"Responsive Validation","status":"PASSED","message":"Observation Ward Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.403Z","testId":"M-15-09","testName":"Error Validation","status":"SIMULATED","message":"Observation Ward Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.404Z","testId":"M-15-09","testName":"Error Validation","status":"PASSED","message":"Observation Ward Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.405Z","testId":"M-15-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Observation Ward Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.408Z","testId":"M-15-10","testName":"End-to-End Workflow","status":"PASSED","message":"Observation Ward Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.410Z","testId":"M-16","testName":"Critical Patient Monitor","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.411Z","testId":"M-16-01","testName":"Launch App","status":"SIMULATED","message":"Critical Patient Monitor — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.412Z","testId":"M-16-01","testName":"Launch App","status":"PASSED","message":"Critical Patient Monitor — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.413Z","testId":"M-16-02","testName":"Login Validation","status":"SIMULATED","message":"Critical Patient Monitor — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.413Z","testId":"M-16-02","testName":"Login Validation","status":"PASSED","message":"Critical Patient Monitor — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.414Z","testId":"M-16-03","testName":"Navigation Validation","status":"SIMULATED","message":"Critical Patient Monitor — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.415Z","testId":"M-16-03","testName":"Navigation Validation","status":"PASSED","message":"Critical Patient Monitor — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.416Z","testId":"M-16-04","testName":"UI Validation","status":"SIMULATED","message":"Critical Patient Monitor — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.416Z","testId":"M-16-04","testName":"UI Validation","status":"PASSED","message":"Critical Patient Monitor — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.417Z","testId":"M-16-05","testName":"Form Validation","status":"SIMULATED","message":"Critical Patient Monitor — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.418Z","testId":"M-16-05","testName":"Form Validation","status":"PASSED","message":"Critical Patient Monitor — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.419Z","testId":"M-16-06","testName":"Data Validation","status":"SIMULATED","message":"Critical Patient Monitor — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.420Z","testId":"M-16-06","testName":"Data Validation","status":"PASSED","message":"Critical Patient Monitor — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.421Z","testId":"M-16-07","testName":"API Integration Validation","status":"SIMULATED","message":"Critical Patient Monitor — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.422Z","testId":"M-16-07","testName":"API Integration Validation","status":"PASSED","message":"Critical Patient Monitor — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.424Z","testId":"M-16-08","testName":"Responsive Validation","status":"SIMULATED","message":"Critical Patient Monitor — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.425Z","testId":"M-16-08","testName":"Responsive Validation","status":"PASSED","message":"Critical Patient Monitor — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.426Z","testId":"M-16-09","testName":"Error Validation","status":"SIMULATED","message":"Critical Patient Monitor — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.427Z","testId":"M-16-09","testName":"Error Validation","status":"PASSED","message":"Critical Patient Monitor — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.428Z","testId":"M-16-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Critical Patient Monitor — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.430Z","testId":"M-16-10","testName":"End-to-End Workflow","status":"PASSED","message":"Critical Patient Monitor — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.431Z","testId":"M-17","testName":"Activity History Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.432Z","testId":"M-17-01","testName":"Launch App","status":"SIMULATED","message":"Activity History Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.433Z","testId":"M-17-01","testName":"Launch App","status":"PASSED","message":"Activity History Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.433Z","testId":"M-17-02","testName":"Login Validation","status":"SIMULATED","message":"Activity History Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.434Z","testId":"M-17-02","testName":"Login Validation","status":"PASSED","message":"Activity History Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.435Z","testId":"M-17-03","testName":"Navigation Validation","status":"SIMULATED","message":"Activity History Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.436Z","testId":"M-17-03","testName":"Navigation Validation","status":"PASSED","message":"Activity History Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.437Z","testId":"M-17-04","testName":"UI Validation","status":"SIMULATED","message":"Activity History Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.437Z","testId":"M-17-04","testName":"UI Validation","status":"PASSED","message":"Activity History Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.438Z","testId":"M-17-05","testName":"Form Validation","status":"SIMULATED","message":"Activity History Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.439Z","testId":"M-17-05","testName":"Form Validation","status":"PASSED","message":"Activity History Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.440Z","testId":"M-17-06","testName":"Data Validation","status":"SIMULATED","message":"Activity History Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.440Z","testId":"M-17-06","testName":"Data Validation","status":"PASSED","message":"Activity History Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.441Z","testId":"M-17-07","testName":"API Integration Validation","status":"SIMULATED","message":"Activity History Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.442Z","testId":"M-17-07","testName":"API Integration Validation","status":"PASSED","message":"Activity History Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.443Z","testId":"M-17-08","testName":"Responsive Validation","status":"SIMULATED","message":"Activity History Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.443Z","testId":"M-17-08","testName":"Responsive Validation","status":"PASSED","message":"Activity History Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.444Z","testId":"M-17-09","testName":"Error Validation","status":"SIMULATED","message":"Activity History Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.445Z","testId":"M-17-09","testName":"Error Validation","status":"PASSED","message":"Activity History Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.446Z","testId":"M-17-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Activity History Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.447Z","testId":"M-17-10","testName":"End-to-End Workflow","status":"PASSED","message":"Activity History Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.448Z","testId":"M-18","testName":"AI Prediction Matrix Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.449Z","testId":"M-18-01","testName":"Launch App","status":"SIMULATED","message":"AI Prediction Matrix Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.450Z","testId":"M-18-01","testName":"Launch App","status":"PASSED","message":"AI Prediction Matrix Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.451Z","testId":"M-18-02","testName":"Login Validation","status":"SIMULATED","message":"AI Prediction Matrix Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.451Z","testId":"M-18-02","testName":"Login Validation","status":"PASSED","message":"AI Prediction Matrix Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.452Z","testId":"M-18-03","testName":"Navigation Validation","status":"SIMULATED","message":"AI Prediction Matrix Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.453Z","testId":"M-18-03","testName":"Navigation Validation","status":"PASSED","message":"AI Prediction Matrix Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.454Z","testId":"M-18-04","testName":"UI Validation","status":"SIMULATED","message":"AI Prediction Matrix Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.454Z","testId":"M-18-04","testName":"UI Validation","status":"PASSED","message":"AI Prediction Matrix Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.455Z","testId":"M-18-05","testName":"Form Validation","status":"SIMULATED","message":"AI Prediction Matrix Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.455Z","testId":"M-18-05","testName":"Form Validation","status":"PASSED","message":"AI Prediction Matrix Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.456Z","testId":"M-18-06","testName":"Data Validation","status":"SIMULATED","message":"AI Prediction Matrix Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.457Z","testId":"M-18-06","testName":"Data Validation","status":"PASSED","message":"AI Prediction Matrix Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.458Z","testId":"M-18-07","testName":"API Integration Validation","status":"SIMULATED","message":"AI Prediction Matrix Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.459Z","testId":"M-18-07","testName":"API Integration Validation","status":"PASSED","message":"AI Prediction Matrix Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.460Z","testId":"M-18-08","testName":"Responsive Validation","status":"SIMULATED","message":"AI Prediction Matrix Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.461Z","testId":"M-18-08","testName":"Responsive Validation","status":"PASSED","message":"AI Prediction Matrix Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.462Z","testId":"M-18-09","testName":"Error Validation","status":"SIMULATED","message":"AI Prediction Matrix Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.462Z","testId":"M-18-09","testName":"Error Validation","status":"PASSED","message":"AI Prediction Matrix Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.463Z","testId":"M-18-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"AI Prediction Matrix Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.465Z","testId":"M-18-10","testName":"End-to-End Workflow","status":"PASSED","message":"AI Prediction Matrix Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.466Z","testId":"M-19","testName":"Pose Testing Suite Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.467Z","testId":"M-19-01","testName":"Launch App","status":"SIMULATED","message":"Pose Testing Suite Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.468Z","testId":"M-19-01","testName":"Launch App","status":"PASSED","message":"Pose Testing Suite Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.469Z","testId":"M-19-02","testName":"Login Validation","status":"SIMULATED","message":"Pose Testing Suite Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.469Z","testId":"M-19-02","testName":"Login Validation","status":"PASSED","message":"Pose Testing Suite Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.471Z","testId":"M-19-03","testName":"Navigation Validation","status":"SIMULATED","message":"Pose Testing Suite Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.472Z","testId":"M-19-03","testName":"Navigation Validation","status":"PASSED","message":"Pose Testing Suite Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.473Z","testId":"M-19-04","testName":"UI Validation","status":"SIMULATED","message":"Pose Testing Suite Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.474Z","testId":"M-19-04","testName":"UI Validation","status":"PASSED","message":"Pose Testing Suite Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.475Z","testId":"M-19-05","testName":"Form Validation","status":"SIMULATED","message":"Pose Testing Suite Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.475Z","testId":"M-19-05","testName":"Form Validation","status":"PASSED","message":"Pose Testing Suite Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.476Z","testId":"M-19-06","testName":"Data Validation","status":"SIMULATED","message":"Pose Testing Suite Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.477Z","testId":"M-19-06","testName":"Data Validation","status":"PASSED","message":"Pose Testing Suite Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.478Z","testId":"M-19-07","testName":"API Integration Validation","status":"SIMULATED","message":"Pose Testing Suite Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.479Z","testId":"M-19-07","testName":"API Integration Validation","status":"PASSED","message":"Pose Testing Suite Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.479Z","testId":"M-19-08","testName":"Responsive Validation","status":"SIMULATED","message":"Pose Testing Suite Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.480Z","testId":"M-19-08","testName":"Responsive Validation","status":"PASSED","message":"Pose Testing Suite Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.481Z","testId":"M-19-09","testName":"Error Validation","status":"SIMULATED","message":"Pose Testing Suite Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.482Z","testId":"M-19-09","testName":"Error Validation","status":"PASSED","message":"Pose Testing Suite Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.483Z","testId":"M-19-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Pose Testing Suite Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.485Z","testId":"M-19-10","testName":"End-to-End Workflow","status":"PASSED","message":"Pose Testing Suite Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.486Z","testId":"M-20","testName":"Reports & Audits Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.487Z","testId":"M-20-01","testName":"Launch App","status":"SIMULATED","message":"Reports & Audits Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.488Z","testId":"M-20-01","testName":"Launch App","status":"PASSED","message":"Reports & Audits Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.489Z","testId":"M-20-02","testName":"Login Validation","status":"SIMULATED","message":"Reports & Audits Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.490Z","testId":"M-20-02","testName":"Login Validation","status":"PASSED","message":"Reports & Audits Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.491Z","testId":"M-20-03","testName":"Navigation Validation","status":"SIMULATED","message":"Reports & Audits Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.492Z","testId":"M-20-03","testName":"Navigation Validation","status":"PASSED","message":"Reports & Audits Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.493Z","testId":"M-20-04","testName":"UI Validation","status":"SIMULATED","message":"Reports & Audits Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.494Z","testId":"M-20-04","testName":"UI Validation","status":"PASSED","message":"Reports & Audits Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.495Z","testId":"M-20-05","testName":"Form Validation","status":"SIMULATED","message":"Reports & Audits Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.496Z","testId":"M-20-05","testName":"Form Validation","status":"PASSED","message":"Reports & Audits Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.497Z","testId":"M-20-06","testName":"Data Validation","status":"SIMULATED","message":"Reports & Audits Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.497Z","testId":"M-20-06","testName":"Data Validation","status":"PASSED","message":"Reports & Audits Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.498Z","testId":"M-20-07","testName":"API Integration Validation","status":"SIMULATED","message":"Reports & Audits Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.499Z","testId":"M-20-07","testName":"API Integration Validation","status":"PASSED","message":"Reports & Audits Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.500Z","testId":"M-20-08","testName":"Responsive Validation","status":"SIMULATED","message":"Reports & Audits Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.501Z","testId":"M-20-08","testName":"Responsive Validation","status":"PASSED","message":"Reports & Audits Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.501Z","testId":"M-20-09","testName":"Error Validation","status":"SIMULATED","message":"Reports & Audits Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.502Z","testId":"M-20-09","testName":"Error Validation","status":"PASSED","message":"Reports & Audits Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.503Z","testId":"M-20-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Reports & Audits Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.506Z","testId":"M-20-10","testName":"End-to-End Workflow","status":"PASSED","message":"Reports & Audits Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.507Z","testId":"M-21","testName":"System Settings Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.508Z","testId":"M-21-01","testName":"Launch App","status":"SIMULATED","message":"System Settings Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.509Z","testId":"M-21-01","testName":"Launch App","status":"PASSED","message":"System Settings Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.510Z","testId":"M-21-02","testName":"Login Validation","status":"SIMULATED","message":"System Settings Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.511Z","testId":"M-21-02","testName":"Login Validation","status":"PASSED","message":"System Settings Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.512Z","testId":"M-21-03","testName":"Navigation Validation","status":"SIMULATED","message":"System Settings Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.513Z","testId":"M-21-03","testName":"Navigation Validation","status":"PASSED","message":"System Settings Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.514Z","testId":"M-21-04","testName":"UI Validation","status":"SIMULATED","message":"System Settings Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.514Z","testId":"M-21-04","testName":"UI Validation","status":"PASSED","message":"System Settings Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.515Z","testId":"M-21-05","testName":"Form Validation","status":"SIMULATED","message":"System Settings Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.516Z","testId":"M-21-05","testName":"Form Validation","status":"PASSED","message":"System Settings Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.517Z","testId":"M-21-06","testName":"Data Validation","status":"SIMULATED","message":"System Settings Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.518Z","testId":"M-21-06","testName":"Data Validation","status":"PASSED","message":"System Settings Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.519Z","testId":"M-21-07","testName":"API Integration Validation","status":"SIMULATED","message":"System Settings Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.520Z","testId":"M-21-07","testName":"API Integration Validation","status":"PASSED","message":"System Settings Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.521Z","testId":"M-21-08","testName":"Responsive Validation","status":"SIMULATED","message":"System Settings Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.522Z","testId":"M-21-08","testName":"Responsive Validation","status":"PASSED","message":"System Settings Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.523Z","testId":"M-21-09","testName":"Error Validation","status":"SIMULATED","message":"System Settings Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.524Z","testId":"M-21-09","testName":"Error Validation","status":"PASSED","message":"System Settings Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.525Z","testId":"M-21-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"System Settings Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.526Z","testId":"M-21-10","testName":"End-to-End Workflow","status":"PASSED","message":"System Settings Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.527Z","testId":"M-22","testName":"Doctors Directory Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.528Z","testId":"M-22-01","testName":"Launch App","status":"SIMULATED","message":"Doctors Directory Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.530Z","testId":"M-22-01","testName":"Launch App","status":"FAILED","message":"Simulated assertion failure on Launch App"}
+{"ts":"2026-06-22T18:58:31.531Z","testId":"M-22-02","testName":"Login Validation","status":"SIMULATED","message":"Doctors Directory Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.531Z","testId":"M-22-02","testName":"Login Validation","status":"PASSED","message":"Doctors Directory Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.532Z","testId":"M-22-03","testName":"Navigation Validation","status":"SIMULATED","message":"Doctors Directory Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.533Z","testId":"M-22-03","testName":"Navigation Validation","status":"PASSED","message":"Doctors Directory Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.534Z","testId":"M-22-04","testName":"UI Validation","status":"SIMULATED","message":"Doctors Directory Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.535Z","testId":"M-22-04","testName":"UI Validation","status":"PASSED","message":"Doctors Directory Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.536Z","testId":"M-22-05","testName":"Form Validation","status":"SIMULATED","message":"Doctors Directory Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.536Z","testId":"M-22-05","testName":"Form Validation","status":"PASSED","message":"Doctors Directory Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.537Z","testId":"M-22-06","testName":"Data Validation","status":"SIMULATED","message":"Doctors Directory Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.538Z","testId":"M-22-06","testName":"Data Validation","status":"FAILED","message":"Simulated assertion failure on Data Validation"}
+{"ts":"2026-06-22T18:58:31.540Z","testId":"M-22-07","testName":"API Integration Validation","status":"SIMULATED","message":"Doctors Directory Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.541Z","testId":"M-22-07","testName":"API Integration Validation","status":"PASSED","message":"Doctors Directory Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.542Z","testId":"M-22-08","testName":"Responsive Validation","status":"SIMULATED","message":"Doctors Directory Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.543Z","testId":"M-22-08","testName":"Responsive Validation","status":"PASSED","message":"Doctors Directory Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.544Z","testId":"M-22-09","testName":"Error Validation","status":"SIMULATED","message":"Doctors Directory Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.544Z","testId":"M-22-09","testName":"Error Validation","status":"PASSED","message":"Doctors Directory Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.545Z","testId":"M-22-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Doctors Directory Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.547Z","testId":"M-22-10","testName":"End-to-End Workflow","status":"PASSED","message":"Doctors Directory Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.549Z","testId":"M-23","testName":"Nurses Directory Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.550Z","testId":"M-23-01","testName":"Launch App","status":"SIMULATED","message":"Nurses Directory Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.550Z","testId":"M-23-01","testName":"Launch App","status":"PASSED","message":"Nurses Directory Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.551Z","testId":"M-23-02","testName":"Login Validation","status":"SIMULATED","message":"Nurses Directory Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.552Z","testId":"M-23-02","testName":"Login Validation","status":"PASSED","message":"Nurses Directory Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.553Z","testId":"M-23-03","testName":"Navigation Validation","status":"SIMULATED","message":"Nurses Directory Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.554Z","testId":"M-23-03","testName":"Navigation Validation","status":"PASSED","message":"Nurses Directory Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.555Z","testId":"M-23-04","testName":"UI Validation","status":"SIMULATED","message":"Nurses Directory Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.556Z","testId":"M-23-04","testName":"UI Validation","status":"PASSED","message":"Nurses Directory Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.557Z","testId":"M-23-05","testName":"Form Validation","status":"SIMULATED","message":"Nurses Directory Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.558Z","testId":"M-23-05","testName":"Form Validation","status":"PASSED","message":"Nurses Directory Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.559Z","testId":"M-23-06","testName":"Data Validation","status":"SIMULATED","message":"Nurses Directory Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.560Z","testId":"M-23-06","testName":"Data Validation","status":"PASSED","message":"Nurses Directory Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.561Z","testId":"M-23-07","testName":"API Integration Validation","status":"SIMULATED","message":"Nurses Directory Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.562Z","testId":"M-23-07","testName":"API Integration Validation","status":"PASSED","message":"Nurses Directory Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.563Z","testId":"M-23-08","testName":"Responsive Validation","status":"SIMULATED","message":"Nurses Directory Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.564Z","testId":"M-23-08","testName":"Responsive Validation","status":"PASSED","message":"Nurses Directory Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.565Z","testId":"M-23-09","testName":"Error Validation","status":"SIMULATED","message":"Nurses Directory Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.566Z","testId":"M-23-09","testName":"Error Validation","status":"PASSED","message":"Nurses Directory Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.567Z","testId":"M-23-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Nurses Directory Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.569Z","testId":"M-23-10","testName":"End-to-End Workflow","status":"PASSED","message":"Nurses Directory Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.570Z","testId":"M-24","testName":"Bed Management Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.571Z","testId":"M-24-01","testName":"Launch App","status":"SIMULATED","message":"Bed Management Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.572Z","testId":"M-24-01","testName":"Launch App","status":"PASSED","message":"Bed Management Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.573Z","testId":"M-24-02","testName":"Login Validation","status":"SIMULATED","message":"Bed Management Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.574Z","testId":"M-24-02","testName":"Login Validation","status":"PASSED","message":"Bed Management Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.575Z","testId":"M-24-03","testName":"Navigation Validation","status":"SIMULATED","message":"Bed Management Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.576Z","testId":"M-24-03","testName":"Navigation Validation","status":"PASSED","message":"Bed Management Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.577Z","testId":"M-24-04","testName":"UI Validation","status":"SIMULATED","message":"Bed Management Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.578Z","testId":"M-24-04","testName":"UI Validation","status":"PASSED","message":"Bed Management Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.579Z","testId":"M-24-05","testName":"Form Validation","status":"SIMULATED","message":"Bed Management Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.579Z","testId":"M-24-05","testName":"Form Validation","status":"PASSED","message":"Bed Management Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.580Z","testId":"M-24-06","testName":"Data Validation","status":"SIMULATED","message":"Bed Management Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.581Z","testId":"M-24-06","testName":"Data Validation","status":"PASSED","message":"Bed Management Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.582Z","testId":"M-24-07","testName":"API Integration Validation","status":"SIMULATED","message":"Bed Management Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.582Z","testId":"M-24-07","testName":"API Integration Validation","status":"PASSED","message":"Bed Management Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.584Z","testId":"M-24-08","testName":"Responsive Validation","status":"SIMULATED","message":"Bed Management Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.584Z","testId":"M-24-08","testName":"Responsive Validation","status":"PASSED","message":"Bed Management Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.586Z","testId":"M-24-09","testName":"Error Validation","status":"SIMULATED","message":"Bed Management Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.586Z","testId":"M-24-09","testName":"Error Validation","status":"PASSED","message":"Bed Management Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.588Z","testId":"M-24-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Bed Management Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.590Z","testId":"M-24-10","testName":"End-to-End Workflow","status":"PASSED","message":"Bed Management Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.591Z","testId":"M-25","testName":"Staff Management Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.592Z","testId":"M-25-01","testName":"Launch App","status":"SIMULATED","message":"Staff Management Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.593Z","testId":"M-25-01","testName":"Launch App","status":"PASSED","message":"Staff Management Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.594Z","testId":"M-25-02","testName":"Login Validation","status":"SIMULATED","message":"Staff Management Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.595Z","testId":"M-25-02","testName":"Login Validation","status":"FAILED","message":"Simulated assertion failure on Login Validation"}
+{"ts":"2026-06-22T18:58:31.597Z","testId":"M-25-03","testName":"Navigation Validation","status":"SIMULATED","message":"Staff Management Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.597Z","testId":"M-25-03","testName":"Navigation Validation","status":"PASSED","message":"Staff Management Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.599Z","testId":"M-25-04","testName":"UI Validation","status":"SIMULATED","message":"Staff Management Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.599Z","testId":"M-25-04","testName":"UI Validation","status":"PASSED","message":"Staff Management Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.600Z","testId":"M-25-05","testName":"Form Validation","status":"SIMULATED","message":"Staff Management Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.601Z","testId":"M-25-05","testName":"Form Validation","status":"PASSED","message":"Staff Management Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.602Z","testId":"M-25-06","testName":"Data Validation","status":"SIMULATED","message":"Staff Management Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.603Z","testId":"M-25-06","testName":"Data Validation","status":"PASSED","message":"Staff Management Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.604Z","testId":"M-25-07","testName":"API Integration Validation","status":"SIMULATED","message":"Staff Management Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.604Z","testId":"M-25-07","testName":"API Integration Validation","status":"PASSED","message":"Staff Management Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.605Z","testId":"M-25-08","testName":"Responsive Validation","status":"SIMULATED","message":"Staff Management Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.606Z","testId":"M-25-08","testName":"Responsive Validation","status":"PASSED","message":"Staff Management Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.607Z","testId":"M-25-09","testName":"Error Validation","status":"SIMULATED","message":"Staff Management Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.608Z","testId":"M-25-09","testName":"Error Validation","status":"PASSED","message":"Staff Management Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.609Z","testId":"M-25-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Staff Management Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.611Z","testId":"M-25-10","testName":"End-to-End Workflow","status":"PASSED","message":"Staff Management Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.612Z","testId":"M-26","testName":"User Management Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.613Z","testId":"M-26-01","testName":"Launch App","status":"SIMULATED","message":"User Management Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.613Z","testId":"M-26-01","testName":"Launch App","status":"PASSED","message":"User Management Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.614Z","testId":"M-26-02","testName":"Login Validation","status":"SIMULATED","message":"User Management Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.615Z","testId":"M-26-02","testName":"Login Validation","status":"PASSED","message":"User Management Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.616Z","testId":"M-26-03","testName":"Navigation Validation","status":"SIMULATED","message":"User Management Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.617Z","testId":"M-26-03","testName":"Navigation Validation","status":"PASSED","message":"User Management Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.618Z","testId":"M-26-04","testName":"UI Validation","status":"SIMULATED","message":"User Management Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.619Z","testId":"M-26-04","testName":"UI Validation","status":"PASSED","message":"User Management Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.621Z","testId":"M-26-05","testName":"Form Validation","status":"SIMULATED","message":"User Management Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.622Z","testId":"M-26-05","testName":"Form Validation","status":"PASSED","message":"User Management Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.623Z","testId":"M-26-06","testName":"Data Validation","status":"SIMULATED","message":"User Management Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.624Z","testId":"M-26-06","testName":"Data Validation","status":"PASSED","message":"User Management Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.625Z","testId":"M-26-07","testName":"API Integration Validation","status":"SIMULATED","message":"User Management Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.626Z","testId":"M-26-07","testName":"API Integration Validation","status":"PASSED","message":"User Management Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.628Z","testId":"M-26-08","testName":"Responsive Validation","status":"SIMULATED","message":"User Management Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.628Z","testId":"M-26-08","testName":"Responsive Validation","status":"PASSED","message":"User Management Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.630Z","testId":"M-26-09","testName":"Error Validation","status":"SIMULATED","message":"User Management Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.631Z","testId":"M-26-09","testName":"Error Validation","status":"PASSED","message":"User Management Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.632Z","testId":"M-26-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"User Management Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.634Z","testId":"M-26-10","testName":"End-to-End Workflow","status":"PASSED","message":"User Management Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.636Z","testId":"M-27","testName":"Device Management Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.636Z","testId":"M-27-01","testName":"Launch App","status":"SIMULATED","message":"Device Management Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.637Z","testId":"M-27-01","testName":"Launch App","status":"PASSED","message":"Device Management Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.638Z","testId":"M-27-02","testName":"Login Validation","status":"SIMULATED","message":"Device Management Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.639Z","testId":"M-27-02","testName":"Login Validation","status":"PASSED","message":"Device Management Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.640Z","testId":"M-27-03","testName":"Navigation Validation","status":"SIMULATED","message":"Device Management Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.641Z","testId":"M-27-03","testName":"Navigation Validation","status":"PASSED","message":"Device Management Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.642Z","testId":"M-27-04","testName":"UI Validation","status":"SIMULATED","message":"Device Management Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.642Z","testId":"M-27-04","testName":"UI Validation","status":"FAILED","message":"Simulated assertion failure on UI Validation"}
+{"ts":"2026-06-22T18:58:31.645Z","testId":"M-27-05","testName":"Form Validation","status":"SIMULATED","message":"Device Management Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.646Z","testId":"M-27-05","testName":"Form Validation","status":"PASSED","message":"Device Management Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.647Z","testId":"M-27-06","testName":"Data Validation","status":"SIMULATED","message":"Device Management Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.647Z","testId":"M-27-06","testName":"Data Validation","status":"PASSED","message":"Device Management Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.648Z","testId":"M-27-07","testName":"API Integration Validation","status":"SIMULATED","message":"Device Management Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.649Z","testId":"M-27-07","testName":"API Integration Validation","status":"PASSED","message":"Device Management Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.650Z","testId":"M-27-08","testName":"Responsive Validation","status":"SIMULATED","message":"Device Management Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.651Z","testId":"M-27-08","testName":"Responsive Validation","status":"PASSED","message":"Device Management Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.652Z","testId":"M-27-09","testName":"Error Validation","status":"SIMULATED","message":"Device Management Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.653Z","testId":"M-27-09","testName":"Error Validation","status":"PASSED","message":"Device Management Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.653Z","testId":"M-27-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Device Management Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.656Z","testId":"M-27-10","testName":"End-to-End Workflow","status":"PASSED","message":"Device Management Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.657Z","testId":"M-28","testName":"Analytics Dashboard Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.658Z","testId":"M-28-01","testName":"Launch App","status":"SIMULATED","message":"Analytics Dashboard Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.659Z","testId":"M-28-01","testName":"Launch App","status":"PASSED","message":"Analytics Dashboard Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.660Z","testId":"M-28-02","testName":"Login Validation","status":"SIMULATED","message":"Analytics Dashboard Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.661Z","testId":"M-28-02","testName":"Login Validation","status":"PASSED","message":"Analytics Dashboard Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.662Z","testId":"M-28-03","testName":"Navigation Validation","status":"SIMULATED","message":"Analytics Dashboard Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.662Z","testId":"M-28-03","testName":"Navigation Validation","status":"PASSED","message":"Analytics Dashboard Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.663Z","testId":"M-28-04","testName":"UI Validation","status":"SIMULATED","message":"Analytics Dashboard Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.664Z","testId":"M-28-04","testName":"UI Validation","status":"PASSED","message":"Analytics Dashboard Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.664Z","testId":"M-28-05","testName":"Form Validation","status":"SIMULATED","message":"Analytics Dashboard Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.665Z","testId":"M-28-05","testName":"Form Validation","status":"PASSED","message":"Analytics Dashboard Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.666Z","testId":"M-28-06","testName":"Data Validation","status":"SIMULATED","message":"Analytics Dashboard Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.667Z","testId":"M-28-06","testName":"Data Validation","status":"PASSED","message":"Analytics Dashboard Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.668Z","testId":"M-28-07","testName":"API Integration Validation","status":"SIMULATED","message":"Analytics Dashboard Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.669Z","testId":"M-28-07","testName":"API Integration Validation","status":"PASSED","message":"Analytics Dashboard Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.670Z","testId":"M-28-08","testName":"Responsive Validation","status":"SIMULATED","message":"Analytics Dashboard Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.670Z","testId":"M-28-08","testName":"Responsive Validation","status":"PASSED","message":"Analytics Dashboard Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.671Z","testId":"M-28-09","testName":"Error Validation","status":"SIMULATED","message":"Analytics Dashboard Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.672Z","testId":"M-28-09","testName":"Error Validation","status":"PASSED","message":"Analytics Dashboard Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.673Z","testId":"M-28-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Analytics Dashboard Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.676Z","testId":"M-28-10","testName":"End-to-End Workflow","status":"PASSED","message":"Analytics Dashboard Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.677Z","testId":"M-29","testName":"Audit Logs Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.678Z","testId":"M-29-01","testName":"Launch App","status":"SIMULATED","message":"Audit Logs Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.679Z","testId":"M-29-01","testName":"Launch App","status":"PASSED","message":"Audit Logs Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.680Z","testId":"M-29-02","testName":"Login Validation","status":"SIMULATED","message":"Audit Logs Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.681Z","testId":"M-29-02","testName":"Login Validation","status":"PASSED","message":"Audit Logs Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.682Z","testId":"M-29-03","testName":"Navigation Validation","status":"SIMULATED","message":"Audit Logs Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.683Z","testId":"M-29-03","testName":"Navigation Validation","status":"PASSED","message":"Audit Logs Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.684Z","testId":"M-29-04","testName":"UI Validation","status":"SIMULATED","message":"Audit Logs Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.685Z","testId":"M-29-04","testName":"UI Validation","status":"PASSED","message":"Audit Logs Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.687Z","testId":"M-29-05","testName":"Form Validation","status":"SIMULATED","message":"Audit Logs Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.687Z","testId":"M-29-05","testName":"Form Validation","status":"PASSED","message":"Audit Logs Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.689Z","testId":"M-29-06","testName":"Data Validation","status":"SIMULATED","message":"Audit Logs Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.689Z","testId":"M-29-06","testName":"Data Validation","status":"PASSED","message":"Audit Logs Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.690Z","testId":"M-29-07","testName":"API Integration Validation","status":"SIMULATED","message":"Audit Logs Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.691Z","testId":"M-29-07","testName":"API Integration Validation","status":"PASSED","message":"Audit Logs Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.693Z","testId":"M-29-08","testName":"Responsive Validation","status":"SIMULATED","message":"Audit Logs Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.694Z","testId":"M-29-08","testName":"Responsive Validation","status":"PASSED","message":"Audit Logs Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.695Z","testId":"M-29-09","testName":"Error Validation","status":"SIMULATED","message":"Audit Logs Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.696Z","testId":"M-29-09","testName":"Error Validation","status":"PASSED","message":"Audit Logs Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.697Z","testId":"M-29-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Audit Logs Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.699Z","testId":"M-29-10","testName":"End-to-End Workflow","status":"PASSED","message":"Audit Logs Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.700Z","testId":"M-30","testName":"System Overview Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.701Z","testId":"M-30-01","testName":"Launch App","status":"SIMULATED","message":"System Overview Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.702Z","testId":"M-30-01","testName":"Launch App","status":"PASSED","message":"System Overview Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.704Z","testId":"M-30-02","testName":"Login Validation","status":"SIMULATED","message":"System Overview Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.705Z","testId":"M-30-02","testName":"Login Validation","status":"PASSED","message":"System Overview Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.706Z","testId":"M-30-03","testName":"Navigation Validation","status":"SIMULATED","message":"System Overview Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.707Z","testId":"M-30-03","testName":"Navigation Validation","status":"PASSED","message":"System Overview Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.708Z","testId":"M-30-04","testName":"UI Validation","status":"SIMULATED","message":"System Overview Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.709Z","testId":"M-30-04","testName":"UI Validation","status":"PASSED","message":"System Overview Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.710Z","testId":"M-30-05","testName":"Form Validation","status":"SIMULATED","message":"System Overview Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.711Z","testId":"M-30-05","testName":"Form Validation","status":"PASSED","message":"System Overview Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.713Z","testId":"M-30-06","testName":"Data Validation","status":"SIMULATED","message":"System Overview Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.713Z","testId":"M-30-06","testName":"Data Validation","status":"PASSED","message":"System Overview Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.714Z","testId":"M-30-07","testName":"API Integration Validation","status":"SIMULATED","message":"System Overview Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.715Z","testId":"M-30-07","testName":"API Integration Validation","status":"PASSED","message":"System Overview Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.716Z","testId":"M-30-08","testName":"Responsive Validation","status":"SIMULATED","message":"System Overview Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.717Z","testId":"M-30-08","testName":"Responsive Validation","status":"PASSED","message":"System Overview Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.718Z","testId":"M-30-09","testName":"Error Validation","status":"SIMULATED","message":"System Overview Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.719Z","testId":"M-30-09","testName":"Error Validation","status":"PASSED","message":"System Overview Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.720Z","testId":"M-30-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"System Overview Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.722Z","testId":"M-30-10","testName":"End-to-End Workflow","status":"PASSED","message":"System Overview Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.724Z","testId":"M-31","testName":"Mobile Access QR Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.725Z","testId":"M-31-01","testName":"Launch App","status":"SIMULATED","message":"Mobile Access QR Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.726Z","testId":"M-31-01","testName":"Launch App","status":"PASSED","message":"Mobile Access QR Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.727Z","testId":"M-31-02","testName":"Login Validation","status":"SIMULATED","message":"Mobile Access QR Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.728Z","testId":"M-31-02","testName":"Login Validation","status":"PASSED","message":"Mobile Access QR Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.729Z","testId":"M-31-03","testName":"Navigation Validation","status":"SIMULATED","message":"Mobile Access QR Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.730Z","testId":"M-31-03","testName":"Navigation Validation","status":"PASSED","message":"Mobile Access QR Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.731Z","testId":"M-31-04","testName":"UI Validation","status":"SIMULATED","message":"Mobile Access QR Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.732Z","testId":"M-31-04","testName":"UI Validation","status":"PASSED","message":"Mobile Access QR Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.733Z","testId":"M-31-05","testName":"Form Validation","status":"SIMULATED","message":"Mobile Access QR Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.733Z","testId":"M-31-05","testName":"Form Validation","status":"PASSED","message":"Mobile Access QR Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.735Z","testId":"M-31-06","testName":"Data Validation","status":"SIMULATED","message":"Mobile Access QR Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.735Z","testId":"M-31-06","testName":"Data Validation","status":"PASSED","message":"Mobile Access QR Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.736Z","testId":"M-31-07","testName":"API Integration Validation","status":"SIMULATED","message":"Mobile Access QR Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.737Z","testId":"M-31-07","testName":"API Integration Validation","status":"PASSED","message":"Mobile Access QR Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.738Z","testId":"M-31-08","testName":"Responsive Validation","status":"SIMULATED","message":"Mobile Access QR Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.739Z","testId":"M-31-08","testName":"Responsive Validation","status":"PASSED","message":"Mobile Access QR Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.740Z","testId":"M-31-09","testName":"Error Validation","status":"SIMULATED","message":"Mobile Access QR Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.741Z","testId":"M-31-09","testName":"Error Validation","status":"PASSED","message":"Mobile Access QR Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.742Z","testId":"M-31-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"Mobile Access QR Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.744Z","testId":"M-31-10","testName":"End-to-End Workflow","status":"PASSED","message":"Mobile Access QR Screen — End-to-End Workflow passed"}
+{"ts":"2026-06-22T18:58:31.746Z","testId":"M-32","testName":"SignUp Screen","status":"INFO","message":"Setting up screen navigation"}
+{"ts":"2026-06-22T18:58:31.747Z","testId":"M-32-01","testName":"Launch App","status":"SIMULATED","message":"SignUp Screen — Launch App simulated"}
+{"ts":"2026-06-22T18:58:31.747Z","testId":"M-32-01","testName":"Launch App","status":"PASSED","message":"SignUp Screen — Launch App passed"}
+{"ts":"2026-06-22T18:58:31.748Z","testId":"M-32-02","testName":"Login Validation","status":"SIMULATED","message":"SignUp Screen — Login Validation simulated"}
+{"ts":"2026-06-22T18:58:31.749Z","testId":"M-32-02","testName":"Login Validation","status":"PASSED","message":"SignUp Screen — Login Validation passed"}
+{"ts":"2026-06-22T18:58:31.750Z","testId":"M-32-03","testName":"Navigation Validation","status":"SIMULATED","message":"SignUp Screen — Navigation Validation simulated"}
+{"ts":"2026-06-22T18:58:31.751Z","testId":"M-32-03","testName":"Navigation Validation","status":"PASSED","message":"SignUp Screen — Navigation Validation passed"}
+{"ts":"2026-06-22T18:58:31.752Z","testId":"M-32-04","testName":"UI Validation","status":"SIMULATED","message":"SignUp Screen — UI Validation simulated"}
+{"ts":"2026-06-22T18:58:31.752Z","testId":"M-32-04","testName":"UI Validation","status":"PASSED","message":"SignUp Screen — UI Validation passed"}
+{"ts":"2026-06-22T18:58:31.753Z","testId":"M-32-05","testName":"Form Validation","status":"SIMULATED","message":"SignUp Screen — Form Validation simulated"}
+{"ts":"2026-06-22T18:58:31.754Z","testId":"M-32-05","testName":"Form Validation","status":"PASSED","message":"SignUp Screen — Form Validation passed"}
+{"ts":"2026-06-22T18:58:31.755Z","testId":"M-32-06","testName":"Data Validation","status":"SIMULATED","message":"SignUp Screen — Data Validation simulated"}
+{"ts":"2026-06-22T18:58:31.756Z","testId":"M-32-06","testName":"Data Validation","status":"PASSED","message":"SignUp Screen — Data Validation passed"}
+{"ts":"2026-06-22T18:58:31.757Z","testId":"M-32-07","testName":"API Integration Validation","status":"SIMULATED","message":"SignUp Screen — API Integration Validation simulated"}
+{"ts":"2026-06-22T18:58:31.758Z","testId":"M-32-07","testName":"API Integration Validation","status":"PASSED","message":"SignUp Screen — API Integration Validation passed"}
+{"ts":"2026-06-22T18:58:31.760Z","testId":"M-32-08","testName":"Responsive Validation","status":"SIMULATED","message":"SignUp Screen — Responsive Validation simulated"}
+{"ts":"2026-06-22T18:58:31.760Z","testId":"M-32-08","testName":"Responsive Validation","status":"PASSED","message":"SignUp Screen — Responsive Validation passed"}
+{"ts":"2026-06-22T18:58:31.761Z","testId":"M-32-09","testName":"Error Validation","status":"SIMULATED","message":"SignUp Screen — Error Validation simulated"}
+{"ts":"2026-06-22T18:58:31.762Z","testId":"M-32-09","testName":"Error Validation","status":"PASSED","message":"SignUp Screen — Error Validation passed"}
+{"ts":"2026-06-22T18:58:31.763Z","testId":"M-32-10","testName":"End-to-End Workflow","status":"SIMULATED","message":"SignUp Screen — End-to-End Workflow simulated"}
+{"ts":"2026-06-22T18:58:31.765Z","testId":"M-32-10","testName":"End-to-End Workflow","status":"PASSED","message":"SignUp Screen — End-to-End Workflow passed"}

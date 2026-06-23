@@ -712,62 +712,8 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
         <div className="lg:col-span-2 space-y-4">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl flex flex-col">
             
-            {/* Header Telemetry stats bar */}
-            <div className="bg-slate-950 border-b border-slate-800 px-4 py-3 flex flex-wrap items-center justify-between text-xs gap-3">
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-slate-300">Device status:</span>
-                <span className="flex items-center gap-1.5 font-semibold">
-                  <span className={`w-2 h-2 rounded-full ${
-                    connectionHealth.includes("Connected") || connectionHealth === "Healthy" || connectionHealth === "Connected" ? "bg-green-500 animate-ping" : "bg-red-500"
-                  }`} />
-                  <span className={connectionHealth.includes("Connected") || connectionHealth === "Healthy" || connectionHealth === "Connected" ? "text-green-400" : "text-red-400"}>
-                    {connectionHealth}
-                  </span>
-                </span>
-              </div>
-
-              {/* Start / Stop Camera Controls */}
-              <div className="flex gap-2">
-                <button
-                  onClick={startCamera}
-                  disabled={cameraRunning}
-                  className="px-2.5 py-1 bg-green-600 hover:bg-green-500 text-white rounded text-[10px] font-bold transition disabled:opacity-40 cursor-pointer"
-                >
-                  Start Camera
-                </button>
-                <button
-                  onClick={stopCamera}
-                  disabled={!cameraRunning}
-                  className="px-2.5 py-1 bg-red-600 hover:bg-red-500 text-white rounded text-[10px] font-bold transition disabled:opacity-40 cursor-pointer"
-                >
-                  Stop Camera
-                </button>
-              </div>
-
-              <div className="flex items-center gap-4 text-slate-400">
-                <div>
-                  <span className="font-bold">Latency:</span>{" "}
-                  <span className="font-semibold text-slate-200">{latency} ms</span>
-                </div>
-                <div>
-                  <span className="font-bold">Rate:</span>{" "}
-                  <span className="font-semibold text-slate-200">{fps} FPS</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <span className="font-bold">Engine:</span>
-                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                    aiStatus.includes("Online") || aiStatus.includes("Active")
-                      ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                      : "bg-red-500/10 text-red-400 border border-red-500/20"
-                  }`}>
-                    {aiStatus}
-                  </span>
-                </div>
-              </div>
-            </div>
-
             {/* Video Canvas Container */}
-            <div className="relative aspect-video bg-black flex items-center justify-center">
+            <div className="relative aspect-video bg-black flex items-center justify-center order-1 md:order-2">
               {isDemoMode && cameraRunning ? (
                 <canvas
                   ref={simCanvasRef}
@@ -791,7 +737,7 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
                     <div className="absolute inset-0 bg-slate-950/90 flex flex-col items-center justify-center text-xs text-slate-500 gap-2">
                       <span className="text-3xl">📹</span>
                       <p className="font-bold">Camera Feed is Offline</p>
-                      <p className="text-[10px]">Click 'Start Camera' above to mount hardware.</p>
+                      <p className="text-[10px]">Click 'Start Camera' to mount hardware.</p>
                     </div>
                   )}
                 </>
@@ -838,6 +784,61 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
                 </div>
               </div>
             </div>
+
+            {/* Header Telemetry stats bar (placed below video on mobile) */}
+            <div className="bg-slate-950 border-t border-slate-800 md:border-t-0 md:border-b px-4 py-3 flex flex-col sm:flex-row items-center justify-between text-xs gap-3 order-2 md:order-1 w-full">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-slate-300">Device status:</span>
+                <span className="flex items-center gap-1.5 font-semibold">
+                  <span className={`w-2 h-2 rounded-full ${
+                    connectionHealth.includes("Connected") || connectionHealth === "Healthy" || connectionHealth === "Connected" ? "bg-green-500 animate-ping" : "bg-red-500"
+                  }`} />
+                  <span className={connectionHealth.includes("Connected") || connectionHealth === "Healthy" || connectionHealth === "Connected" ? "text-green-400" : "text-red-400"}>
+                    {connectionHealth}
+                  </span>
+                </span>
+              </div>
+
+              {/* Start / Stop Camera Controls */}
+              <div className="flex gap-2">
+                <button
+                  onClick={startCamera}
+                  disabled={cameraRunning}
+                  className="px-2.5 py-1 bg-green-600 hover:bg-green-500 text-white rounded text-[10px] font-bold transition disabled:opacity-40 cursor-pointer"
+                >
+                  Start Camera
+                </button>
+                <button
+                  onClick={stopCamera}
+                  disabled={!cameraRunning}
+                  className="px-2.5 py-1 bg-red-600 hover:bg-red-500 text-white rounded text-[10px] font-bold transition disabled:opacity-40 cursor-pointer"
+                >
+                  Stop Camera
+                </button>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-slate-400">
+                <div>
+                  <span className="font-bold">Latency:</span>{" "}
+                  <span className="font-semibold text-slate-200">{latency} ms</span>
+                </div>
+                <div>
+                  <span className="font-bold">Rate:</span>{" "}
+                  <span className="font-semibold text-slate-200">{fps} FPS</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-bold">Engine:</span>
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                    aiStatus.includes("Online") || aiStatus.includes("Active")
+                      ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                      : "bg-red-500/10 text-red-400 border border-red-500/20"
+                  }`}>
+                    {aiStatus}
+                  </span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 

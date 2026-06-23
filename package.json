@@ -1,4 +1,12 @@
 {
+  "name": "wellcare-patient-monitoring",
+  "version": "1.0.0",
+  "scripts": {
+    "test:web": "npm --prefix testing run test:web",
+    "test:mobile": "npm --prefix testing run test:mobile",
+    "test:all": "npm --prefix testing run test:all",
+    "report": "npm --prefix testing run report"
+  },
   "dependencies": {
     "firebase": "^12.14.0"
   }

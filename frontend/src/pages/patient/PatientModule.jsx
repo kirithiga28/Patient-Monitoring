@@ -69,13 +69,13 @@ export function PatientProfile({ patientId: propPatientId, onBack }) {
           <CardHeader>
             <CardTitle>Clinical Chart Details</CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-2 gap-4 text-xs">
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div><span className="text-slate-500 font-bold block mb-1">AGE</span> {p.age} Years</div>
             <div><span className="text-slate-500 font-bold block mb-1">BLOOD GROUP</span> {p.bloodGroup}</div>
             <div><span className="text-slate-500 font-bold block mb-1">PRIMARY PHYSICIAN</span> {p.doctor}</div>
             <div><span className="text-slate-500 font-bold block mb-1">CONTACT PHONE</span> {p.contact}</div>
-            <div className="col-span-2"><span className="text-slate-500 font-bold block mb-1">ADMITTING DIAGNOSIS</span> {p.diagnosis}</div>
-            <div className="col-span-2"><span className="text-slate-500 font-bold block mb-1">MEDICAL HISTORY NOTES</span> {p.history}</div>
+            <div className="sm:col-span-2"><span className="text-slate-500 font-bold block mb-1">ADMITTING DIAGNOSIS</span> {p.diagnosis}</div>
+            <div className="sm:col-span-2"><span className="text-slate-500 font-bold block mb-1">MEDICAL HISTORY NOTES</span> {p.history}</div>
           </CardContent>
         </Card>
 

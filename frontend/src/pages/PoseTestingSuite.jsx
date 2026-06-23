@@ -518,38 +518,8 @@ export default function PoseTestingSuite() {
         <div className="lg:col-span-2 space-y-4">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl flex flex-col">
             
-            {/* Telemetry Bar */}
-            <div className="bg-slate-950 border-b border-slate-800 px-4 py-3 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2">
-              <div className="flex items-center gap-2">
-                <span className="font-bold">Engine Status:</span>
-                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                  engineStatus.includes("ONLINE") 
-                    ? "bg-green-500/10 text-green-400 border border-green-500/20"
-                    : "bg-red-500/10 text-red-400 border border-red-500/20"
-                }`}>
-                  {engineStatus}
-                </span>
-              </div>
-              <div className="flex gap-4 flex-wrap">
-                <div>
-                  <span className="font-bold">Landmarks Extracted:</span>{" "}
-                  <span className="font-bold text-slate-200">
-                    {landmarksCount > 0 ? `${landmarksCount} / 33` : "MediaPipe unavailable - YOLO fallback active"}
-                  </span>
-                </div>
-                <div>
-                  <span className="font-bold">Rate:</span>{" "}
-                  <span className="font-semibold text-slate-200">{fps > 0 ? `${fps} FPS` : "--"}</span>
-                </div>
-                <div>
-                  <span className="font-bold">Latency:</span>{" "}
-                  <span className="font-semibold text-slate-200">{latency > 0 ? `${latency} ms` : "--"}</span>
-                </div>
-              </div>
-            </div>
-
             {/* Video Preview */}
-            <div className="relative aspect-video bg-black flex items-center justify-center">
+            <div className="relative aspect-video bg-black flex items-center justify-center order-1 md:order-2">
               {streamError && !isTestMode ? (
                 <div className="text-center text-slate-500 text-xs p-4">
                   <span className="text-3xl block mb-2">⚠️</span>
@@ -589,6 +559,37 @@ export default function PoseTestingSuite() {
                 </div>
               </div>
             </div>
+
+            {/* Telemetry Bar (placed below video on mobile) */}
+            <div className="bg-slate-950 border-t border-slate-800 md:border-t-0 md:border-b px-4 py-3 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-3 order-2 md:order-1 w-full">
+              <div className="flex items-center gap-2">
+                <span className="font-bold">Engine Status:</span>
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                  engineStatus.includes("ONLINE") 
+                    ? "bg-green-500/10 text-green-400 border border-green-500/20"
+                    : "bg-red-500/10 text-red-400 border border-red-500/20"
+                }`}>
+                  {engineStatus}
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+                <div>
+                  <span className="font-bold">Landmarks Extracted:</span>{" "}
+                  <span className="font-bold text-slate-200">
+                    {landmarksCount > 0 ? `${landmarksCount} / 33` : "MediaPipe unavailable - YOLO fallback active"}
+                  </span>
+                </div>
+                <div>
+                  <span className="font-bold">Rate:</span>{" "}
+                  <span className="font-semibold text-slate-200">{fps > 0 ? `${fps} FPS` : "--"}</span>
+                </div>
+                <div>
+                  <span className="font-bold">Latency:</span>{" "}
+                  <span className="font-semibold text-slate-200">{latency > 0 ? `${latency} ms` : "--"}</span>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -699,7 +700,7 @@ export default function PoseTestingSuite() {
           <div className="space-y-2">
             <span className="text-xs font-bold text-slate-300">Raw Landmark Coordinates (X, Y, Z, Visibility)</span>
             
-            <div className="max-h-[350px] overflow-y-auto border border-slate-850 rounded-xl custom-scrollbar bg-slate-950">
+            <div className="max-h-[350px] overflow-auto border border-slate-850 rounded-xl custom-scrollbar bg-slate-950 w-full">
               <table className="w-full text-left border-collapse text-[10px]">
                 <thead>
                   <tr className="bg-slate-900 border-b border-slate-850 text-slate-400 font-semibold sticky top-0">

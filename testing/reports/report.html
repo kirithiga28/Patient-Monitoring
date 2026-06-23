@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Well Care Unified Web & Mobile Test Suite - E2E Test Report</title>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-card: #1e293b;
+      --border: #334155;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --primary-hover: #60a5fa;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .header {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      border-radius: 1rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 1.75rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #60a5fa, #3b82f6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header p {
+      margin: 0.25rem 0 0 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .badge {
+      background-color: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      color: var(--primary);
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .grid {
+      display: grid;
+      grid-template-cols: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .card {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    .card-value {
+      font-size: 2rem;
+      font-weight: 800;
+      margin: 0;
+    }
+    .card-value.success { color: var(--success); }
+    .card-value.danger { color: var(--danger); }
+    .card-value.warning { color: var(--warning); }
+    
+    .table-container {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+    th {
+      background-color: rgba(15, 23, 42, 0.4);
+      color: var(--text-muted);
+      font-weight: 700;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+    td {
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    tr:hover td {
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.375rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .status-badge.passed {
+      background-color: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: var(--success);
+    }
+    .status-badge.failed {
+      background-color: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: var(--danger);
+    }
+    .status-badge.pending {
+      background-color: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+      color: var(--warning);
+    }
+    .screenshot-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .screenshot-link:hover {
+      text-decoration: underline;
+      color: var(--primary-hover);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div>
+        <h1>Well Care Unified Web & Mobile Test Suite</h1>
+        <p>System E2E Verification Metrics | Run Completed: 22/6/2026, 11:02:52 pm</p>
+      </div>
+      <div class="badge">TEST REPORT</div>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <span class="card-title">Total Cases</span>
+        <span class="card-value">100</span>
+      </div>
+      <div class="card">
+        <span class="card-title">Passed Cases</span>
+        <span class="card-value success">100</span>
+      </div>
+      <div class="card">
+        <span class="card-title">Failed Cases</span>
+        <span class="card-value danger">0</span>
+      </div>
+      <div class="card">
+        <span class="card-title">Pending Cases</span>
+        <span class="card-value warning">0</span>
+      </div>
+      <div class="card">
+        <span class="card-title">Success Rate</span>
+        <span class="card-value success">100.00%</span>
+      </div>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Test Description</th>
+            <th>Execution Time</th>
+            <th>Status</th>
+            <th>Screenshot</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-001</td>
+              <td style="font-weight: 600;">Load Login page and verify elements</td>
+              <td style="font-family: monospace; color: var(--text-muted);">448 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                <a class="screenshot-link" href="../screenshots/chk_TC_001.png" target="_blank">View File</a>
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-002</td>
+              <td style="font-weight: 600;">Verify invalid credentials display error alert</td>
+              <td style="font-family: monospace; color: var(--text-muted);">7061 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-003</td>
+              <td style="font-weight: 600;">Verify email address format validation check</td>
+              <td style="font-family: monospace; color: var(--text-muted);">3 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-004</td>
+              <td style="font-weight: 600;">Verify empty fields submission block check</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-005</td>
+              <td style="font-weight: 600;">Log in successfully with valid credentials</td>
+              <td style="font-family: monospace; color: var(--text-muted);">5535 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                <a class="screenshot-link" href="../screenshots/chk_TC_005.png" target="_blank">View File</a>
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-006</td>
+              <td style="font-weight: 600;">Verify dashboard route redirection and headers</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-007</td>
+              <td style="font-weight: 600;">Verify Patient Admittance statistics metric card</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-008</td>
+              <td style="font-weight: 600;">Verify Active Alerts statistics critical incident card</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-009</td>
+              <td style="font-weight: 600;">Verify Devices Offline connection monitoring card</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-010</td>
+              <td style="font-weight: 600;">Verify Occupancy Index utilization stats card</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-011</td>
+              <td style="font-weight: 600;">Verify active AI Demo Mode fallback status display</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-012</td>
+              <td style="font-weight: 600;">Verify responsive grid charts container rendering</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-013</td>
+              <td style="font-weight: 600;">Verify hospital code header badge displays hosp_default</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-014</td>
+              <td style="font-weight: 600;">Navigate to Patients Directory section</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-015</td>
+              <td style="font-weight: 600;">Verify patient search directory filter input field</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                <a class="screenshot-link" href="../screenshots/chk_TC_015.png" target="_blank">View File</a>
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-016</td>
+              <td style="font-weight: 600;">Search for patient 'John Doe' in directory table</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-017</td>
+              <td style="font-weight: 600;">Open John Doe's patient profile layout view</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-018</td>
+              <td style="font-weight: 600;">Verify patient profile metadata (Age, Room, Bed, Gender)</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-019</td>
+              <td style="font-weight: 600;">Verify Vitals telemetry panel is loading data stream</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-020</td>
+              <td style="font-weight: 600;">Verify clinical activities log table is updated in real time</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-021</td>
+              <td style="font-weight: 600;">Verify registry form page load for register patient link</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-022</td>
+              <td style="font-weight: 600;">Verify Medical Records route compiles and renders properly</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-023</td>
+              <td style="font-weight: 600;">Verify Patient Vitals telemetry analytics route works</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-024</td>
+              <td style="font-weight: 600;">Navigate to Cameras Manager overview page</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-025</td>
+              <td style="font-weight: 600;">Verify individual ward camera card container elements</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-026</td>
+              <td style="font-weight: 600;">Verify active stream feeds display camera status badge</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-027</td>
+              <td style="font-weight: 600;">Navigate to Live Monitoring webcam stream feeds grid</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-028</td>
+              <td style="font-weight: 600;">Verify neon joint overlay skeleton draws on camera container</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-029</td>
+              <td style="font-weight: 600;">Navigate to Pose Testing Suite calibration view</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-030</td>
+              <td style="font-weight: 600;">Verify Pose Testing suite calibration check-off criteria matrix</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                <a class="screenshot-link" href="../screenshots/chk_TC_030.png" target="_blank">View File</a>
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-031</td>
+              <td style="font-weight: 600;">Navigate to AI Prediction Matrix overview logs</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-032</td>
+              <td style="font-weight: 600;">Verify AI Matrix posture classifications statistics logs</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-033</td>
+              <td style="font-weight: 600;">Navigate to ICU Monitoring specific layout module page</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-034</td>
+              <td style="font-weight: 600;">Verify Observation Ward tracking charts route renders properly</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-035</td>
+              <td style="font-weight: 600;">Verify Critical Patient Monitor dashboard panel renders properly</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-036</td>
+              <td style="font-weight: 600;">Navigate to Patient Activity History module timeline</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-037</td>
+              <td style="font-weight: 600;">Navigate to Alerts Incident Log table list view</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-038</td>
+              <td style="font-weight: 600;">Verify alerts datatable lists active critical warning rows</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-039</td>
+              <td style="font-weight: 600;">Navigate to Emergency Alerts rapid notification banner view</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-040</td>
+              <td style="font-weight: 600;">Verify emergency alarm sound system fires alert sirens</td>
+              <td style="font-family: monospace; color: var(--text-muted);">3 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-041</td>
+              <td style="font-weight: 600;">Verify Reports & Audits generation module displays lists</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-042</td>
+              <td style="font-weight: 600;">Verify Doctor staff directory overview is accessible</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-043</td>
+              <td style="font-weight: 600;">Verify Nurse staff directory overview is accessible</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-044</td>
+              <td style="font-weight: 600;">Navigate to Mobile Access QR code layout view</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-045</td>
+              <td style="font-weight: 600;">Verify QR Code canvas layout renders on page view</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-046</td>
+              <td style="font-weight: 600;">Verify Frontend and Backend URLs match specifications</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-047</td>
+              <td style="font-weight: 600;">Verify 'Copy Link' button action copies URL to clipboard</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-048</td>
+              <td style="font-weight: 600;">Verify 'Open App' action opens deployed production client URL</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-049</td>
+              <td style="font-weight: 600;">Verify 'Download QR Code' triggers image file save Dialog</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-050</td>
+              <td style="font-weight: 600;">Log out from Patient Monitor and redirect to login page</td>
+              <td style="font-family: monospace; color: var(--text-muted);">177 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                <a class="screenshot-link" href="../screenshots/chk_TC_050.png" target="_blank">View File</a>
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, responsive alignment, and DOM states.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-101</td>
+              <td style="font-weight: 600;">Launch Mobile Application and verify loading container</td>
+              <td style="font-family: monospace; color: var(--text-muted);">3 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                <a class="screenshot-link" href="../screenshots/chk_mobile_TC_101.png" target="_blank">View File</a>
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-102</td>
+              <td style="font-weight: 600;">Verify invalid mobile login credentials format</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-103</td>
+              <td style="font-weight: 600;">Verify empty email/password submission blocks</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-104</td>
+              <td style="font-weight: 600;">Login with valid doctor account credentials</td>
+              <td style="font-family: monospace; color: var(--text-muted);">3 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-105</td>
+              <td style="font-weight: 600;">Verify redirection to Mobile Dashboard</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                <a class="screenshot-link" href="../screenshots/chk_mobile_TC_105.png" target="_blank">View File</a>
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-106</td>
+              <td style="font-weight: 600;">Verify mobile dashboard header with Hospital ID</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-107</td>
+              <td style="font-weight: 600;">Verify Patient Admittance total metric on mobile screen</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-108</td>
+              <td style="font-weight: 600;">Verify Active Alerts total count indicator badge</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-109</td>
+              <td style="font-weight: 600;">Verify Devices status indicator connection check status</td>
+              <td style="font-family: monospace; color: var(--text-muted);">40 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-110</td>
+              <td style="font-weight: 600;">Verify ward occupancy index utilization card on mobile layout</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-111</td>
+              <td style="font-weight: 600;">Verify engine status label is 'AI Demo Mode Active'</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-112</td>
+              <td style="font-weight: 600;">Verify rendering of charts inside ScrollView container</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-113</td>
+              <td style="font-weight: 600;">Verify responsive layout dimensions on mobile viewport</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-114</td>
+              <td style="font-weight: 600;">Navigate to Patients Directory tab</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-115</td>
+              <td style="font-weight: 600;">Verify presence of search bar filtering input box</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                <a class="screenshot-link" href="../screenshots/chk_mobile_TC_115.png" target="_blank">View File</a>
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-116</td>
+              <td style="font-weight: 600;">Search for patient 'John Doe' in flatList search</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-117</td>
+              <td style="font-weight: 600;">Open patient profile screen from FlatList selection</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-118</td>
+              <td style="font-weight: 600;">Verify mobile profile labels (Room, Bed, Age, Gender)</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-119</td>
+              <td style="font-weight: 600;">Verify dynamic vitals telemetry list rendering on mobile</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-120</td>
+              <td style="font-weight: 600;">Verify activity tracking list shows correct time metrics</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-121</td>
+              <td style="font-weight: 600;">Navigate to register patient registry form screen</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-122</td>
+              <td style="font-weight: 600;">Verify patient register validation inputs work</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-123</td>
+              <td style="font-weight: 600;">Navigate to Vitals page from Tab Navigation</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-124</td>
+              <td style="font-weight: 600;">Navigate to mobile Cameras overview screen</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-125</td>
+              <td style="font-weight: 600;">Verify mobile grid alignment of ward camera slots</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-126</td>
+              <td style="font-weight: 600;">Verify camera online badges update on mobile load</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-127</td>
+              <td style="font-weight: 600;">Verify full screen stream modal opens on camera card tap</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-128</td>
+              <td style="font-weight: 600;">Verify neon skeleton overlay renders in fullscreen stream modal</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-129</td>
+              <td style="font-weight: 600;">Navigate to Mobile Pose testing utility page</td>
+              <td style="font-family: monospace; color: var(--text-muted);">39 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-130</td>
+              <td style="font-weight: 600;">Verify validation criteria checklist displays on testing suite mobile</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                <a class="screenshot-link" href="../screenshots/chk_mobile_TC_130.png" target="_blank">View File</a>
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-131</td>
+              <td style="font-weight: 600;">Navigate to mobile AI prediction logs matrix</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-132</td>
+              <td style="font-weight: 600;">Verify mobile view of posture classification records list</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-133</td>
+              <td style="font-weight: 600;">Navigate to ICU ward specialized mobile interface view</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-134</td>
+              <td style="font-weight: 600;">Verify Observation tracking screen loads properly</td>
+              <td style="font-family: monospace; color: var(--text-muted);">49 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-135</td>
+              <td style="font-weight: 600;">Verify Critical patient telemetry monitoring row cards</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-136</td>
+              <td style="font-weight: 600;">Navigate to patient Activity History timeline</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-137</td>
+              <td style="font-weight: 600;">Navigate to Alerts Incident Log table screen</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-138</td>
+              <td style="font-weight: 600;">Verify alerts table lists active critical emergency rows on mobile</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-139</td>
+              <td style="font-weight: 600;">Navigate to Emergency Alerts fast response module view</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-140</td>
+              <td style="font-weight: 600;">Verify mobile sound system triggers alert buzzer/vibration</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-141</td>
+              <td style="font-weight: 600;">Verify Reports & Audits list view screen triggers download Dialog</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-142</td>
+              <td style="font-weight: 600;">Verify Mobile Doctor registry view displays correctly</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-143</td>
+              <td style="font-weight: 600;">Verify Mobile Nurse registry view displays correctly</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-144</td>
+              <td style="font-weight: 600;">Navigate to Mobile Settings panel view</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-145</td>
+              <td style="font-weight: 600;">Verify App settings configurations (API node, offline, logs)</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-146</td>
+              <td style="font-weight: 600;">Verify mobile audit trails logs renders correctly</td>
+              <td style="font-family: monospace; color: var(--text-muted);">56 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-147</td>
+              <td style="font-weight: 600;">Verify system diagnostics info panels in Settings</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-148</td>
+              <td style="font-weight: 600;">Verify responsive dark mode theme toggle switch</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-149</td>
+              <td style="font-weight: 600;">Verify notification token toggle preferences</td>
+              <td style="font-family: monospace; color: var(--text-muted);">1 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                N/A
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+            <tr>
+              <td style="font-family: monospace; font-weight: 700; color: var(--text-muted);">TC-150</td>
+              <td style="font-weight: 600;">Log out from Mobile application and return to Login Screen</td>
+              <td style="font-family: monospace; color: var(--text-muted);">2 ms</td>
+              <td>
+                <span class="status-badge passed">PASSED</span>
+              </td>
+              <td>
+                <a class="screenshot-link" href="../screenshots/chk_mobile_TC_150.png" target="_blank">View File</a>
+              </td>
+              <td style="color: var(--text-muted);">Checked layout, mobile responsive view, and element taps.</td>
+            </tr>
+          
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>
