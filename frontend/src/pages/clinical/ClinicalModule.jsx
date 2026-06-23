@@ -20,8 +20,6 @@ export function EmergencyAlerts() {
 
   const columns = [
     { key: "id", label: "Alert ID", render: (row) => <span className="font-mono text-[10px] text-slate-400">{row.id || "N/A"}</span> },
-    { key: "patientId", label: "Patient ID", render: (row) => <span className="font-mono text-[10px] text-slate-400">{row.patientId || "N/A"}</span> },
-    { key: "patientName", label: "Patient Name" },
     { key: "room", label: "Room Number" },
     { key: "alertType", label: "Alert Type", render: (row) => <span className="font-semibold text-red-400">{row.alertType}</span> },
     {
