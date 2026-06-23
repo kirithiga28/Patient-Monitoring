@@ -13,31 +13,31 @@ jobs:
 
       - name: Verify report files exist
         run: |
-          ls -la testing/final-reports/WellCare_Selenium_Report.xlsx
-          ls -la testing/final-reports/WellCare_Appium_Report.xlsx
-          ls -la testing/final-reports/WellCare_Vulnerability_Report.xlsx
-          ls -la testing/final-reports/WellCare_Load_Report.xlsx
+          ls -la testing/final-reports/selenium/WellCare_Selenium_Report.xlsx
+          ls -la testing/final-reports/appium/WellCare_Appium_Report.xlsx
+          ls -la testing/final-reports/vulnerability/WellCare_Vulnerability_Report.xlsx
+          ls -la testing/final-reports/load/WellCare_Load_Report.xlsx
 
       - name: Upload Selenium Report
         uses: actions/upload-artifact@v4
         with:
           name: Selenium-Report
-          path: testing/final-reports/WellCare_Selenium_Report.xlsx
+          path: testing/final-reports/selenium/
 
       - name: Upload Appium Report
         uses: actions/upload-artifact@v4
         with:
           name: Appium-Report
-          path: testing/final-reports/WellCare_Appium_Report.xlsx
+          path: testing/final-reports/appium/
 
       - name: Upload Vulnerability Report
         uses: actions/upload-artifact@v4
         with:
           name: Vulnerability-Report
-          path: testing/final-reports/WellCare_Vulnerability_Report.xlsx
+          path: testing/final-reports/vulnerability/
 
       - name: Upload Load Test Report
         uses: actions/upload-artifact@v4
         with:
           name: Load-Test-Report
-          path: testing/final-reports/WellCare_Load_Report.xlsx
+          path: testing/final-reports/load/
