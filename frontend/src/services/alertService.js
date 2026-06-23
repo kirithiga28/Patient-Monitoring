@@ -8,6 +8,7 @@ import {
   onSnapshot
 } from "firebase/firestore";
 import { db } from "../firebase/config";
+import { notificationService } from "./notificationService";
 
 const COLLECTION = "alerts";
 
@@ -58,18 +59,29 @@ export const alertService = {
 
   // Create an alert (used by UI or AI microservice)
   async createAlert(alertData) {
-    const docRef = await addDoc(collection(db, COLLECTION), {
+    const hId = alertData.hospitalId || "WHC-2026-1001";
+    const newAlert = {
       patientId: alertData.patientId || "",
       patientName: alertData.patientName || "Unknown",
-      room: alertData.room || "Unknown",
+      room: alertData.room || alertData.roomNumber || "Unknown",
       alertType: alertData.alertType || "Emergency Alert",
       severity: alertData.severity || "High",
-      status: "Open",
-      timestamp: new Date().toISOString(),
-      hospitalId: alertData.hospitalId || "hosp_default",
+      status: alertData.status || "Open",
+      timestamp: alertData.timestamp || alertData.alertTime || new Date().toISOString(),
+      hospitalId: hId,
+      createdBy: alertData.createdBy || "System",
       resolvedBy: ""
-    });
-    return { id: docRef.id, ...alertData };
+    };
+    const docRef = await addDoc(collection(db, COLLECTION), newAlert);
+    
+    // Add Emergency Alert Created notification
+    await notificationService.addNotification(
+      "Emergency Alert Created",
+      `Emergency Alert (${newAlert.alertType}) raised for patient ${newAlert.patientName}.`,
+      hId
+    );
+
+    return { id: docRef.id, ...newAlert };
   },
 
   // Acknowledge an alert

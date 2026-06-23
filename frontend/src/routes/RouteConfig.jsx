@@ -4,6 +4,7 @@ import Patients from "../pages/Patients";
 import Reports from "../pages/Reports";
 import Cameras from "../pages/Cameras";
 import Settings from "../pages/Settings";
+import DoctorProfile from "../pages/DoctorProfile";
 
 import PatientProfile from "../pages/PatientProfile";
 import {
@@ -41,7 +42,8 @@ export const routesConfig = {
   emergencyalerts: { component: EmergencyAlerts },
   notificationcenter: { component: NotificationCenter },
   reports: { component: Reports },
-  settings: { component: Settings }
+  settings: { component: Settings },
+  doctorprofile: { component: DoctorProfile }
 };
 
 export function getRouteComponent(page, userRole) {

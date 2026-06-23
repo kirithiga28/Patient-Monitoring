@@ -6,7 +6,7 @@ import {
   signOut,
   onAuthStateChanged 
 } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
 
 const AuthContext = createContext(null);
@@ -17,20 +17,19 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let unsubUserDoc = null;
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        try {
-          const userDocRef = doc(db, "users", user.uid);
-          const userDocSnap = await getDoc(userDocRef);
-          if (userDocSnap.exists()) {
-            const data = userDocSnap.data();
-            setCurrentUser(user);
+        setCurrentUser(user);
+        localStorage.setItem("wellcare_user", JSON.stringify(user));
+        
+        const userDocRef = doc(db, "users", user.uid);
+        unsubUserDoc = onSnapshot(userDocRef, (snap) => {
+          if (snap.exists()) {
+            const data = snap.data();
             setUserData({ uid: user.uid, ...data });
-            localStorage.setItem("wellcare_user", JSON.stringify(user));
             localStorage.setItem("wellcare_userdata", JSON.stringify({ uid: user.uid, ...data }));
           } else {
-            setCurrentUser(user);
-            // Default placeholder if firestore doc isn't written yet
             setUserData({
               uid: user.uid,
               name: user.displayName || "Doctor",
@@ -40,20 +39,28 @@ export function AuthProvider({ children }) {
               hospitalCode: "WHC-2026-1001"
             });
           }
-        } catch (err) {
-          console.error("Error loading user profile on state change:", err);
-          setCurrentUser(user);
-        }
+          setLoading(false);
+        }, (err) => {
+          console.error("Error listening to user profile:", err);
+          setLoading(false);
+        });
       } else {
+        if (unsubUserDoc) {
+          unsubUserDoc();
+          unsubUserDoc = null;
+        }
         setCurrentUser(null);
         setUserData(null);
         localStorage.removeItem("wellcare_user");
         localStorage.removeItem("wellcare_userdata");
+        setLoading(false);
       }
-      setLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribe();
+      if (unsubUserDoc) unsubUserDoc();
+    };
   }, []);
 
   const login = async (email, password) => {
@@ -72,7 +79,11 @@ export function AuthProvider({ children }) {
           await signOut(auth);
           throw new Error("Access denied. Only doctors can access this application.");
         }
-        setUserData({ uid: user.uid, ...data });
+        
+        // Update last login timestamp in Firestore
+        const lastLoginTime = new Date().toISOString();
+        await setDoc(userDocRef, { lastLogin: lastLoginTime }, { merge: true });
+        setUserData({ uid: user.uid, ...data, lastLogin: lastLoginTime });
       } else {
         throw new Error("Doctor profile not found in database.");
       }
@@ -101,6 +112,8 @@ export function AuthProvider({ children }) {
         hospitalCode: extraData.hospitalCode || "WHC-2026-1001",
         hospitalId: extraData.hospitalCode || "WHC-2026-1001",
         role: "doctor",
+        specialization: extraData.specialization || "General Medicine",
+        experience: extraData.experience || "5",
         status: "active",
         createdAt: new Date().toISOString()
       };

@@ -1,6 +1,7 @@
 import { 
   collection, 
   doc, 
+  getDoc,
   addDoc, 
   getDocs, 
   query, 
@@ -8,6 +9,7 @@ import {
   updateDoc 
 } from "firebase/firestore";
 import { db } from "../firebase/config";
+import { notificationService } from "./notificationService";
 
 const HISTORY_COLLECTION = "vitals_history";
 
@@ -38,9 +40,10 @@ export const vitalsService = {
   // Record vitals and update the current vitals in patient record
   async recordVitals(patientId, vitals, hospitalId) {
     const timestamp = new Date().toISOString();
+    const hId = hospitalId || "WHC-2026-1001";
     const vitalsRecord = {
       patientId,
-      hospitalId: hospitalId || "hosp_default",
+      hospitalId: hId,
       timestamp,
       heartRate: Number(vitals.heartRate),
       temperature: Number(vitals.temperature),
@@ -63,6 +66,24 @@ export const vitalsService = {
         respiratoryRate: vitalsRecord.respiratoryRate
       }
     });
+
+    // Fetch patient name for notification
+    let patientName = patientId;
+    try {
+      const patientDoc = await getDoc(patientDocRef);
+      if (patientDoc.exists()) {
+        patientName = patientDoc.data().name;
+      }
+    } catch (e) {
+      console.warn("Could not fetch patient name for vital signs notification:", e);
+    }
+
+    // Add Notification
+    await notificationService.addNotification(
+      "Vital Signs Updated",
+      `Vital signs updated for patient ${patientName}.`,
+      hId
+    );
 
     return vitalsRecord;
   }

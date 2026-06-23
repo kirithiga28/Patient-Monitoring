@@ -12,6 +12,7 @@ export default function Sidebar({ currentPage, setPage, isOpen, onClose }) {
         { id: "dashboard", label: "📊 Dashboard" },
         { id: "patients", label: "👨‍⚕️ Patients Directory" },
         { id: "patientprofile", label: "👤 Patient Profile" },
+        { id: "doctorprofile", label: "👤 Doctor Profile" },
         { id: "medicalrecords", label: "📋 Medical Records" },
         { id: "patientvitals", label: "🩺 Patient Vitals" }
       ]

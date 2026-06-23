@@ -356,11 +356,10 @@ export function CriticalPatientMonitor() {
   const [criticalAlerts, setCriticalAlerts] = useState([]);
 
   useEffect(() => {
-    const unsubPatients = patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
-      const critList = list.filter(p => p.status === "Critical" || (p.vitals?.oxygenSaturation && p.vitals?.oxygenSaturation < 95));
-      setPatients(critList);
-      if (critList.length > 0 && !selectedPatientId) {
-        setSelectedPatientId(critList[0].id);
+    const unsubPatients = patientService.listenCriticalPatients(hospitalId, (list) => {
+      setPatients(list);
+      if (list.length > 0 && !selectedPatientId) {
+        setSelectedPatientId(list[0].id || list[0].patientId);
       }
       setLoading(false);
     });
@@ -375,7 +374,7 @@ export function CriticalPatientMonitor() {
     };
   }, [hospitalId, selectedPatientId]);
 
-  const selectedPatient = patients.find(p => p.id === selectedPatientId);
+  const selectedPatient = patients.find(p => p.id === selectedPatientId || p.patientId === selectedPatientId);
 
   const columns = [
     { key: "name", label: "Patient" },
@@ -410,6 +409,7 @@ export function CriticalPatientMonitor() {
             searchKey="name"
             searchPlaceholder="Search critical patients..."
             loading={loading}
+            emptyMessage="No Critical Patients Available"
           />
 
           {/* Alert History */}

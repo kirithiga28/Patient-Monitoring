@@ -1,5 +1,6 @@
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, where, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, updateDoc, deleteDoc, doc, getDoc, onSnapshot, query, where, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase/config";
+import { notificationService } from "./notificationService";
 
 const ADMISSIONS = "admissions";
 const DISCHARGES = "discharges";
@@ -97,13 +98,59 @@ export const clinicalService = {
     });
   },
   async addMedicalRecord(data) {
-    return addDoc(collection(db, MEDICAL_RECORDS), {
+    const docRef = await addDoc(collection(db, MEDICAL_RECORDS), {
       ...data,
       createdAt: new Date().toISOString()
     });
+    
+    // Fetch patient name if possible
+    let patientName = data.patientName || data.patientId || "Unknown Patient";
+    if (data.patientId && !data.patientName) {
+      try {
+        const patientDoc = await getDoc(doc(db, "patients", data.patientId));
+        if (patientDoc.exists()) {
+          patientName = patientDoc.data().name;
+        }
+      } catch (e) {
+        console.warn("Could not fetch patient name for medical record notification:", e);
+      }
+    }
+    
+    await notificationService.addNotification(
+      "Medical Record Updated",
+      `Medical record added for patient ${patientName}.`,
+      data.hospitalId || "WHC-2026-1001"
+    );
+    
+    return docRef;
   },
   async updateMedicalRecord(id, data) {
-    return updateDoc(doc(db, MEDICAL_RECORDS, id), data);
+    await updateDoc(doc(db, MEDICAL_RECORDS, id), data);
+    
+    let hospitalId = data.hospitalId;
+    let patientName = data.patientName || data.patientId;
+    try {
+      const recDoc = await getDoc(doc(db, MEDICAL_RECORDS, id));
+      if (recDoc.exists()) {
+        const recData = recDoc.data();
+        hospitalId = hospitalId || recData.hospitalId;
+        const patientId = recData.patientId;
+        if (patientId) {
+          const patientDoc = await getDoc(doc(db, "patients", patientId));
+          if (patientDoc.exists()) {
+            patientName = patientDoc.data().name;
+          }
+        }
+      }
+    } catch (e) {
+      console.warn("Could not fetch medical record details for notification:", e);
+    }
+    
+    await notificationService.addNotification(
+      "Medical Record Updated",
+      `Medical record updated for patient ${patientName || "Unknown"}.`,
+      hospitalId || "WHC-2026-1001"
+    );
   },
   async deleteMedicalRecord(id) {
     return deleteDoc(doc(db, MEDICAL_RECORDS, id));
