@@ -1,0 +1,21 @@
+name: Upload Load Test Report
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  upload-report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify Load Test Report exists
+        run: ls -la testing/final-reports/WellCare_Load_Report.xlsx
+
+      - name: Upload Load Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Load-Test-Report
+          path: testing/final-reports/WellCare_Load_Report.xlsx
