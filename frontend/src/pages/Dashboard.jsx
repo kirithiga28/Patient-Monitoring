@@ -5,15 +5,6 @@ import { alertService } from "../services/alertService";
 import { cameraService } from "../services/cameraService";
 import WebcamStream from "../components/WebcamStream";
 import { activityService } from "../services/activityService";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell
-} from "recharts";
 
 export default function Dashboard() {
   const { hospitalId, userData } = useAuth();
@@ -78,7 +69,7 @@ export default function Dashboard() {
         oscillator.connect(gainNode);
         gainNode.connect(audioCtx.destination);
         oscillator.type = "sine";
-        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // high tone
+        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
         gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
         oscillator.start();
         setTimeout(() => oscillator.stop(), 500);
@@ -102,17 +93,10 @@ export default function Dashboard() {
   const totalPatients = patients.length;
   const criticalPatients = patients.filter((p) => p.status === "Critical").length;
   const observationPatients = patients.filter((p) => p.status === "Observation").length;
-  const stablePatients = patients.filter((p) => p.status === "Stable").length;
   const icuPatients = patients.filter((p) => p.status === "Critical" || p.room === "101" || p.room === "105" || p.room === "110").length;
 
   const openAlertsCount = alerts.filter((a) => a.status === "Open").length;
   const activeCamerasCount = cameras.filter(c => c.status === "Active" || c.status === "Streaming").length;
-
-  const chartData = [
-    { name: "Stable", count: stablePatients, color: "#10b981" },
-    { name: "Observation", count: observationPatients, color: "#eab308" },
-    { name: "Critical", count: criticalPatients, color: "#ef4444" },
-  ];
 
   if (loading) {
     return (
@@ -140,8 +124,8 @@ export default function Dashboard() {
         </div>
 
         <div className={`px-4 py-2.5 rounded-xl border flex items-center gap-2 font-bold ${
-          openAlertsCount > 0 
-            ? "bg-red-950/40 border-red-500/50 text-red-400 animate-pulse" 
+          openAlertsCount > 0
+            ? "bg-red-950/40 border-red-500/50 text-red-400 animate-pulse"
             : "bg-slate-950/40 border-slate-800 text-slate-400"
         }`}>
           <span>🚨</span>
@@ -150,14 +134,14 @@ export default function Dashboard() {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl shadow-lg hover:border-blue-500/50 transition">
           <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Total Patients</p>
           <p className="text-3xl font-extrabold text-blue-500 mt-2">{totalPatients}</p>
         </div>
 
         <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl shadow-lg hover:border-red-500/50 transition">
-          <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Critical Status</p>
+          <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Critical Patients</p>
           <p className="text-3xl font-extrabold text-red-500 mt-2">{criticalPatients}</p>
         </div>
 
@@ -167,7 +151,7 @@ export default function Dashboard() {
         </div>
 
         <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl shadow-lg hover:border-indigo-500/50 transition">
-          <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">ICU Status</p>
+          <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">ICU Patients</p>
           <p className="text-3xl font-extrabold text-indigo-500 mt-2">{icuPatients}</p>
         </div>
 
@@ -175,15 +159,11 @@ export default function Dashboard() {
           <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Active Cameras</p>
           <p className="text-3xl font-extrabold text-green-500 mt-2">{activeCamerasCount}</p>
         </div>
-
-        <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl shadow-lg hover:border-red-500/50 transition">
-          <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Emergency Alerts</p>
-          <p className="text-3xl font-extrabold text-red-600 mt-2">{alerts.length}</p>
-        </div>
       </div>
 
+      {/* Camera Feed + Recent Activities */}
       <div className="grid md:grid-cols-3 gap-6">
-        {/* Real-time Camera Feeds Grid */}
+        {/* Active Camera Feed */}
         <div className="md:col-span-2 bg-slate-900/50 border border-slate-800 p-6 rounded-2xl shadow-lg space-y-6">
           <div className="flex justify-between items-center border-b border-slate-800 pb-3">
             <h2 className="text-xl font-bold flex items-center gap-2">
@@ -236,58 +216,34 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Status Analytics & Event Log */}
-        <div className="space-y-6">
-          {/* Status Chart */}
-          <div className="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl shadow-lg space-y-4">
-            <h2 className="text-xl font-bold flex items-center gap-2 border-b border-slate-800 pb-3">
-              <span>📊</span> Patient Health Status
-            </h2>
-            <div className="h-[180px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
-                  <XAxis dataKey="name" stroke="#94a3b8" fontSize={11} />
-                  <YAxis stroke="#94a3b8" fontSize={11} allowDecimals={false} />
-                  <Tooltip cursor={{ fill: "rgba(30, 41, 59, 0.5)" }} contentStyle={{ backgroundColor: "#0f172a", border: "1px solid #334155", borderRadius: "8px", color: "#f8fafc" }} />
-                  <Bar dataKey="count" radius={[6, 6, 0, 0]}>
-                    {chartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.color} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* Recent Activities Log */}
-          <div className="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl shadow-lg space-y-4">
-            <h2 className="text-xl font-bold flex items-center gap-2 border-b border-slate-800 pb-3">
-              <span>📋</span> Recent Activities
-            </h2>
-            <div className="space-y-3 max-h-[220px] overflow-y-auto pr-1">
-              {activities.slice(0, 5).map((activity) => (
-                <div key={activity.id} className="p-3 bg-slate-950/80 border border-slate-800/80 rounded-xl text-xs flex justify-between items-center">
-                  <div>
-                    <p className="font-bold text-slate-200">{activity.patientName}</p>
-                    <p className="text-slate-400 text-[10px] mt-0.5">{activity.activity}</p>
-                  </div>
-                  <span className="text-[9px] text-slate-500 font-mono">
-                    {activity.timestamp ? new Date(activity.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : "N/A"}
-                  </span>
+        {/* Recent Activities — expanded in its column */}
+        <div className="bg-slate-900/50 border border-slate-800 p-6 rounded-2xl shadow-lg space-y-4 flex flex-col">
+          <h2 className="text-xl font-bold flex items-center gap-2 border-b border-slate-800 pb-3">
+            <span>📋</span> Recent Activities
+          </h2>
+          <div className="space-y-3 flex-1 overflow-y-auto pr-1 max-h-[420px]">
+            {activities.slice(0, 10).map((activity) => (
+              <div key={activity.id} className="p-3 bg-slate-950/80 border border-slate-800/80 rounded-xl text-xs flex justify-between items-center">
+                <div>
+                  <p className="font-bold text-slate-200">{activity.patientName}</p>
+                  <p className="text-slate-400 text-[10px] mt-0.5">{activity.activity}</p>
                 </div>
-              ))}
+                <span className="text-[9px] text-slate-500 font-mono shrink-0 ml-2">
+                  {activity.timestamp ? new Date(activity.timestamp).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "N/A"}
+                </span>
+              </div>
+            ))}
 
-              {activities.length === 0 && (
-                <p className="text-center text-slate-500 text-xs py-4">No recent activities logged.</p>
-              )}
-            </div>
+            {activities.length === 0 && (
+              <p className="text-center text-slate-500 text-xs py-4">No recent activities logged.</p>
+            )}
           </div>
         </div>
       </div>
 
       {/* Footer */}
       <div className="text-center text-slate-500 text-xs pt-8 border-t border-slate-900">
-        Well Care Hospital Monitoring System • Real-Time Ward & Patient Telemetry Portal
+        Well Care Hospital Monitoring System • Real-Time Ward &amp; Patient Telemetry Portal
       </div>
     </div>
   );
