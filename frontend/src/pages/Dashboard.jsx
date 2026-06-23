@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { patientService } from "../services/patientService";
-import { alertService } from "../services/alertService";
 import { cameraService } from "../services/cameraService";
 import WebcamStream from "../components/WebcamStream";
 import { activityService } from "../services/activityService";
@@ -9,7 +8,6 @@ import { activityService } from "../services/activityService";
 export default function Dashboard() {
   const { hospitalId, userData } = useAuth();
   const [patients, setPatients] = useState([]);
-  const [alerts, setAlerts] = useState([]);
   const [cameras, setCameras] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeWebcamId, setActiveWebcamId] = useState(null);
@@ -28,11 +26,6 @@ export default function Dashboard() {
       }
     );
 
-    // Real-time alerts listener
-    const unsubAlerts = alertService.listenAlerts("doctor", hospitalId, (alertList) => {
-      setAlerts(alertList);
-    });
-
     // Real-time cameras listener
     const unsubCameras = cameraService.listenCameras("doctor", hospitalId, (cameraList) => {
       setCameras(cameraList);
@@ -45,7 +38,6 @@ export default function Dashboard() {
 
     return () => {
       unsubPatients();
-      unsubAlerts();
       unsubCameras();
       unsubActivities();
     };
@@ -58,44 +50,12 @@ export default function Dashboard() {
     }
   }, [cameras, activeWebcamId]);
 
-  // Real-time audio alarms for new open alerts
-  useEffect(() => {
-    const activeOpenAlerts = alerts.filter(a => a.status === "Open");
-    if (activeOpenAlerts.length > 0) {
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.type = "sine";
-        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
-        gainNode.gain.setValueAtTime(0.15, audioCtx.currentTime);
-        oscillator.start();
-        setTimeout(() => oscillator.stop(), 500);
-      } catch (e) {
-        console.warn("Could not play synthesized audio alarm:", e);
-      }
-
-      try {
-        const latestAlert = activeOpenAlerts[0];
-        const speech = new SpeechSynthesisUtterance(
-          `Attention! ${latestAlert.alertType} detected in Room ${latestAlert.room}.`
-        );
-        speech.rate = 0.95;
-        window.speechSynthesis.speak(speech);
-      } catch (e) {
-        console.warn("Could not speak alert announcement:", e);
-      }
-    }
-  }, [alerts]);
 
   const totalPatients = patients.length;
   const criticalPatients = patients.filter((p) => p.status === "Critical").length;
   const observationPatients = patients.filter((p) => p.status === "Observation").length;
   const icuPatients = patients.filter((p) => p.status === "Critical" || p.room === "101" || p.room === "105" || p.room === "110").length;
 
-  const openAlertsCount = alerts.filter((a) => a.status === "Open").length;
   const activeCamerasCount = cameras.filter(c => c.status === "Active" || c.status === "Streaming").length;
 
   if (loading) {
@@ -121,15 +81,6 @@ export default function Dashboard() {
           <p className="text-slate-400 text-xs mt-1">
             Current Session: {userData?.name || "Doctor"} • {new Date().toLocaleDateString()}
           </p>
-        </div>
-
-        <div className={`px-4 py-2.5 rounded-xl border flex items-center gap-2 font-bold ${
-          openAlertsCount > 0
-            ? "bg-red-950/40 border-red-500/50 text-red-400 animate-pulse"
-            : "bg-slate-950/40 border-slate-800 text-slate-400"
-        }`}>
-          <span>🚨</span>
-          <span>{openAlertsCount} Active Emergency Alerts</span>
         </div>
       </div>
 

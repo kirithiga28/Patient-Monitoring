@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { clinicalService } from "../../services/clinicalService";
 import { patientService } from "../../services/patientService";
-import { alertService } from "../../services/alertService";
 import { activityService } from "../../services/activityService";
 import { Card, CardHeader, CardTitle, CardContent } from "../../components/ui/Card";
 import { StatCard } from "../../components/ui/StatCard";
@@ -95,7 +94,6 @@ export function ICUMonitoring() {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPatientId, setSelectedPatientId] = useState("");
-  const [activeAlerts, setActiveAlerts] = useState([]);
 
   useEffect(() => {
     const unsubPatients = patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
@@ -107,13 +105,8 @@ export function ICUMonitoring() {
       setLoading(false);
     });
 
-    const unsubAlerts = alertService.listenAlerts("doctor", hospitalId, (alerts) => {
-      setActiveAlerts(alerts.filter(a => a.status === "Open" && (a.room === "101" || a.room === "105" || a.room === "110")));
-    });
-
     return () => {
       unsubPatients();
-      unsubAlerts();
     };
   }, [hospitalId, selectedPatientId]);
 
@@ -151,28 +144,8 @@ export function ICUMonitoring() {
             searchKey="name"
             searchPlaceholder="Search ICU patients..."
             loading={loading}
+            emptyMessage="No ICU patients found."
           />
-
-          {/* ICU Alerts */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Active ICU Ward Alerts</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {activeAlerts.map(alert => (
-                <div key={alert.id} className="p-3 bg-red-950/20 border border-red-500/20 rounded-xl flex items-center justify-between text-xs">
-                  <div>
-                    <span className="font-extrabold text-white block">Room {alert.room} - {alert.patientName}</span>
-                    <span className="text-slate-400">{alert.alertType}</span>
-                  </div>
-                  <span className="px-2 py-0.5 rounded bg-red-600 text-white font-bold text-[9px] uppercase animate-pulse">{alert.severity}</span>
-                </div>
-              ))}
-              {activeAlerts.length === 0 && (
-                <p className="text-slate-500 text-xs text-center py-4">No active ICU alerts reported.</p>
-              )}
-            </CardContent>
-          </Card>
         </div>
 
         <div className="space-y-6">
@@ -353,7 +326,6 @@ export function CriticalPatientMonitor() {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPatientId, setSelectedPatientId] = useState("");
-  const [criticalAlerts, setCriticalAlerts] = useState([]);
 
   useEffect(() => {
     const unsubPatients = patientService.listenCriticalPatients(hospitalId, (list) => {
@@ -364,13 +336,8 @@ export function CriticalPatientMonitor() {
       setLoading(false);
     });
 
-    const unsubAlerts = alertService.listenAlerts("doctor", hospitalId, (alerts) => {
-      setCriticalAlerts(alerts.filter(a => a.severity === "Critical" || a.severity === "High"));
-    });
-
     return () => {
       unsubPatients();
-      unsubAlerts();
     };
   }, [hospitalId, selectedPatientId]);
 
@@ -411,27 +378,6 @@ export function CriticalPatientMonitor() {
             loading={loading}
             emptyMessage="No Critical Patients Available"
           />
-
-          {/* Alert History */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Critical Alert & Notification History</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {criticalAlerts.map(alert => (
-                <div key={alert.id} className="p-3 bg-red-950/20 border border-red-500/20 rounded-xl flex items-center justify-between text-xs">
-                  <div>
-                    <span className="font-extrabold text-white block">Room {alert.room} - {alert.patientName}</span>
-                    <span className="text-slate-400">{alert.alertType} ({alert.timestamp ? new Date(alert.timestamp).toLocaleString() : ""})</span>
-                  </div>
-                  <span className="px-2 py-0.5 rounded bg-red-600 text-white font-bold text-[9px] uppercase animate-pulse">{alert.status}</span>
-                </div>
-              ))}
-              {criticalAlerts.length === 0 && (
-                <p className="text-slate-500 text-xs text-center py-4">No critical alerts history reported.</p>
-              )}
-            </CardContent>
-          </Card>
         </div>
 
         <div className="space-y-6">
