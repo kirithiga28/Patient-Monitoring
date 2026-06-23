@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { alertService } from "../../services/alertService";
 import { notificationService } from "../../services/notificationService";
-import { StatCard } from "../../components/ui/StatCard";
 import { DataTable } from "../../components/ui/DataTable";
 
 // 1. Emergency Alerts Command (Code Blue & Critical Incidents Only)
@@ -18,8 +17,6 @@ export function EmergencyAlerts() {
     });
   }, [hospitalId]);
 
-  const activeCount = alerts.filter(a => a.status === "Open").length;
-  const resolvedCount = alerts.filter(a => a.status === "Resolved" || a.status === "Acknowledged").length;
 
   const columns = [
     { key: "id", label: "Alert ID", render: (row) => <span className="font-mono text-[10px] text-slate-400">{row.id || "N/A"}</span> },
@@ -60,11 +57,6 @@ export function EmergencyAlerts() {
       <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg border-l-4 border-l-red-600">
         <h1 className="text-3xl font-extrabold tracking-tight text-white">Emergency Alerts Command</h1>
         <p className="text-slate-400 text-xs mt-1">Real-time status of critical room emergencies, telemetry alerts, and alarm logs from the backend.</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <StatCard title="Active Alerts" value={activeCount} icon="🚨" color="red" />
-        <StatCard title="Resolved Alarms" value={resolvedCount} icon="✅" color="green" />
       </div>
 
       <DataTable
