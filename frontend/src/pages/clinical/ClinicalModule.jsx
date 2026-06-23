@@ -27,6 +27,19 @@ export function EmergencyAlerts() {
     { key: "patientName", label: "Patient Name" },
     { key: "room", label: "Room Number" },
     { key: "alertType", label: "Alert Type", render: (row) => <span className="font-semibold text-red-400">{row.alertType}</span> },
+    {
+      key: "severity",
+      label: "Severity",
+      render: (row) => (
+        <span className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
+          row.severity === "Critical" ? "bg-red-500/10 text-red-400 border-red-500/20 animate-pulse" :
+          row.severity === "High" ? "bg-orange-500/10 text-orange-400 border-orange-500/20" :
+          "bg-slate-800 text-slate-400 border-slate-700"
+        }`}>
+          {row.severity || "High"}
+        </span>
+      )
+    },
     { key: "timestamp", label: "Alert Time", render: (row) => <span>{row.timestamp ? new Date(row.timestamp).toLocaleString() : "N/A"}</span> },
     {
       key: "status",
@@ -50,7 +63,7 @@ export function EmergencyAlerts() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <StatCard title="Active Emergency Alerts" value={activeCount} icon="🚨" color="red" />
+        <StatCard title="Active Alerts" value={activeCount} icon="🚨" color="red" />
         <StatCard title="Resolved Alarms" value={resolvedCount} icon="✅" color="green" />
       </div>
 
@@ -60,7 +73,7 @@ export function EmergencyAlerts() {
         searchKey="patientName"
         searchPlaceholder="Search by patient name..."
         loading={loading}
-        emptyMessage="No Emergency Alerts"
+        emptyMessage="No Emergency Alerts Available"
       />
     </div>
   );
