@@ -1,94 +1,93 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { 
-  onAuthStateChanged, 
-  signInWithEmailAndPassword, 
+  signInAnonymously, 
   signOut 
 } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { auth, db } from "../firebase/config";
+import { auth } from "../firebase/config";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [userData, setUserData] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => {
+    const saved = localStorage.getItem("wellcare_user");
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [userData, setUserData] = useState(() => {
+    const saved = localStorage.getItem("wellcare_userdata");
+    return saved ? JSON.parse(saved) : null;
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setCurrentUser(user);
-        // Fetch custom role and tenant data from Firestore users collection
+    // Automatically trigger anonymous background login if logged in locally
+    const initAuth = async () => {
+      if (currentUser) {
         try {
-          const userDocRef = doc(db, "users", user.uid);
-          const userDoc = await getDoc(userDocRef);
-          
-          if (userDoc.exists()) {
-            setUserData(userDoc.data());
-          } else {
-            // If user logged in but doesn't exist in users collection, create a default user record
-            // For convenience of testing and setup, we check if email is admin-like
-            const email = user.email || "";
-            let role = "caregiver";
-            if (email.includes("superadmin")) {
-              role = "super_admin";
-            } else if (email.includes("admin")) {
-              role = "hospital_admin";
-            } else if (email.includes("doctor")) {
-              role = "doctor";
-            } else if (email.includes("nurse")) {
-              role = "nurse";
-            }
-
-            const defaultUserData = {
-              uid: user.uid,
-              email: user.email,
-              name: user.displayName || user.email.split("@")[0],
-              role: role,
-              hospitalId: "hosp_default", // default multi-tenant hospital id
-              assignedPatients: [],
-              assignedRooms: [],
-              status: "active",
-              createdAt: new Date().toISOString()
-            };
-
-            await setDoc(userDocRef, defaultUserData);
-            setUserData(defaultUserData);
-          }
-        } catch (error) {
-          console.error("Error loading user profile:", error);
+          await signInAnonymously(auth);
+        } catch (err) {
+          console.warn("Background Firebase Auth anonymous sign-in failed:", err);
         }
-      } else {
-        setCurrentUser(null);
-        setUserData(null);
       }
       setLoading(false);
-    });
+    };
+    initAuth();
+  }, [currentUser]);
 
-    return () => unsubscribe();
-  }, []);
-
-  const login = async (email, password) => {
+  const login = async (username, password) => {
     setLoading(true);
-    try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      return userCredential.user;
-    } catch (error) {
+    const normalizedUsername = username.trim().toLowerCase();
+    
+    if (normalizedUsername === "doctor" && password === "doctor123") {
+      try {
+        await signInAnonymously(auth);
+      } catch (err) {
+        console.warn("Background anonymous sign-in failed during login:", err);
+      }
+
+      const mockUser = {
+        uid: "doctor_uid",
+        email: "doctor@wellcare.com",
+        name: "Dr. Rajesh Mehta"
+      };
+
+      const mockUserData = {
+        uid: "doctor_uid",
+        email: "doctor@wellcare.com",
+        name: "Dr. Rajesh Mehta",
+        role: "doctor",
+        hospitalId: "hosp_default",
+        hospitalName: "Well Care Hospital",
+        status: "active"
+      };
+
+      localStorage.setItem("wellcare_user", JSON.stringify(mockUser));
+      localStorage.setItem("wellcare_userdata", JSON.stringify(mockUserData));
+      setCurrentUser(mockUser);
+      setUserData(mockUserData);
       setLoading(false);
-      throw error;
+      return mockUser;
+    } else {
+      setLoading(false);
+      throw new Error("Invalid username or password");
     }
   };
 
   const logout = async () => {
     setLoading(true);
-    await signOut(auth);
+    try {
+      await signOut(auth);
+    } catch (err) {
+      console.warn("SignOut error:", err);
+    }
+    localStorage.removeItem("wellcare_user");
+    localStorage.removeItem("wellcare_userdata");
+    setCurrentUser(null);
+    setUserData(null);
     setLoading(false);
   };
 
   const hasPermission = (requiredRoles) => {
-    if (!userData) return false;
-    if (userData.role === "super_admin") return true; // Super Admin has access to everything
-    return requiredRoles.includes(userData.role);
+    return true; // Doctor has access to all remaining pages
   };
 
   const value = {
@@ -98,8 +97,8 @@ export function AuthProvider({ children }) {
     login,
     logout,
     hasPermission,
-    hospitalId: userData?.hospitalId || null,
-    role: userData?.role || null
+    hospitalId: userData?.hospitalId || "hosp_default",
+    role: "doctor"
   };
 
   return (
@@ -112,3 +111,4 @@ export function AuthProvider({ children }) {
 export function useAuth() {
   return useContext(AuthContext);
 }
+

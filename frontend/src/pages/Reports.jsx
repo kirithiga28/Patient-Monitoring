@@ -14,17 +14,17 @@ export default function Reports() {
 
   useEffect(() => {
     const unsubPatients = patientService.listenPatients(
-      role,
+      "doctor",
       hospitalId,
-      userData?.assignedPatients,
-      userData?.assignedRooms,
+      null,
+      null,
       (patientList) => {
         setPatients(patientList);
         setLoading(false);
       }
     );
 
-    const unsubAlerts = alertService.listenAlerts(role, hospitalId, (alertList) => {
+    const unsubAlerts = alertService.listenAlerts("doctor", hospitalId, (alertList) => {
       setAlerts(alertList);
     });
 
@@ -32,7 +32,7 @@ export default function Reports() {
       unsubPatients();
       unsubAlerts();
     };
-  }, [role, hospitalId, userData]);
+  }, [hospitalId]);
 
   // Excel (CSV) Download
   const downloadExcel = () => {
@@ -69,15 +69,13 @@ export default function Reports() {
         a.notes || ""
       ]);
     } else {
-      filename = "AI_Detection_Report.csv";
-      headers = ["ID", "Patient Name", "Room", "Detected Activity", "Confidence Score", "Risk Evaluation", "Timestamp"];
-      // Maps alerts representing AI Detections
+      filename = "Activity_History_Report.csv";
+      headers = ["ID", "Patient Name", "Room", "Activity", "Risk Evaluation", "Timestamp"];
       rows = alerts.map((a) => [
         a.id,
         a.patientName || "",
         a.room || "",
         a.alertType || "",
-        "95%", // default confidence
         a.severity || "",
         formatDateTime(a.timestamp)
       ]);
@@ -115,7 +113,7 @@ export default function Reports() {
     
     doc.setFontSize(10);
     doc.setTextColor(150, 150, 150);
-    doc.text(`Tenant Scope: ${userData?.hospitalName || "Default Hospital"} • Date: ${new Date().toLocaleDateString()}`, 20, 34);
+    doc.text(`Tenant Scope: ${userData?.hospitalName || "Well Care Hospital"} • Date: ${new Date().toLocaleDateString()}`, 20, 34);
 
     doc.setTextColor(50, 50, 50);
     doc.setFontSize(14);
@@ -123,7 +121,7 @@ export default function Reports() {
     let reportTitle = "";
     if (reportType === "patients") reportTitle = "Patient Directory Census";
     else if (reportType === "alerts") reportTitle = "Incident Alerts Audit Log";
-    else reportTitle = "AI System Activity Detection log";
+    else reportTitle = "System Activity History Log";
     
     doc.text(reportTitle, 20, 55);
     doc.setDrawColor(200, 200, 200);
@@ -167,13 +165,13 @@ export default function Reports() {
   }
 
   return (
-    <div className="space-y-6 font-sans text-slate-100 animate-fade-in">
+    <div className="space-y-6 font-sans text-slate-100 animate-fade-in pb-12">
       <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
         <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
           Reports & Audit Center
         </h1>
         <p className="text-slate-400 text-xs mt-1">
-          Export clinical history, alert events, and AI observations.
+          Export clinical history, alert events, and activity logs.
         </p>
       </div>
 
@@ -203,12 +201,12 @@ export default function Reports() {
             </button>
 
             <button
-              onClick={() => setReportType("ai")}
+              onClick={() => setReportType("activities")}
               className={`w-full text-left p-3.5 rounded-xl text-sm font-semibold transition cursor-pointer flex justify-between items-center ${
-                reportType === "ai" ? "bg-blue-600 text-white shadow" : "bg-slate-950/40 border border-slate-850 hover:bg-slate-800"
+                reportType === "activities" ? "bg-blue-600 text-white shadow" : "bg-slate-950/40 border border-slate-850 hover:bg-slate-800"
               }`}
             >
-              <span>🧠 AI Detection Analytics</span>
+              <span>🗄️ Activity History Logs</span>
               <span className="text-xs opacity-80">{alerts.length} events</span>
             </button>
           </div>

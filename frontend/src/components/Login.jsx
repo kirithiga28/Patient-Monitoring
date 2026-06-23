@@ -41,7 +41,7 @@ export default function Login({ setLoggedIn }) {
         </h1>
 
         <p className="text-center text-gray-500 mb-6">
-          AI Patient Monitoring System
+          Well Care Hospital Monitoring System
         </p>
 
         {error && (
