@@ -1,0 +1,43 @@
+name: Upload Test Reports
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  upload-reports:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify report files exist
+        run: |
+          ls -la testing/final-reports/WellCare_Selenium_Report.xlsx
+          ls -la testing/final-reports/WellCare_Appium_Report.xlsx
+          ls -la testing/final-reports/WellCare_Vulnerability_Report.xlsx
+          ls -la testing/final-reports/WellCare_Load_Report.xlsx
+
+      - name: Upload Selenium Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Selenium-Report
+          path: testing/final-reports/WellCare_Selenium_Report.xlsx
+
+      - name: Upload Appium Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Appium-Report
+          path: testing/final-reports/WellCare_Appium_Report.xlsx
+
+      - name: Upload Vulnerability Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Vulnerability-Report
+          path: testing/final-reports/WellCare_Vulnerability_Report.xlsx
+
+      - name: Upload Load Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: Load-Test-Report
+          path: testing/final-reports/WellCare_Load_Report.xlsx
