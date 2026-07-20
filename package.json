@@ -2,6 +2,7 @@
   "name": "wellcare-patient-monitoring",
   "version": "1.0.0",
   "scripts": {
+    "build": "npm --prefix frontend run build",
     "test:web": "npm --prefix testing run test:web",
     "test:mobile": "npm --prefix testing run test:mobile",
     "test:all": "npm --prefix testing run test:all",
