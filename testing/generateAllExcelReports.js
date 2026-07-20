@@ -171,13 +171,13 @@ async function buildAllReports() {
   wbSel.creator = "WellCare QA Framework";
   const sheetSel = wbSel.addWorksheet("Selenium Detailed Results");
   formatWorksheet(sheetSel, selHeaders, selRows);
-  await wbSel.xlsx.writeFile(path.join(finalReportsDir, "WellCare_Selenium_Report.xlsx"));
-  console.log(`✓ Saved WellCare_Selenium_Report.xlsx (${sheetSel.rowCount} total rows: 1 Header + ${selRows.length} Test Cases)`);
+  await wbSel.xlsx.writeFile(path.join(finalReportsDir, "selenium report.xlsx"));
+  console.log(`✓ Saved selenium report.xlsx (${sheetSel.rowCount} total rows: 1 Header + ${selRows.length} Test Cases)`);
 
   // ==========================================================
-  // REPORT 2: WellCare_Appium_Report.xlsx
+  // REPORT 2: appium report.xlsx
   // ==========================================================
-  console.log("Generating REPORT 2: WellCare_Appium_Report.xlsx...");
+  console.log("Generating REPORT 2: appium report.xlsx...");
   const appJsonPath = path.resolve("appium/reports/results.json");
   let rawApp = [];
   if (fs.existsSync(appJsonPath)) {
@@ -244,13 +244,13 @@ async function buildAllReports() {
   wbApp.creator = "WellCare QA Framework";
   const sheetApp = wbApp.addWorksheet("Appium Detailed Results");
   formatWorksheet(sheetApp, appHeaders, appRows);
-  await wbApp.xlsx.writeFile(path.join(finalReportsDir, "WellCare_Appium_Report.xlsx"));
-  console.log(`✓ Saved WellCare_Appium_Report.xlsx (${sheetApp.rowCount} total rows: 1 Header + ${appRows.length} Test Cases)`);
+  await wbApp.xlsx.writeFile(path.join(finalReportsDir, "appium report.xlsx"));
+  console.log(`✓ Saved appium report.xlsx (${sheetApp.rowCount} total rows: 1 Header + ${appRows.length} Test Cases)`);
 
   // ==========================================================
-  // REPORT 3: WellCare_Vulnerability_Report.xlsx
+  // REPORT 3: vulnerability report.xlsx
   // ==========================================================
-  console.log("Generating REPORT 3: WellCare_Vulnerability_Report.xlsx...");
+  console.log("Generating REPORT 3: vulnerability report.xlsx...");
   const vulnScreens = [
     { name: "Login Screen", module: "Authentication", endpoint: "/login" },
     { name: "SignUp Screen", module: "Authentication", endpoint: "/signup" },
@@ -331,13 +331,13 @@ async function buildAllReports() {
   wbVuln.creator = "WellCare QA Framework";
   const sheetVuln = wbVuln.addWorksheet("Vulnerability Detailed Results");
   formatWorksheet(sheetVuln, vulnHeaders, vulnRows, true);
-  await wbVuln.xlsx.writeFile(path.join(finalReportsDir, "WellCare_Vulnerability_Report.xlsx"));
-  console.log(`✓ Saved WellCare_Vulnerability_Report.xlsx (${sheetVuln.rowCount} total rows: 1 Header + ${vulnRows.length} Test Cases)`);
+  await wbVuln.xlsx.writeFile(path.join(finalReportsDir, "vulnerability report.xlsx"));
+  console.log(`✓ Saved vulnerability report.xlsx (${sheetVuln.rowCount} total rows: 1 Header + ${vulnRows.length} Test Cases)`);
 
   // ==========================================================
-  // REPORT 4: WellCare_Load_Report.xlsx
+  // REPORT 4: loadtest report.xlsx
   // ==========================================================
-  console.log("Generating REPORT 4: WellCare_Load_Report.xlsx...");
+  console.log("Generating REPORT 4: loadtest report.xlsx...");
   const loadEndpoints = [
     { name: "Login Authentication API", endpoint: "/api/auth/login" },
     { name: "Dashboard Overview Telemetry", endpoint: "/api/dashboard/summary" },
@@ -424,8 +424,8 @@ async function buildAllReports() {
   wbLoad.creator = "WellCare QA Framework";
   const sheetLoad = wbLoad.addWorksheet("Load Testing Detailed Results");
   formatWorksheet(sheetLoad, loadHeaders, loadRows);
-  await wbLoad.xlsx.writeFile(path.join(finalReportsDir, "WellCare_Load_Report.xlsx"));
-  console.log(`✓ Saved WellCare_Load_Report.xlsx (${sheetLoad.rowCount} total rows: 1 Header + ${loadRows.length} Test Cases)`);
+  await wbLoad.xlsx.writeFile(path.join(finalReportsDir, "loadtest report.xlsx"));
+  console.log(`✓ Saved loadtest report.xlsx (${sheetLoad.rowCount} total rows: 1 Header + ${loadRows.length} Test Cases)`);
 
   console.log("\n==========================================================");
   console.log("ALL 4 EXCEL REPORTS SUCCESSFULLY GENERATED AND VALIDATED!");
