@@ -41,6 +41,10 @@ export default function Patients() {
   }, [userData]);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
     const unsubscribe = patientService.listenPatients(
       role,
       hospitalId,
@@ -52,7 +56,10 @@ export default function Patients() {
       }
     );
 
-    return () => unsubscribe();
+    return () => {
+      clearTimeout(timer);
+      unsubscribe();
+    };
   }, [role, hospitalId, userData]);
 
   const handleAddPatient = async (e) => {

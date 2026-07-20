@@ -17,6 +17,9 @@ export const clinicalService = {
     return onSnapshot(q, (snap) => {
       const list = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       callback(list);
+    }, (error) => {
+      console.error("Error listening to admissions:", error);
+      callback([]);
     });
   },
   async addAdmission(data) {
@@ -29,6 +32,9 @@ export const clinicalService = {
     return onSnapshot(q, (snap) => {
       const list = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       callback(list);
+    }, (error) => {
+      console.error("Error listening to discharges:", error);
+      callback([]);
     });
   },
   async addDischarge(data) {
@@ -41,6 +47,9 @@ export const clinicalService = {
     return onSnapshot(q, (snap) => {
       const list = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       callback(list);
+    }, (error) => {
+      console.error("Error listening to transfers:", error);
+      callback([]);
     });
   },
   async addTransfer(data) {
@@ -53,6 +62,9 @@ export const clinicalService = {
     return onSnapshot(q, (snap) => {
       const list = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       callback(list);
+    }, (error) => {
+      console.error("Error listening to prescriptions:", error);
+      callback([]);
     });
   },
   async addPrescription(data) {
@@ -65,6 +77,9 @@ export const clinicalService = {
     return onSnapshot(q, (snap) => {
       const list = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       callback(list);
+    }, (error) => {
+      console.error("Error listening to lab reports:", error);
+      callback([]);
     });
   },
   async addLabReport(data) {
@@ -77,6 +92,9 @@ export const clinicalService = {
     return onSnapshot(q, (snap) => {
       const list = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       callback(list);
+    }, (error) => {
+      console.error("Error listening to scan reports:", error);
+      callback([]);
     });
   },
   async addScanReport(data) {

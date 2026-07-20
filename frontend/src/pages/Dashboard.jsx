@@ -14,6 +14,10 @@ export default function Dashboard() {
   const [activities, setActivities] = useState([]);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
     // Real-time patients listener
     const unsubPatients = patientService.listenPatients(
       "doctor",
@@ -37,6 +41,7 @@ export default function Dashboard() {
     });
 
     return () => {
+      clearTimeout(timer);
       unsubPatients();
       unsubCameras();
       unsubActivities();

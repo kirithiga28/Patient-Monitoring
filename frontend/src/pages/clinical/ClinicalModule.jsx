@@ -11,10 +11,19 @@ export function EmergencyAlerts() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    return alertService.listenAlerts("doctor", hospitalId, (list) => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    const unsub = alertService.listenAlerts("doctor", hospitalId, (list) => {
       setAlerts(list);
       setLoading(false);
     });
+
+    return () => {
+      clearTimeout(timer);
+      unsub();
+    };
   }, [hospitalId]);
 
 
@@ -76,10 +85,19 @@ export function NotificationCenter() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    return notificationService.listenNotifications(hospitalId, (list) => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    const unsub = notificationService.listenNotifications(hospitalId, (list) => {
       setNotifications(list);
       setLoading(false);
     });
+
+    return () => {
+      clearTimeout(timer);
+      unsub();
+    };
   }, [hospitalId]);
 
   // Columns for NotificationCenter DataTable

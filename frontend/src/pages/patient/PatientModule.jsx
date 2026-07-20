@@ -17,10 +17,19 @@ export function MedicalRecords() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    return patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    const unsub = patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
       setPatients(list);
       setLoading(false);
     });
+
+    return () => {
+      clearTimeout(timer);
+      unsub();
+    };
   }, [hospitalId]);
 
   const columns = [
@@ -55,10 +64,19 @@ export function PatientVitals() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    return patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    const unsub = patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
       setPatients(list);
       setLoading(false);
     });
+
+    return () => {
+      clearTimeout(timer);
+      unsub();
+    };
   }, [hospitalId]);
 
   const columns = [
@@ -96,6 +114,10 @@ export function ICUMonitoring() {
   const [selectedPatientId, setSelectedPatientId] = useState("");
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
     const unsubPatients = patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
       const icuList = list.filter(p => p.status === "Critical" || p.room === "101" || p.room === "105" || p.room === "110");
       setPatients(icuList);
@@ -106,6 +128,7 @@ export function ICUMonitoring() {
     });
 
     return () => {
+      clearTimeout(timer);
       unsubPatients();
     };
   }, [hospitalId, selectedPatientId]);
@@ -200,6 +223,10 @@ export function ObservationWardMonitor() {
   const [activityLogs, setActivityLogs] = useState([]);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
     const unsubPatients = patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
       const obsList = list.filter(p => p.status === "Observation" || p.status === "Stable");
       setPatients(obsList);
@@ -214,6 +241,7 @@ export function ObservationWardMonitor() {
     });
 
     return () => {
+      clearTimeout(timer);
       unsubPatients();
       unsubActivities();
     };
@@ -328,6 +356,10 @@ export function CriticalPatientMonitor() {
   const [selectedPatientId, setSelectedPatientId] = useState("");
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
     const unsubPatients = patientService.listenCriticalPatients(hospitalId, (list) => {
       setPatients(list);
       if (list.length > 0 && !selectedPatientId) {
@@ -337,6 +369,7 @@ export function CriticalPatientMonitor() {
     });
 
     return () => {
+      clearTimeout(timer);
       unsubPatients();
     };
   }, [hospitalId, selectedPatientId]);

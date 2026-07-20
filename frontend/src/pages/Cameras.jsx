@@ -23,6 +23,10 @@ export default function Cameras() {
   });
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
     const unsubCameras = cameraService.listenCameras(role, hospitalId, (cameraList) => {
       setCameras(cameraList);
       setLoading(false);
@@ -33,6 +37,7 @@ export default function Cameras() {
     });
 
     return () => {
+      clearTimeout(timer);
       unsubCameras();
       unsubPatients();
     };

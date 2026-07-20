@@ -13,6 +13,10 @@ export default function Reports() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
     const unsubPatients = patientService.listenPatients(
       "doctor",
       hospitalId,
@@ -29,6 +33,7 @@ export default function Reports() {
     });
 
     return () => {
+      clearTimeout(timer);
       unsubPatients();
       unsubAlerts();
     };

@@ -63,6 +63,14 @@ export const systemService = {
       }
     }, (error) => {
       console.error("Error listening to hospital settings:", error);
+      callback({
+        hospitalCode: hospitalId || "WHC-2026-1001",
+        hospitalId: "1001",
+        hospitalName: "Well Care Hospital",
+        contactNumber: "+1-555-0199",
+        address: "123 Health Ave, Medical City",
+        email: "contact@wellcare.com"
+      });
     });
   },
   async saveSettings(hospitalId, settingsData) {

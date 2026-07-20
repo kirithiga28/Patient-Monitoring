@@ -75,6 +75,9 @@ export default function PatientProfile({ patient, onBack }) {
   useEffect(() => {
     if (!patient) {
       setSelectorLoading(true);
+      const timer = setTimeout(() => {
+        setSelectorLoading(false);
+      }, 1000);
       const unsubscribe = patientService.listenPatients(
         "doctor",
         hospitalId,
@@ -85,7 +88,10 @@ export default function PatientProfile({ patient, onBack }) {
           setSelectorLoading(false);
         }
       );
-      return () => unsubscribe();
+      return () => {
+        clearTimeout(timer);
+        unsubscribe();
+      };
     }
   }, [patient, hospitalId]);
 

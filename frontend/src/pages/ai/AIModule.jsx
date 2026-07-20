@@ -13,10 +13,19 @@ export function LiveCameraMonitoring() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    return patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    const unsub = patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
       setPatients(list);
       setLoading(false);
     });
+
+    return () => {
+      clearTimeout(timer);
+      unsub();
+    };
   }, [hospitalId]);
 
   if (loading) {
@@ -64,10 +73,19 @@ export function ActivityHistory() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    return activityService.listenActivities("doctor", hospitalId, (list) => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    const unsub = activityService.listenActivities("doctor", hospitalId, (list) => {
       setHistory(list);
       setLoading(false);
     });
+
+    return () => {
+      clearTimeout(timer);
+      unsub();
+    };
   }, [hospitalId]);
 
   const columns = [
