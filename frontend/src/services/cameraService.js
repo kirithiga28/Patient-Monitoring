@@ -12,39 +12,6 @@ import { db } from "../firebase/config";
 
 const COLLECTION = "cameras";
 
-const DEFAULT_CAMERAS = [
-  {
-    id: "cam_101",
-    name: "ICU Isolation Feed - Cam 1",
-    room: "101",
-    streamUrl: "webcam",
-    type: "Webcam",
-    status: "Active",
-    patientId: "pat_101",
-    hospitalId: "WHC-2026-1001"
-  },
-  {
-    id: "cam_105",
-    name: "Ward Room 105 - Cam 2",
-    room: "105",
-    streamUrl: "webcam",
-    type: "Webcam",
-    status: "Active",
-    patientId: "pat_105",
-    hospitalId: "WHC-2026-1001"
-  },
-  {
-    id: "cam_110",
-    name: "ICU Ward Room 110 - Cam 3",
-    room: "110",
-    streamUrl: "webcam",
-    type: "Webcam",
-    status: "Active",
-    patientId: "pat_110",
-    hospitalId: "WHC-2026-1001"
-  }
-];
-
 export const cameraService = {
   // Listen to camera devices
   listenCameras(userRole, hospitalId, callback) {
@@ -59,13 +26,10 @@ export const cameraService = {
         id: doc.id,
         ...doc.data()
       }));
-      if (cameras.length === 0) {
-        cameras = DEFAULT_CAMERAS;
-      }
       callback(cameras);
     }, (error) => {
       console.error("Error listening to cameras:", error);
-      callback(DEFAULT_CAMERAS);
+      callback([]);
     });
   },
 

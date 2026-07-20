@@ -458,7 +458,21 @@ export default function Patients() {
         ))}
 
         {processedPatients.length === 0 && (
-          <p className="text-center text-slate-500 py-12 text-sm col-span-2">No patients match the filters or search.</p>
+          <div className="flex flex-col items-center justify-center p-12 bg-slate-900 border border-slate-800 rounded-2xl col-span-2 text-center space-y-4">
+            <span className="text-4xl">👨‍⚕️</span>
+            <div>
+              <h3 className="text-lg font-bold text-slate-200">No Patient Records Available</h3>
+              <p className="text-slate-400 text-xs mt-1">Register your first patient to populate the clinical patient directory.</p>
+            </div>
+            {role !== "caregiver" && !isAdding && (
+              <button
+                onClick={() => setIsAdding(true)}
+                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl text-xs transition cursor-pointer shadow-md shadow-blue-600/10"
+              >
+                ➕ Register Patient Now
+              </button>
+            )}
+          </div>
         )}
       </div>
     </div>
