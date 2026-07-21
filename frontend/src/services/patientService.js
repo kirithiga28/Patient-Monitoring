@@ -3,7 +3,6 @@ import {
   doc, 
   getDoc, 
   setDoc,
-  addDoc, 
   updateDoc, 
   deleteDoc, 
   query, 
@@ -45,7 +44,6 @@ export const patientService = {
 
   // Listen to patients real-time with DOCTOR OWNERSHIP FILTERING
   listenPatients(userRole, hospitalId, currentDoctor, assignedRooms, callback) {
-    // We can fetch from Backend API or Firestore
     const doctorId = currentDoctor?.uid || currentDoctor?.id;
     const doctorEmail = currentDoctor?.email;
     const doctorName = currentDoctor?.name;
@@ -94,8 +92,6 @@ export const patientService = {
       }
 
       // DOCTOR OWNERSHIP ISOLATION
-      // When Doctor A logs in: Display only Doctor A's patients
-      // When Doctor B logs in: Display only Doctor B's patients
       if (currentDoctor && (doctorName || doctorId || doctorEmail)) {
         patientList = patientList.filter(p => {
           const isDocId = doctorId && (p.doctorId === doctorId || p.doctor === doctorId);
@@ -108,7 +104,6 @@ export const patientService = {
       callback(patientList);
     }, async (error) => {
       console.warn("Firestore patient listener warning:", error.message);
-      // Fallback to backend REST API
       const backendList = await fetchBackendPatients();
       if (backendList) {
         callback(backendList);
@@ -116,6 +111,9 @@ export const patientService = {
         callback([]);
       }
     });
+
+    return unsubscribe;
+  },
 
   // Listen to critical patients real-time
   listenCriticalPatients(hospitalId, callback) {
@@ -140,12 +138,11 @@ export const patientService = {
     );
 
     const unsubscribe = onSnapshot(q, async (snapshot) => {
-      let list = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
+      let list = snapshot.docs.map(d => ({
+        id: d.id,
+        ...d.data()
       }));
 
-      // If empty or missing, fallback to main patients list filtered by status Critical
       if (list.length === 0) {
         const backendList = await fetchBackendCritical();
         if (backendList && backendList.length > 0) {
@@ -230,7 +227,6 @@ export const patientService = {
     } catch (fsErr) {
       console.warn("Firestore patient create warning:", fsErr.message);
       if (!backendSaved) {
-        // Local persistence fallback
         const existing = JSON.parse(localStorage.getItem("wellcare_local_patients") || "[]");
         existing.push(cleanData);
         localStorage.setItem("wellcare_local_patients", JSON.stringify(existing));
