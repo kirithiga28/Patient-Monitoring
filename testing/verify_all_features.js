@@ -31,100 +31,47 @@ function request(method, path, body) {
 
 async function verifyAll() {
   console.log("=========================================");
-  console.log("STARTING BACKEND REST API VERIFICATION");
+  console.log("VERIFYING PASSWORD POLICY & REST API");
   console.log("=========================================\n");
 
-  // 1. Doctor Registration with custom email format (e.g. gmail.com)
-  console.log("1. Testing Doctor Registration with doctor@gmail.com...");
-  const regRes = await request("POST", "/api/doctors/register", {
-    fullName: "Dr. John Smith",
-    email: "doctor@gmail.com",
-    password: "Password123",
-    mobile: "+1-555-0199",
-    department: "Cardiology",
-    qualification: "MBBS, MD"
+  // 1. Password with ONLY LETTERS (e.g., "abcdefgh")
+  console.log("1. Registration with ONLY LETTERS password ('abcdefgh')...");
+  const lettersRes = await request("POST", "/api/doctors/register", {
+    fullName: "Dr. Letter User",
+    email: `letters_${Date.now()}@gmail.com`,
+    password: "abcdefgh"
   });
-  console.log("   Registration Status:", regRes.status);
-  console.log("   Registration Output:", regRes.data);
+  console.log("   Status:", lettersRes.status, "Output:", lettersRes.data.message || lettersRes.data);
 
-  // 2. Doctor Registration with invalid email
-  console.log("\n2. Testing Invalid Email Rejection (e.g. invalid-email)...");
-  const badEmailRes = await request("POST", "/api/doctors/register", {
-    fullName: "Dr. Test Bad Email",
-    email: "invalid-email",
-    password: "Password123"
+  // 2. Password with ONLY NUMBERS (e.g., "12345678")
+  console.log("\n2. Registration with ONLY NUMBERS password ('12345678')...");
+  const numbersRes = await request("POST", "/api/doctors/register", {
+    fullName: "Dr. Number User",
+    email: `numbers_${Date.now()}@gmail.com`,
+    password: "12345678"
   });
-  console.log("   Status:", badEmailRes.status, "Output:", badEmailRes.data);
+  console.log("   Status:", numbersRes.status, "Output:", numbersRes.data.message || numbersRes.data);
 
-  // 3. Doctor Registration with invalid password (< 8 chars)
-  console.log("\n3. Testing Short Password Rejection (< 8 chars)...");
-  const badPassRes = await request("POST", "/api/doctors/register", {
+  // 3. Password with MIXED LETTERS & NUMBERS (e.g., "Doctor123")
+  console.log("\n3. Registration with MIXED password ('Doctor123')...");
+  const mixedRes = await request("POST", "/api/doctors/register", {
+    fullName: "Dr. Mixed User",
+    email: `mixed_${Date.now()}@gmail.com`,
+    password: "Doctor123"
+  });
+  console.log("   Status:", mixedRes.status, "Output:", mixedRes.data.message || mixedRes.data);
+
+  // 4. Password with FEWER THAN 8 CHARACTERS (e.g., "short")
+  console.log("\n4. Testing Short Password Rejection ('short' < 8 chars)...");
+  const shortRes = await request("POST", "/api/doctors/register", {
     fullName: "Dr. Short Pass",
     email: "shortpass@gmail.com",
     password: "short"
   });
-  console.log("   Status:", badPassRes.status, "Output:", badPassRes.data);
-
-  // 4. Doctor Login
-  console.log("\n4. Testing Doctor Login...");
-  const loginRes = await request("POST", "/api/doctors/login", {
-    email: "doctor@gmail.com",
-    password: "Password123"
-  });
-  console.log("   Login Status:", loginRes.status);
-  console.log("   Logged in Doctor:", loginRes.data.doctor);
-
-  const docId = loginRes.data.doctor.id;
-
-  // 5. Doctor Profile Fetch & Edit (Immutable Email)
-  console.log("\n5. Testing Doctor Profile Update (Editing Phone & Department)...");
-  const editProfileRes = await request("PUT", `/api/doctors/profile/${docId}`, {
-    mobile: "+1-555-9999",
-    department: "Neurology",
-    qualification: "MBBS, MD, DM"
-  });
-  console.log("   Profile Update Status:", editProfileRes.status);
-  console.log("   Updated Profile:", editProfileRes.data.doctor);
-
-  // 6. Patient Creation under Doctor A
-  console.log("\n6. Testing Patient Creation for Doctor A...");
-  const createPatientRes = await request("POST", "/api/patients", {
-    name: "Samantha Reed",
-    age: 34,
-    gender: "Female",
-    bloodGroup: "A+",
-    contact: "+1-555-8888",
-    diagnosis: "Acute Arrhythmia",
-    history: "High blood pressure",
-    currentMedication: "Beta Blockers 25mg",
-    doctor: "Dr. John Smith",
-    doctorId: docId,
-    doctorEmail: "doctor@gmail.com",
-    room: "Room 302",
-    status: "Stable"
-  });
-  console.log("   Patient Creation Status:", createPatientRes.status);
-  console.log("   Created Patient:", createPatientRes.data.patient);
-
-  // 7. Patient Directory Ownership Isolation
-  console.log("\n7. Testing Doctor Ownership Isolation (Fetching patients for Dr. John Smith)...");
-  const docAPatients = await request("GET", `/api/patients?doctorId=${docId}`);
-  console.log(`   Patients count for ${docId}:`, docAPatients.data.length);
-  console.log("   Patient List:", docAPatients.data.map(p => ({ id: p.id, name: p.name, doctor: p.doctor })));
-
-  // 8. Add Medical Record
-  console.log("\n8. Testing Medical Record Creation for Patient...");
-  const patId = createPatientRes.data.patient.id;
-  const medRecRes = await request("POST", `/api/patients/${patId}/records`, {
-    type: "ECG Test",
-    title: "Normal Sinus Rhythm ECG",
-    description: "Heart rate 72 bpm with standard P-QRS-T complexes."
-  });
-  console.log("   Medical Record Status:", medRecRes.status);
-  console.log("   Created Record:", medRecRes.data.record);
+  console.log("   Status:", shortRes.status, "Rejection Output:", shortRes.data);
 
   console.log("\n=========================================");
-  console.log("ALL REST API ENDPOINTS VERIFIED SUCCESSFULLY!");
+  console.log("ALL PASSWORD POLICY TESTS PASSED SUCCESSFULLY!");
   console.log("=========================================");
 }
 

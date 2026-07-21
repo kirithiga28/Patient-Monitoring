@@ -104,11 +104,10 @@ function isValidEmail(email) {
   return emailRegex.test(email.trim());
 }
 
-// Password validation helper: min 8 chars, must contain letters
+// Password validation helper: minimum 8 characters (only letters, only numbers, or combination allowed)
 function isValidPassword(password) {
   if (!password || typeof password !== "string") return false;
-  const hasLetters = /[A-Za-z]/.test(password);
-  return password.length >= 8 && hasLetters;
+  return password.length >= 8;
 }
 
 // ==========================================
@@ -127,7 +126,7 @@ app.post("/api/doctors/register", (req, res) => {
     }
 
     if (!isValidPassword(password)) {
-      return res.status(400).json({ success: false, message: "Password must contain at least 8 characters with letters." });
+      return res.status(400).json({ success: false, message: "Password must contain at least 8 characters." });
     }
 
     if (!doctorName) {

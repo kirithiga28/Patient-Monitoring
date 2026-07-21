@@ -26,11 +26,11 @@ export default function Login() {
     return emailRegex.test(val.trim());
   };
 
-  // Password validation: min 8 characters, must contain letters
-  const isPasswordValid = password.length >= 8 && /[A-Za-z]/.test(password);
+  // Password validation: minimum 8 characters (letters, numbers, or combination allowed)
+  const isPasswordValid = password.length >= 8;
 
-  // Live password validation state
-  const showPasswordLengthError = password.length > 0 && !isPasswordValid;
+  // Live password validation state: show error if typing and length < 8
+  const showPasswordLengthError = password.length > 0 && password.length < 8;
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -76,7 +76,7 @@ export default function Login() {
     }
 
     if (!isPasswordValid) {
-      setError("Password must contain at least 8 characters with letters.");
+      setError("Password must contain at least 8 characters.");
       return;
     }
 
