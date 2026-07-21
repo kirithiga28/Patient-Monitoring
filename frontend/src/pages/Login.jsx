@@ -3,30 +3,57 @@ import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const { login, signup, forgotPassword } = useAuth();
-  const [view, setView] = useState("login"); // login, register, forgot
+  const [view, setView] = useState("login"); // "login", "register", "forgot"
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [fullName, setFullName] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [medRegNo, setMedRegNo] = useState("");
+  const [hospitalCode, setHospitalCode] = useState("WHC-2026-1001");
+  const [department, setDepartment] = useState("General Medicine");
+  const [qualification, setQualification] = useState("MBBS, MD");
+
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Registration states
-  const [fullName, setFullName] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [medRegNo, setMedRegNo] = useState("");
-  const [hospitalCode, setHospitalCode] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  // Email validation regex: accepts any valid email format (gmail, yahoo, outlook, etc.)
+  const validateEmailFormat = (val) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(val.trim());
+  };
+
+  // Password validation: min 8 characters, must contain letters
+  const isPasswordValid = password.length >= 8 && /[A-Za-z]/.test(password);
+
+  // Live password validation state
+  const showPasswordLengthError = password.length > 0 && !isPasswordValid;
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
+
+    if (!validateEmailFormat(email)) {
+      setError("Please enter a valid email address (e.g., doctor@gmail.com).");
+      return;
+    }
+
+    if (!password) {
+      setError("Password is required.");
+      return;
+    }
+
     setLoading(true);
 
     try {
       await login(email.trim(), password);
+      setSuccess("Login successful! Redirecting...");
     } catch (err) {
-      console.error(err);
+      console.error("Login component error:", err);
       setError(err.message || "Failed to log in. Please check your credentials.");
     } finally {
       setLoading(false);
@@ -38,23 +65,40 @@ export default function Login() {
     setError("");
     setSuccess("");
 
+    if (!fullName.trim()) {
+      setError("Full name is required.");
+      return;
+    }
+
+    if (!validateEmailFormat(email)) {
+      setError("Please enter a valid email address (e.g., doctor@gmail.com).");
+      return;
+    }
+
+    if (!isPasswordValid) {
+      setError("Password must contain at least 8 characters with letters.");
+      return;
+    }
+
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError("Passwords do not match.");
       return;
     }
 
     setLoading(true);
     try {
       await signup(email.trim(), password, {
-        fullName,
-        mobile,
-        medRegNo,
-        hospitalCode
+        fullName: fullName.trim(),
+        mobile: mobile.trim(),
+        medRegNo: medRegNo.trim(),
+        hospitalCode: hospitalCode.trim(),
+        department,
+        qualification
       });
-      setSuccess("Account registered successfully! Redirecting...");
+      setSuccess("Account registered successfully! Redirecting to doctor workspace...");
     } catch (err) {
-      console.error(err);
-      setError(err.message || "Failed to register account.");
+      console.error("Registration component error:", err);
+      setError(err.message || "Failed to register account. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -64,8 +108,13 @@ export default function Login() {
     e.preventDefault();
     setError("");
     setSuccess("");
-    setLoading(true);
 
+    if (!validateEmailFormat(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    setLoading(true);
     try {
       await forgotPassword(email.trim());
       setSuccess("Password reset instructions have been sent to your email.");
@@ -95,21 +144,24 @@ export default function Login() {
         </h1>
 
         <p className="text-center text-slate-400 text-xs mb-6">
-          Monitoring System Portal
+          AI Patient Monitoring System Portal
         </p>
 
         {error && (
-          <div className="bg-red-950/50 border border-red-500/30 text-red-300 p-3 rounded-xl text-xs mb-4">
-            ⚠️ {error}
+          <div className="bg-red-950/60 border border-red-500/40 text-red-300 p-3 rounded-xl text-xs mb-4 flex items-center shadow-lg">
+            <span className="mr-2 text-base">⚠️</span>
+            <span>{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="bg-green-950/50 border border-green-500/30 text-green-300 p-3 rounded-xl text-xs mb-4">
-            ✅ {success}
+          <div className="bg-green-950/60 border border-green-500/40 text-green-300 p-3 rounded-xl text-xs mb-4 flex items-center shadow-lg">
+            <span className="mr-2 text-base">✅</span>
+            <span>{success}</span>
           </div>
         )}
 
+        {/* LOGIN FORM */}
         {view === "login" && (
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
@@ -118,11 +170,11 @@ export default function Login() {
               </label>
               <input
                 type="email"
-                placeholder="doctor@wellcare.com"
+                placeholder="doctor@gmail.com"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-950/60 border border-slate-805 focus:border-blue-500/80 p-3 rounded-xl text-white outline-none focus:ring-2 focus:ring-blue-500/10 transition text-xs"
+                className="w-full bg-slate-950/60 border border-slate-800 focus:border-blue-500/80 p-3 rounded-xl text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition text-xs"
               />
             </div>
 
@@ -136,7 +188,7 @@ export default function Login() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-slate-950/60 border border-slate-805 focus:border-blue-500/80 p-3 rounded-xl text-white outline-none focus:ring-2 focus:ring-blue-500/10 transition text-xs"
+                className="w-full bg-slate-950/60 border border-slate-800 focus:border-blue-500/80 p-3 rounded-xl text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition text-xs"
               />
             </div>
 
@@ -151,7 +203,7 @@ export default function Login() {
               <button
                 type="button"
                 onClick={() => { setView("forgot"); setError(""); setSuccess(""); }}
-                className="text-slate-500 hover:text-slate-400 transition cursor-pointer"
+                className="text-slate-400 hover:text-slate-300 transition cursor-pointer"
               >
                 Forgot Password?
               </button>
@@ -160,7 +212,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold hover:from-blue-500 hover:to-cyan-400 focus:outline-none focus:ring-2 focus:ring-blue-500/10 shadow-lg shadow-blue-600/20 transition disabled:opacity-50 mt-4 cursor-pointer text-xs uppercase tracking-wider"
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold hover:from-blue-500 hover:to-cyan-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-lg shadow-blue-600/20 transition disabled:opacity-50 mt-4 cursor-pointer text-xs uppercase tracking-wider"
             >
               {loading ? (
                 <span className="flex items-center justify-center">
@@ -174,34 +226,35 @@ export default function Login() {
           </form>
         )}
 
+        {/* REGISTER / SIGN UP FORM */}
         {view === "register" && (
           <form onSubmit={handleRegister} className="space-y-3.5">
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                  Full Name
+                  Full Name <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="text"
-                  placeholder="Dr. Jane Doe"
+                  placeholder="Dr. John Smith"
                   required
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className="w-full bg-slate-950/60 border border-slate-805 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none focus:ring-1 focus:ring-blue-500/10 transition text-xs"
+                  className="w-full bg-slate-950/60 border border-slate-800 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none focus:ring-1 focus:ring-blue-500/20 transition text-xs"
                 />
               </div>
 
               <div>
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                  Email
+                  Email Address <span className="text-red-400">*</span>
                 </label>
                 <input
                   type="email"
-                  placeholder="jane.doe@wellcare.com"
+                  placeholder="doctor@gmail.com"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-slate-950/60 border border-slate-805 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none focus:ring-1 focus:ring-blue-500/10 transition text-xs"
+                  className="w-full bg-slate-950/60 border border-slate-800 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none focus:ring-1 focus:ring-blue-500/20 transition text-xs"
                 />
               </div>
             </div>
@@ -214,70 +267,95 @@ export default function Login() {
                 <input
                   type="tel"
                   placeholder="+1-555-0199"
-                  required
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value)}
-                  className="w-full bg-slate-950/60 border border-slate-805 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none focus:ring-1 focus:ring-blue-500/10 transition text-xs"
+                  className="w-full bg-slate-950/60 border border-slate-800 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none focus:ring-1 focus:ring-blue-500/20 transition text-xs"
                 />
               </div>
 
               <div>
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                  Medical Reg Number
+                  Medical Reg No.
                 </label>
                 <input
                   type="text"
                   placeholder="MED-89172"
-                  required
                   value={medRegNo}
                   onChange={(e) => setMedRegNo(e.target.value)}
-                  className="w-full bg-slate-950/60 border border-slate-805 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none focus:ring-1 focus:ring-blue-500/10 transition text-xs"
+                  className="w-full bg-slate-950/60 border border-slate-800 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none focus:ring-1 focus:ring-blue-500/20 transition text-xs"
                 />
               </div>
-            </div>
-
-            <div>
-              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                Hospital Code (Tenant Scope)
-              </label>
-              <input
-                type="text"
-                placeholder="WHC-2026-1001"
-                required
-                value={hospitalCode}
-                onChange={(e) => setHospitalCode(e.target.value)}
-                className="w-full bg-slate-950/60 border border-slate-805 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none focus:ring-1 focus:ring-blue-500/10 transition text-xs"
-              />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                  Password
+                  Department
                 </label>
-                <input
-                  type="password"
-                  placeholder="••••••••"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-950/60 border border-slate-805 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none focus:ring-1 focus:ring-blue-500/10 transition text-xs"
-                />
+                <select
+                  value={department}
+                  onChange={(e) => setDepartment(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none transition text-xs"
+                >
+                  <option value="General Medicine">General Medicine</option>
+                  <option value="Cardiology">Cardiology</option>
+                  <option value="Neurology">Neurology</option>
+                  <option value="Pediatrics">Pediatrics</option>
+                  <option value="Surgery">Surgery</option>
+                  <option value="ICU Care">ICU Care</option>
+                </select>
               </div>
 
               <div>
                 <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
-                  Confirm Password
+                  Qualification
                 </label>
                 <input
-                  type="password"
-                  placeholder="••••••••"
-                  required
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full bg-slate-950/60 border border-slate-805 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none focus:ring-1 focus:ring-blue-500/10 transition text-xs"
+                  type="text"
+                  placeholder="MBBS, MD"
+                  value={qualification}
+                  onChange={(e) => setQualification(e.target.value)}
+                  className="w-full bg-slate-950/60 border border-slate-800 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none focus:ring-1 focus:ring-blue-500/20 transition text-xs"
                 />
               </div>
+            </div>
+
+            {/* PASSWORD FIELD WITH LIVE RED VALIDATION MESSAGE & RED BORDER */}
+            <div>
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                Password <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="password"
+                placeholder="•••••••• (min 8 characters)"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={`w-full bg-slate-950/60 p-2.5 rounded-xl text-white outline-none transition text-xs ${
+                  showPasswordLengthError
+                    ? "border-2 border-red-500 focus:border-red-500 ring-2 ring-red-500/20"
+                    : "border border-slate-800 focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/20"
+                }`}
+              />
+              {showPasswordLengthError && (
+                <p className="text-red-400 text-[11px] font-medium mt-1 animate-pulse">
+                  Password must contain at least 8 characters.
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                Confirm Password <span className="text-red-400">*</span>
+              </label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="w-full bg-slate-950/60 border border-slate-800 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none focus:ring-1 focus:ring-blue-500/20 transition text-xs"
+              />
             </div>
 
             <div className="text-[10px] text-center pt-2">
@@ -293,14 +371,22 @@ export default function Login() {
 
             <button
               type="submit"
-              disabled={loading}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold hover:from-blue-500 hover:to-cyan-400 focus:outline-none focus:ring-2 focus:ring-blue-500/10 shadow-lg shadow-blue-600/20 transition disabled:opacity-50 mt-4 cursor-pointer text-xs uppercase tracking-wider"
+              disabled={loading || showPasswordLengthError}
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold hover:from-blue-500 hover:to-cyan-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-lg shadow-blue-600/20 transition disabled:opacity-50 mt-4 cursor-pointer text-xs uppercase tracking-wider"
             >
-              {loading ? "Creating Account..." : "Register & Sign Up"}
+              {loading ? (
+                <span className="flex items-center justify-center">
+                  <span className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
+                  Creating Account...
+                </span>
+              ) : (
+                "Register Doctor Account"
+              )}
             </button>
           </form>
         )}
 
+        {/* FORGOT PASSWORD FORM */}
         {view === "forgot" && (
           <form onSubmit={handleForgot} className="space-y-4">
             <div>
@@ -309,11 +395,11 @@ export default function Login() {
               </label>
               <input
                 type="email"
-                placeholder="doctor@wellcare.com"
+                placeholder="doctor@gmail.com"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-950/60 border border-slate-805 focus:border-blue-500/80 p-3 rounded-xl text-white outline-none focus:ring-2 focus:ring-blue-500/10 transition text-xs"
+                className="w-full bg-slate-950/60 border border-slate-800 focus:border-blue-500/80 p-3 rounded-xl text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition text-xs"
               />
             </div>
 
@@ -330,7 +416,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold hover:from-blue-500 hover:to-cyan-400 focus:outline-none focus:ring-2 focus:ring-blue-500/10 shadow-lg shadow-blue-600/20 transition disabled:opacity-50 mt-4 cursor-pointer text-xs uppercase tracking-wider"
+              className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold hover:from-blue-500 hover:to-cyan-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-lg shadow-blue-600/20 transition disabled:opacity-50 mt-4 cursor-pointer text-xs uppercase tracking-wider"
             >
               {loading ? "Sending link..." : "Send Password Reset Link"}
             </button>

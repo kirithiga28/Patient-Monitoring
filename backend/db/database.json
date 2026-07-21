@@ -1,0 +1,116 @@
+{
+  "doctors": [
+    {
+      "id": "DOC-1001",
+      "uid": "DOC-1001",
+      "name": "Dr. Rajesh Mehta",
+      "email": "rajesh.mehta@gmail.com",
+      "mobile": "9876543210",
+      "department": "Cardiology",
+      "specialization": "Cardiology",
+      "qualification": "MBBS, MD (Cardiology)",
+      "hospitalName": "Well Care Hospital",
+      "hospitalCode": "WHC-2026-1001",
+      "hospitalId": "WHC-2026-1001",
+      "profilePhoto": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150",
+      "createdAt": "2026-07-21T05:16:15.207Z",
+      "role": "doctor"
+    },
+    {
+      "id": "DOC-2332",
+      "uid": "DOC-2332",
+      "name": "Dr. John Smith",
+      "email": "doctor@gmail.com",
+      "password": "$2b$10$1IrKjbaSECpBRlof0kXyMOY9lfAplxeju.Ti7RVx2ULkZ7GnHZNS6",
+      "mobile": "+1-555-9999",
+      "phone": "+1-555-9999",
+      "medRegNo": "MED-41273",
+      "department": "Neurology",
+      "specialization": "Neurology",
+      "qualification": "MBBS, MD, DM",
+      "hospitalName": "Well Care Hospital",
+      "hospitalCode": "WHC-2026-1001",
+      "hospitalId": "WHC-2026-1001",
+      "profilePhoto": "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150",
+      "createdAt": "2026-07-21T05:16:39.673Z",
+      "role": "doctor"
+    }
+  ],
+  "patients": [
+    {
+      "id": "PAT-1001",
+      "patientId": "PAT-1001",
+      "name": "Aarav Sharma",
+      "age": 8,
+      "gender": "Male",
+      "bloodGroup": "O+",
+      "room": "101",
+      "diagnosis": "Epilepsy",
+      "status": "Stable",
+      "doctor": "Dr. Rajesh Mehta",
+      "doctorId": "DOC-1001",
+      "doctorEmail": "rajesh.mehta@gmail.com",
+      "contact": "9876543210",
+      "phone": "9876543210",
+      "address": "123 Main Street, City",
+      "history": "Frequent seizure monitoring",
+      "currentMedication": "Anticonvulsants 50mg",
+      "admissionDate": "2026-07-01",
+      "emergencyContact": "Father: 9876543299",
+      "hospitalId": "WHC-2026-1001",
+      "createdAt": "2026-07-21T05:16:15.209Z",
+      "vitals": {
+        "heartRate": 75,
+        "temperature": 98.6,
+        "bloodPressure": "120/80",
+        "oxygenSaturation": 98,
+        "respiratoryRate": 16
+      }
+    },
+    {
+      "id": "PAT-1351",
+      "patientId": "PAT-1351",
+      "name": "Samantha Reed",
+      "age": 34,
+      "gender": "Female",
+      "bloodGroup": "A+",
+      "contact": "+1-555-8888",
+      "phone": "+1-555-8888",
+      "address": "N/A",
+      "diagnosis": "Acute Arrhythmia",
+      "history": "High blood pressure",
+      "currentMedication": "Beta Blockers 25mg",
+      "doctor": "Dr. John Smith",
+      "doctorId": "DOC-2332",
+      "doctorEmail": "doctor@gmail.com",
+      "room": "Room 302",
+      "admissionDate": "2026-07-21",
+      "emergencyContact": "N/A",
+      "status": "Stable",
+      "riskScore": 10,
+      "hospitalId": "WHC-2026-1001",
+      "createdAt": "2026-07-21T05:16:39.882Z",
+      "vitals": {
+        "heartRate": 75,
+        "temperature": 98.6,
+        "bloodPressure": "120/80",
+        "oxygenSaturation": 98,
+        "respiratoryRate": 16
+      }
+    }
+  ],
+  "medical_records": [
+    {
+      "id": "REC-1784610999912",
+      "patientId": "PAT-1351",
+      "type": "ECG Test",
+      "title": "Normal Sinus Rhythm ECG",
+      "description": "Heart rate 72 bpm with standard P-QRS-T complexes.",
+      "createdAt": "2026-07-21T05:16:39.912Z"
+    }
+  ],
+  "vitals": [],
+  "reports": [],
+  "treatments": [],
+  "activities": []
+}

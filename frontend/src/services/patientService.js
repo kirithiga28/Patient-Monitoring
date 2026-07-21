@@ -14,10 +14,23 @@ import { db } from "../firebase/config";
 import { notificationService } from "./notificationService";
 
 const COLLECTION = "patients";
+const BACKEND_URL = "http://localhost:5000";
 
 export const patientService = {
-  // Retrieve single patient doc
+  // Fetch single patient by ID
   async getPatient(id) {
+    // 1. Try Backend REST API
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/patients/${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.id) return data;
+      }
+    } catch (e) {
+      console.warn("Backend patient fetch warning:", e.message);
+    }
+
+    // 2. Try Firestore
     try {
       const docRef = doc(db, COLLECTION, id);
       const docSnap = await getDoc(docRef);
@@ -25,80 +38,117 @@ export const patientService = {
         return { id: docSnap.id, ...docSnap.data() };
       }
     } catch (e) {
-      console.warn("Error fetching patient doc:", e);
+      console.warn("Firestore patient doc fetch warning:", e.message);
     }
     return null;
   },
 
-  // Listen to patient records real-time
-  listenPatients(userRole, hospitalId, assignedPatients, assignedRooms, callback) {
-    let q = collection(db, COLLECTION);
-    
-    // Multi-tenant isolation: filter by hospitalId if not super_admin
-    if (userRole !== "super_admin" && hospitalId) {
-      q = query(q, where("hospitalId", "==", hospitalId));
-    }
+  // Listen to patients real-time with DOCTOR OWNERSHIP FILTERING
+  listenPatients(userRole, hospitalId, currentDoctor, assignedRooms, callback) {
+    // We can fetch from Backend API or Firestore
+    const doctorId = currentDoctor?.uid || currentDoctor?.id;
+    const doctorEmail = currentDoctor?.email;
+    const doctorName = currentDoctor?.name;
 
-    return onSnapshot(q, (snapshot) => {
-      let patientList = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
+    const fetchBackendPatients = async () => {
+      try {
+        let url = `${BACKEND_URL}/api/patients`;
+        const params = new URLSearchParams();
+        if (doctorId) params.append("doctorId", doctorId);
+        if (doctorEmail) params.append("doctorEmail", doctorEmail);
+        if (doctorName) params.append("doctor", doctorName);
+
+        if (params.toString()) {
+          url += `?${params.toString()}`;
+        }
+
+        const res = await fetch(url);
+        if (res.ok) {
+          const list = await res.json();
+          if (Array.isArray(list)) {
+            return list;
+          }
+        }
+      } catch (e) {
+        console.warn("Backend patient listener warning:", e.message);
+      }
+      return null;
+    };
+
+    // Firestore listener
+    let q = collection(db, COLLECTION);
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+      let patientList = snapshot.docs.map(d => ({
+        id: d.id,
+        ...d.data()
       }));
 
-      // Apply role access restrictions on client side
-      if (userRole === "doctor" && assignedPatients && assignedPatients.length > 0) {
-        patientList = patientList.filter(p => assignedPatients.includes(p.id) || p.doctor === assignedPatients[0]);
-      } else if (userRole === "caregiver" && assignedPatients) {
-        patientList = patientList.filter(p => assignedPatients.includes(p.id));
-      } else if (userRole === "nurse" && assignedRooms && assignedRooms.length > 0) {
-        patientList = patientList.filter(p => assignedRooms.includes(p.room));
+      // Merge backend REST API patients if available
+      const backendList = await fetchBackendPatients();
+      if (backendList && backendList.length > 0) {
+        const map = new Map();
+        [...patientList, ...backendList].forEach(p => {
+          map.set(p.id || p.patientId, p);
+        });
+        patientList = Array.from(map.values());
+      }
+
+      // DOCTOR OWNERSHIP ISOLATION
+      // When Doctor A logs in: Display only Doctor A's patients
+      // When Doctor B logs in: Display only Doctor B's patients
+      if (currentDoctor && (doctorName || doctorId || doctorEmail)) {
+        patientList = patientList.filter(p => {
+          const isDocId = doctorId && (p.doctorId === doctorId || p.doctor === doctorId);
+          const isDocEmail = doctorEmail && (p.doctorEmail === doctorEmail || p.doctor === doctorEmail);
+          const isDocName = doctorName && (p.doctor === doctorName || p.doctorName === doctorName);
+          return isDocId || isDocEmail || isDocName;
+        });
       }
 
       callback(patientList);
-    }, (error) => {
-      console.error("Error subscribing to patients:", error);
-      callback([]);
+    }, async (error) => {
+      console.warn("Firestore patient listener warning:", error.message);
+      // Fallback to backend REST API
+      const backendList = await fetchBackendPatients();
+      if (backendList) {
+        callback(backendList);
+      } else {
+        callback([]);
+      }
     });
+
+    return unsubscribe;
   },
 
-  // Listen to critical patients, isolated by hospital tenant
-  listenCriticalPatients(hospitalId, callback) {
-    const q = query(
-      collection(db, "critical_patients"),
-      where("hospitalId", "==", hospitalId || "WHC-2026-1001")
-    );
-
-    return onSnapshot(q, (snapshot) => {
-      let list = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      // Sort chronologically descending
-      list.sort((a, b) => new Date(b.criticalSince || 0) - new Date(a.criticalSince || 0));
-      callback(list);
-    }, (error) => {
-      console.error("Error subscribing to critical patients:", error);
-      callback([]);
-    });
-  },
-
-  // Create a patient with all standard clinical fields
-  async addPatient(patientData, hospitalId) {
+  // Create a patient record and store in backend database + Firestore
+  async addPatient(patientData, hospitalId, currentDoctor) {
     const hId = hospitalId || patientData.hospitalId || "WHC-2026-1001";
+    const docName = currentDoctor?.name || patientData.doctor || "Dr. WellCare";
+    const docId = currentDoctor?.uid || currentDoctor?.id || patientData.doctorId || "DOC-1001";
+    const docEmail = currentDoctor?.email || patientData.doctorEmail || "doctor@wellcare.com";
+
+    const patId = `PAT-${Math.floor(1000 + Math.random() * 9000)}`;
     const cleanData = {
+      id: patId,
+      patientId: patId,
       name: patientData.name || "Unknown Patient",
       age: Number(patientData.age) || 0,
-      gender: patientData.gender || "Other",
+      gender: patientData.gender || "Male",
       bloodGroup: patientData.bloodGroup || "O+",
-      doctor: patientData.doctor || "Unassigned",
-      room: patientData.room || "Unassigned",
-      contact: patientData.contact || "N/A",
+      doctor: docName,
+      doctorId: docId,
+      doctorEmail: docEmail,
+      room: patientData.room || "Room 101",
+      contact: patientData.contact || patientData.phone || "N/A",
+      phone: patientData.phone || patientData.contact || "N/A",
       address: patientData.address || "N/A",
-      diagnosis: patientData.diagnosis || "No Diagnosis",
-      history: patientData.history || "",
+      diagnosis: patientData.diagnosis || "General Observation",
+      history: patientData.history || "No medical history recorded",
+      currentMedication: patientData.currentMedication || patientData.medication || "None prescribed",
+      admissionDate: patientData.admissionDate || new Date().toISOString().split("T")[0],
+      emergencyContact: patientData.emergencyContact || "N/A",
       status: patientData.status || "Stable",
       riskScore: Number(patientData.riskScore) || 10,
-      admissionDate: patientData.admissionDate || new Date().toISOString().split("T")[0],
       hospitalId: hId,
       createdAt: new Date().toISOString(),
       vitals: patientData.vitals || {
@@ -109,100 +159,94 @@ export const patientService = {
         respiratoryRate: 16
       }
     };
-    const docRef = await addDoc(collection(db, COLLECTION), cleanData);
-    
-    // Add Patient notification
-    await notificationService.addNotification(
-      "Patient Added",
-      `Patient ${cleanData.name} has been admitted.`,
-      hId
-    );
 
-    // If status is Critical, add to critical_patients
-    if (cleanData.status === "Critical") {
-      await setDoc(doc(db, "critical_patients", docRef.id), {
-        patientId: docRef.id,
-        name: cleanData.name,
-        room: cleanData.room,
-        doctor: cleanData.doctor,
-        hospitalId: hId,
-        vitals: cleanData.vitals,
-        diagnosis: cleanData.diagnosis,
-        criticalSince: new Date().toISOString()
+    // 1. Save to Backend REST API
+    let backendSaved = false;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/patients`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(cleanData)
       });
-      
+      if (res.ok) {
+        backendSaved = true;
+      }
+    } catch (backendErr) {
+      console.warn("Backend patient create REST API warning:", backendErr.message);
+    }
+
+    // 2. Save to Firestore
+    try {
+      const docRef = doc(db, COLLECTION, patId);
+      await setDoc(docRef, cleanData);
+    } catch (fsErr) {
+      console.warn("Firestore patient create warning:", fsErr.message);
+      if (!backendSaved) {
+        // Local persistence fallback
+        const existing = JSON.parse(localStorage.getItem("wellcare_local_patients") || "[]");
+        existing.push(cleanData);
+        localStorage.setItem("wellcare_local_patients", JSON.stringify(existing));
+      }
+    }
+
+    // Notification trigger
+    try {
       await notificationService.addNotification(
-        "Critical Patient Created",
-        `Patient ${cleanData.name} status is CRITICAL.`,
+        "Patient Registered",
+        `Patient ${cleanData.name} (ID: ${cleanData.patientId}) has been registered under ${docName}.`,
         hId
       );
-    }
-
-    return { id: docRef.id, ...cleanData };
-  },
-
-  // Update fields on a patient record
-  async updatePatient(id, patientData) {
-    const docRef = doc(db, COLLECTION, id);
-    
-    // Fetch current state
-    const snap = await getDoc(docRef);
-    if (!snap.exists()) {
-      throw new Error("Patient not found");
-    }
-    const currentData = snap.data();
-    const prevStatus = currentData.status;
-    const hId = currentData.hospitalId || patientData.hospitalId || "WHC-2026-1001";
-    
-    const updatedData = { ...patientData };
-    if (updatedData.age !== undefined) updatedData.age = Number(updatedData.age);
-    if (updatedData.riskScore !== undefined) updatedData.riskScore = Number(updatedData.riskScore);
-    await updateDoc(docRef, updatedData);
-    
-    const newStatus = updatedData.status !== undefined ? updatedData.status : prevStatus;
-    
-    // If status is Critical
-    if (newStatus === "Critical") {
-      await setDoc(doc(db, "critical_patients", id), {
-        patientId: id,
-        name: updatedData.name || currentData.name || "Unknown Patient",
-        room: updatedData.room || currentData.room || "Unassigned",
-        doctor: updatedData.doctor || currentData.doctor || "Unassigned",
-        hospitalId: hId,
-        vitals: updatedData.vitals || currentData.vitals || null,
-        diagnosis: updatedData.diagnosis || currentData.diagnosis || "Critical",
-        criticalSince: currentData.criticalSince || new Date().toISOString()
-      });
-      
-      if (prevStatus !== "Critical") {
-        await notificationService.addNotification(
-          "Critical Patient Created",
-          `Patient ${updatedData.name || currentData.name || "Unknown Patient"} status changed to CRITICAL.`,
-          hId
-        );
-      }
-    } 
-    // If status was Critical and changed to something else
-    else if (prevStatus === "Critical" && newStatus !== "Critical") {
-      await deleteDoc(doc(db, "critical_patients", id));
-    }
-    
-    // Add Patient Updated notification
-    await notificationService.addNotification(
-      "Patient Updated",
-      `Patient ${updatedData.name || currentData.name || "Unknown Patient"} records updated.`,
-      hId
-    );
-  },
-
-  // Delete patient document
-  async deletePatient(id) {
-    const docRef = doc(db, COLLECTION, id);
-    await deleteDoc(docRef);
-    try {
-      await deleteDoc(doc(db, "critical_patients", id));
     } catch (e) {
-      console.warn("Error removing deleted patient from critical list:", e);
+      console.warn("Notification trigger warning:", e);
+    }
+
+    return cleanData;
+  },
+
+  // Update patient record
+  async updatePatient(id, patientData) {
+    const cleanUpdates = {
+      ...patientData,
+      updatedAt: new Date().toISOString()
+    };
+
+    // 1. Update Backend REST API
+    try {
+      await fetch(`${BACKEND_URL}/api/patients/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(cleanUpdates)
+      });
+    } catch (e) {
+      console.warn("Backend patient update REST API warning:", e.message);
+    }
+
+    // 2. Update Firestore
+    try {
+      const docRef = doc(db, COLLECTION, id);
+      await updateDoc(docRef, cleanUpdates);
+    } catch (e) {
+      console.warn("Firestore patient update warning:", e.message);
+    }
+
+    return cleanUpdates;
+  },
+
+  // Delete patient record
+  async deletePatient(id) {
+    // 1. Delete on Backend REST API
+    try {
+      await fetch(`${BACKEND_URL}/api/patients/${id}`, { method: "DELETE" });
+    } catch (e) {
+      console.warn("Backend patient delete REST API warning:", e.message);
+    }
+
+    // 2. Delete on Firestore
+    try {
+      const docRef = doc(db, COLLECTION, id);
+      await deleteDoc(docRef);
+    } catch (e) {
+      console.warn("Firestore patient delete warning:", e.message);
     }
   }
 };
