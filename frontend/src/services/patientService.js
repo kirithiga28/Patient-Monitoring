@@ -117,6 +117,54 @@ export const patientService = {
       }
     });
 
+  // Listen to critical patients real-time
+  listenCriticalPatients(hospitalId, callback) {
+    const fetchBackendCritical = async () => {
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/patients`);
+        if (res.ok) {
+          const list = await res.json();
+          if (Array.isArray(list)) {
+            return list.filter(p => p.status === "Critical");
+          }
+        }
+      } catch (e) {
+        console.warn("Backend critical patients fetch warning:", e.message);
+      }
+      return null;
+    };
+
+    const q = query(
+      collection(db, "critical_patients"),
+      where("hospitalId", "==", hospitalId || "WHC-2026-1001")
+    );
+
+    const unsubscribe = onSnapshot(q, async (snapshot) => {
+      let list = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      // If empty or missing, fallback to main patients list filtered by status Critical
+      if (list.length === 0) {
+        const backendList = await fetchBackendCritical();
+        if (backendList && backendList.length > 0) {
+          list = backendList;
+        }
+      }
+
+      list.sort((a, b) => new Date(b.criticalSince || b.createdAt || 0) - new Date(a.criticalSince || a.createdAt || 0));
+      callback(list);
+    }, async (error) => {
+      console.warn("Firestore critical patients listener warning:", error.message);
+      const backendList = await fetchBackendCritical();
+      if (backendList) {
+        callback(backendList);
+      } else {
+        callback([]);
+      }
+    });
+
     return unsubscribe;
   },
 

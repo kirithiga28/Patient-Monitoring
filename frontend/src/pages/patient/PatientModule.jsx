@@ -370,7 +370,7 @@ export function CriticalPatientMonitor() {
 
     return () => {
       clearTimeout(timer);
-      unsubPatients();
+      if (typeof unsubPatients === "function") unsubPatients();
     };
   }, [hospitalId, selectedPatientId]);
 
