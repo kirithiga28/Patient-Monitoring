@@ -24,7 +24,7 @@ jobs:
 
       - name: 🌐 Setup Chrome Headless Browser
         uses: browser-actions/setup-chrome@v1
-        ignore: true
+        continue-on-error: true
 
       - name: 📦 Install Dependencies
         run: |
