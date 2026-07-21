@@ -1,0 +1,45 @@
+name: 🚀 All 4 Test Suites & Excel Artifacts
+
+on:
+  push:
+    branches: [ main, master, dev ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  run-all-4-tests:
+    name: Run All 4 Test Suites & Export Excel Artifacts
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        test-type: [selenium, appium, vulnerability, loadtest]
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: |
+          npm install
+          cd testing && npm install
+
+      - name: 🧪 Execute Test Suite Matrix
+        run: |
+          cd testing
+          node generateAllExcelReports.js
+
+      - name: 📊 Upload Excel Report Artifact for ${{ matrix.test-type }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.test-type }}-excel-report
+          path: |
+            testing/final-reports/${{ matrix.test-type }} report.xlsx
+            final-reports/${{ matrix.test-type }} report.xlsx
+          retention-days: 30

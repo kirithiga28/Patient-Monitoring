@@ -1,0 +1,42 @@
+name: ⚡ Performance Load Test
+
+on:
+  push:
+    branches: [ main, master, dev ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  load-test:
+    name: Run Performance Load Tests & Export Excel Report
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: |
+          npm install
+          cd testing && npm install
+
+      - name: 🧪 Execute Performance Load Tests & Generate Excel Report
+        run: |
+          cd testing
+          node generateAllExcelReports.js
+
+      - name: 📊 Upload Load Test Excel Report Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: loadtest-excel-report
+          path: |
+            testing/final-reports/loadtest report.xlsx
+            final-reports/loadtest report.xlsx
+          retention-days: 30

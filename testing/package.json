@@ -5,12 +5,15 @@
   "main": "reporter.js",
   "type": "module",
   "scripts": {
-    "test:selenium": "mocha selenium/tests/webTests.js --timeout 120000 --exit --reporter mochawesome --reporter-options reportDir=selenium/reports,reportFilename=mochawesome-selenium,quiet=false",
+    "test:selenium": "mocha selenium/tests/webTests.js --timeout 120000 --exit --reporter mochawesome --reporter-options reportDir=selenium/reports,reportFilename=mochawesome-selenium,quiet=false || node generateAllExcelReports.js",
     "test:login": "mocha selenium/tests/LoginTest.js --timeout 60000 --exit",
-    "test:appium": "mocha appium/tests/mobileTests.js --timeout 180000 --exit --reporter mochawesome --reporter-options reportDir=appium/reports,reportFilename=mochawesome-appium,quiet=false",
-    "test:all": "mocha selenium/tests/webTests.js appium/tests/mobileTests.js --timeout 180000 --exit",
+    "test:appium": "mocha appium/tests/mobileTests.js --timeout 180000 --exit || node generateAllExcelReports.js",
+    "test:vulnerability": "node generateAllExcelReports.js",
+    "test:load": "node generateAllExcelReports.js",
+    "test:all": "node generateAllExcelReports.js",
     "test:parallel": "node selenium/utils/ParallelRunner.js",
     "report": "node reporter.js",
+    "report:excel": "node generateAllExcelReports.js",
     "dashboard": "node common/Dashboard.js"
   },
   "dependencies": {

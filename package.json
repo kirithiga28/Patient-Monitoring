@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "scripts": {
     "build": "npm --prefix frontend run build",
-    "test:web": "npm --prefix testing run test:web",
-    "test:mobile": "npm --prefix testing run test:mobile",
+    "test:selenium": "npm --prefix testing run test:selenium",
+    "test:appium": "npm --prefix testing run test:appium",
+    "test:vulnerability": "npm --prefix testing run test:vulnerability",
+    "test:load": "npm --prefix testing run test:load",
     "test:all": "npm --prefix testing run test:all",
-    "report": "npm --prefix testing run report"
+    "report:excel": "npm --prefix testing run report:excel"
   },
   "dependencies": {
     "firebase": "^12.14.0"
