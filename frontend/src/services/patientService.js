@@ -42,9 +42,9 @@ export const patientService = {
     return null;
   },
 
-  // Listen to patients real-time with DOCTOR OWNERSHIP FILTERING
+  // Listen to patients real-time with STRICT DOCTOR OWNERSHIP ISOLATION
   listenPatients(userRole, hospitalId, currentDoctor, assignedRooms, callback) {
-    const doctorId = currentDoctor?.uid || currentDoctor?.id;
+    const doctorId = currentDoctor?.uid || currentDoctor?.id || currentDoctor?.doctorId;
     const doctorEmail = currentDoctor?.email;
     const doctorName = currentDoctor?.name;
 
@@ -83,7 +83,7 @@ export const patientService = {
 
       // Merge backend REST API patients if available
       const backendList = await fetchBackendPatients();
-      if (backendList && backendList.length > 0) {
+      if (backendList) {
         const map = new Map();
         [...patientList, ...backendList].forEach(p => {
           map.set(p.id || p.patientId, p);
@@ -91,14 +91,16 @@ export const patientService = {
         patientList = Array.from(map.values());
       }
 
-      // DOCTOR OWNERSHIP ISOLATION
-      if (currentDoctor && (doctorName || doctorId || doctorEmail)) {
+      // STRICT DOCTOR OWNERSHIP FILTERING
+      if (currentDoctor) {
         patientList = patientList.filter(p => {
-          const isDocId = doctorId && (p.doctorId === doctorId || p.doctor === doctorId);
+          const isDocId = doctorId && (p.doctorId === doctorId || p.createdBy === doctorId || p.doctor === doctorId);
           const isDocEmail = doctorEmail && (p.doctorEmail === doctorEmail || p.doctor === doctorEmail);
           const isDocName = doctorName && (p.doctor === doctorName || p.doctorName === doctorName);
           return isDocId || isDocEmail || isDocName;
         });
+      } else {
+        patientList = [];
       }
 
       callback(patientList);
@@ -115,11 +117,28 @@ export const patientService = {
     return unsubscribe;
   },
 
-  // Listen to critical patients real-time
-  listenCriticalPatients(hospitalId, callback) {
+  // Listen to critical patients real-time with STRICT DOCTOR ISOLATION
+  listenCriticalPatients(hospitalId, currentDoctor, callback) {
+    // If callback passed as second argument
+    if (typeof currentDoctor === "function") {
+      callback = currentDoctor;
+      currentDoctor = null;
+    }
+
+    const doctorId = currentDoctor?.uid || currentDoctor?.id || currentDoctor?.doctorId;
+    const doctorEmail = currentDoctor?.email;
+    const doctorName = currentDoctor?.name;
+
     const fetchBackendCritical = async () => {
       try {
-        const res = await fetch(`${BACKEND_URL}/api/patients`);
+        let url = `${BACKEND_URL}/api/patients`;
+        const params = new URLSearchParams();
+        if (doctorId) params.append("doctorId", doctorId);
+        if (doctorEmail) params.append("doctorEmail", doctorEmail);
+        if (doctorName) params.append("doctor", doctorName);
+        if (params.toString()) url += `?${params.toString()}`;
+
+        const res = await fetch(url);
         if (res.ok) {
           const list = await res.json();
           if (Array.isArray(list)) {
@@ -143,11 +162,23 @@ export const patientService = {
         ...d.data()
       }));
 
-      if (list.length === 0) {
-        const backendList = await fetchBackendCritical();
-        if (backendList && backendList.length > 0) {
-          list = backendList;
-        }
+      const backendList = await fetchBackendCritical();
+      if (backendList && backendList.length > 0) {
+        const map = new Map();
+        [...list, ...backendList].forEach(p => map.set(p.id || p.patientId, p));
+        list = Array.from(map.values());
+      }
+
+      // STRICT DOCTOR FILTERING FOR CRITICAL PATIENTS
+      if (currentDoctor) {
+        list = list.filter(p => {
+          const isDocId = doctorId && (p.doctorId === doctorId || p.createdBy === doctorId || p.doctor === doctorId);
+          const isDocEmail = doctorEmail && (p.doctorEmail === doctorEmail || p.doctor === doctorEmail);
+          const isDocName = doctorName && (p.doctor === doctorName || p.doctorName === doctorName);
+          return isDocId || isDocEmail || isDocName;
+        });
+      } else {
+        list = [];
       }
 
       list.sort((a, b) => new Date(b.criticalSince || b.createdAt || 0) - new Date(a.criticalSince || a.createdAt || 0));
@@ -169,7 +200,7 @@ export const patientService = {
   async addPatient(patientData, hospitalId, currentDoctor) {
     const hId = hospitalId || patientData.hospitalId || "WHC-2026-1001";
     const docName = currentDoctor?.name || patientData.doctor || "Dr. WellCare";
-    const docId = currentDoctor?.uid || currentDoctor?.id || patientData.doctorId || "DOC-1001";
+    const docId = currentDoctor?.uid || currentDoctor?.id || currentDoctor?.doctorId || patientData.doctorId || "DOC-1001";
     const docEmail = currentDoctor?.email || patientData.doctorEmail || "doctor@wellcare.com";
 
     const patId = `PAT-${Math.floor(1000 + Math.random() * 9000)}`;
@@ -181,8 +212,10 @@ export const patientService = {
       gender: patientData.gender || "Male",
       bloodGroup: patientData.bloodGroup || "O+",
       doctor: docName,
+      doctorName: docName,
       doctorId: docId,
       doctorEmail: docEmail,
+      createdBy: docId,
       room: patientData.room || "Room 101",
       contact: patientData.contact || patientData.phone || "N/A",
       phone: patientData.phone || patientData.contact || "N/A",
@@ -254,7 +287,6 @@ export const patientService = {
       updatedAt: new Date().toISOString()
     };
 
-    // 1. Update Backend REST API
     try {
       await fetch(`${BACKEND_URL}/api/patients/${id}`, {
         method: "PUT",
@@ -265,7 +297,6 @@ export const patientService = {
       console.warn("Backend patient update REST API warning:", e.message);
     }
 
-    // 2. Update Firestore
     try {
       const docRef = doc(db, COLLECTION, id);
       await updateDoc(docRef, cleanUpdates);
@@ -278,14 +309,12 @@ export const patientService = {
 
   // Delete patient record
   async deletePatient(id) {
-    // 1. Delete on Backend REST API
     try {
       await fetch(`${BACKEND_URL}/api/patients/${id}`, { method: "DELETE" });
     } catch (e) {
       console.warn("Backend patient delete REST API warning:", e.message);
     }
 
-    // 2. Delete on Firestore
     try {
       const docRef = doc(db, COLLECTION, id);
       await deleteDoc(docRef);

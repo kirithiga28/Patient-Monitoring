@@ -8,8 +8,6 @@ import { StatCard } from "../../components/ui/StatCard";
 import { DataTable } from "../../components/ui/DataTable";
 import WebcamStream from "../../components/WebcamStream";
 
-// Patient Profile standalone view is routed directly to src/pages/PatientProfile.jsx
-
 // 2. Medical Records
 export function MedicalRecords() {
   const { role, hospitalId, userData } = useAuth();
@@ -21,19 +19,20 @@ export function MedicalRecords() {
       setLoading(false);
     }, 1000);
 
-    const unsub = patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
+    const unsub = patientService.listenPatients("doctor", hospitalId, userData, null, (list) => {
       setPatients(list);
       setLoading(false);
     });
 
     return () => {
       clearTimeout(timer);
-      unsub();
+      if (typeof unsub === "function") unsub();
     };
-  }, [hospitalId]);
+  }, [hospitalId, userData]);
 
   const columns = [
-    { key: "name", label: "Patient" },
+    { key: "name", label: "Patient Name" },
+    { key: "patientId", label: "Patient ID", render: (row) => <span className="font-mono text-cyan-400 font-bold">{row.patientId || row.id}</span> },
     { key: "age", label: "Age" },
     { key: "diagnosis", label: "Diagnosis" },
     { key: "history", label: "Medical History Profile", className: "text-slate-400 max-w-sm truncate" }
@@ -41,17 +40,18 @@ export function MedicalRecords() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
+      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg border-l-4 border-l-blue-600">
         <h1 className="text-3xl font-extrabold tracking-tight text-white">Central Medical Records</h1>
-        <p className="text-slate-400 text-xs mt-1">Inspect hospital patient medical history profile and clinical diagnosis sheets.</p>
+        <p className="text-slate-400 text-xs mt-1">Inspect hospital patient medical history profile and clinical diagnosis sheets assigned to your doctor workspace.</p>
       </div>
 
       <DataTable
         columns={columns}
         data={patients}
         searchKey="name"
-        searchPlaceholder="Search patients..."
+        searchPlaceholder="Search assigned patients..."
         loading={loading}
+        emptyMessage="No Medical Records Available"
       />
     </div>
   );
@@ -68,19 +68,20 @@ export function PatientVitals() {
       setLoading(false);
     }, 1000);
 
-    const unsub = patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
+    const unsub = patientService.listenPatients("doctor", hospitalId, userData, null, (list) => {
       setPatients(list);
       setLoading(false);
     });
 
     return () => {
       clearTimeout(timer);
-      unsub();
+      if (typeof unsub === "function") unsub();
     };
-  }, [hospitalId]);
+  }, [hospitalId, userData]);
 
   const columns = [
-    { key: "name", label: "Patient" },
+    { key: "name", label: "Patient Name" },
+    { key: "patientId", label: "Patient ID", render: (row) => <span className="font-mono text-cyan-400 font-bold">{row.patientId || row.id}</span> },
     { key: "room", label: "Room" },
     { key: "heartRate", label: "Heart Rate", render: (row) => <span className="text-red-400 font-mono font-bold">{row.vitals?.heartRate || 75} bpm</span> },
     { key: "oxygenSaturation", label: "Oxygen SpO2", render: (row) => <span className="text-cyan-400 font-mono font-bold">{row.vitals?.oxygenSaturation || 98} %</span> },
@@ -90,17 +91,18 @@ export function PatientVitals() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
+      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg border-l-4 border-l-blue-600">
         <h1 className="text-3xl font-extrabold tracking-tight text-white">Vitals Telemetry Center</h1>
-        <p className="text-slate-400 text-xs mt-1">Real-time vital signs trackers and sensor feeds from ward rooms.</p>
+        <p className="text-slate-400 text-xs mt-1">Real-time vital signs trackers and sensor feeds from ward rooms for your assigned patients.</p>
       </div>
 
       <DataTable
         columns={columns}
         data={patients}
         searchKey="name"
-        searchPlaceholder="Search patients..."
+        searchPlaceholder="Search assigned patients..."
         loading={loading}
+        emptyMessage="No Patient Vitals Available"
       />
     </div>
   );
@@ -108,7 +110,7 @@ export function PatientVitals() {
 
 // 4. ICU Monitoring
 export function ICUMonitoring() {
-  const { hospitalId } = useAuth();
+  const { hospitalId, userData } = useAuth();
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPatientId, setSelectedPatientId] = useState("");
@@ -118,7 +120,7 @@ export function ICUMonitoring() {
       setLoading(false);
     }, 1000);
 
-    const unsubPatients = patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
+    const unsubPatients = patientService.listenPatients("doctor", hospitalId, userData, null, (list) => {
       const icuList = list.filter(p => p.status === "Critical" || p.room === "101" || p.room === "105" || p.room === "110");
       setPatients(icuList);
       if (icuList.length > 0 && !selectedPatientId) {
@@ -129,14 +131,14 @@ export function ICUMonitoring() {
 
     return () => {
       clearTimeout(timer);
-      unsubPatients();
+      if (typeof unsubPatients === "function") unsubPatients();
     };
-  }, [hospitalId, selectedPatientId]);
+  }, [hospitalId, userData, selectedPatientId]);
 
   const selectedPatient = patients.find(p => p.id === selectedPatientId);
 
   const columns = [
-    { key: "name", label: "Patient" },
+    { key: "name", label: "Patient Name" },
     { key: "room", label: "ICU Bed Room" },
     { key: "diagnosis", label: "Diagnosis" },
     { key: "heartRate", label: "HR", render: (row) => <span className="text-red-400 font-mono font-bold">{row.vitals?.heartRate || 75}</span> },
@@ -156,7 +158,7 @@ export function ICUMonitoring() {
     <div className="space-y-6 animate-fade-in">
       <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg border-l-4 border-l-blue-600">
         <h1 className="text-3xl font-extrabold tracking-tight text-white">ICU Central Telemetry</h1>
-        <p className="text-slate-400 text-xs mt-1">ICU Division monitors displaying critical vitals, emergency alerts, and live video feeds.</p>
+        <p className="text-slate-400 text-xs mt-1">ICU Division monitors displaying critical vitals, emergency alerts, and live video feeds for your assigned patients.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -165,9 +167,9 @@ export function ICUMonitoring() {
             columns={columns}
             data={patients}
             searchKey="name"
-            searchPlaceholder="Search ICU patients..."
+            searchPlaceholder="Search assigned ICU patients..."
             loading={loading}
-            emptyMessage="No ICU patients found."
+            emptyMessage="No ICU Patients Available"
           />
         </div>
 
@@ -204,7 +206,7 @@ export function ICUMonitoring() {
                   )}
                 </>
               ) : (
-                <div className="text-center py-8 text-slate-500 text-xs">No active ICU patients.</div>
+                <div className="text-center py-8 text-slate-500 text-xs">No active ICU patients available.</div>
               )}
             </CardContent>
           </Card>
@@ -216,7 +218,7 @@ export function ICUMonitoring() {
 
 // 5. Observation Ward Monitor
 export function ObservationWardMonitor() {
-  const { hospitalId } = useAuth();
+  const { hospitalId, userData } = useAuth();
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPatientId, setSelectedPatientId] = useState("");
@@ -227,7 +229,7 @@ export function ObservationWardMonitor() {
       setLoading(false);
     }, 1000);
 
-    const unsubPatients = patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
+    const unsubPatients = patientService.listenPatients("doctor", hospitalId, userData, null, (list) => {
       const obsList = list.filter(p => p.status === "Observation" || p.status === "Stable");
       setPatients(obsList);
       if (obsList.length > 0 && !selectedPatientId) {
@@ -237,20 +239,21 @@ export function ObservationWardMonitor() {
     });
 
     const unsubActivities = activityService.listenActivities("doctor", hospitalId, (logs) => {
-      setActivityLogs(logs.slice(0, 8));
+      // Filter activities for doctor patients
+      setActivityLogs(logs.filter(l => !userData || l.doctorId === userData.uid || l.doctorId === userData.id).slice(0, 8));
     });
 
     return () => {
       clearTimeout(timer);
-      unsubPatients();
-      unsubActivities();
+      if (typeof unsubPatients === "function") unsubPatients();
+      if (typeof unsubActivities === "function") unsubActivities();
     };
-  }, [hospitalId, selectedPatientId]);
+  }, [hospitalId, userData, selectedPatientId]);
 
   const selectedPatient = patients.find(p => p.id === selectedPatientId);
 
   const columns = [
-    { key: "name", label: "Patient" },
+    { key: "name", label: "Patient Name" },
     { key: "room", label: "Ward Room" },
     { key: "diagnosis", label: "Diagnosis" },
     {
@@ -270,7 +273,7 @@ export function ObservationWardMonitor() {
     <div className="space-y-6 animate-fade-in">
       <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
         <h1 className="text-3xl font-extrabold tracking-tight text-white">Observation Ward Monitor</h1>
-        <p className="text-slate-400 text-xs mt-1">Track patient stability indexes, ward statuses, activity logs, and camera feeds.</p>
+        <p className="text-slate-400 text-xs mt-1">Track patient stability indexes, ward statuses, activity logs, and camera feeds for your assigned patients.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -279,8 +282,9 @@ export function ObservationWardMonitor() {
             columns={columns}
             data={patients}
             searchKey="name"
-            searchPlaceholder="Search patients..."
+            searchPlaceholder="Search assigned patients..."
             loading={loading}
+            emptyMessage="No Observation Patients Available"
           />
 
           {/* Activity Logs */}
@@ -299,7 +303,7 @@ export function ObservationWardMonitor() {
                 </div>
               ))}
               {activityLogs.length === 0 && (
-                <p className="text-slate-500 text-xs text-center py-4">No recent activity logged.</p>
+                <p className="text-slate-500 text-xs text-center py-4">No Activity History Available</p>
               )}
             </CardContent>
           </Card>
@@ -338,7 +342,7 @@ export function ObservationWardMonitor() {
                   )}
                 </>
               ) : (
-                <div className="text-center py-8 text-slate-500 text-xs">No active observation patients.</div>
+                <div className="text-center py-8 text-slate-500 text-xs">No active observation patients available.</div>
               )}
             </CardContent>
           </Card>
@@ -350,7 +354,7 @@ export function ObservationWardMonitor() {
 
 // 6. Critical Patient Monitor
 export function CriticalPatientMonitor() {
-  const { hospitalId } = useAuth();
+  const { hospitalId, userData } = useAuth();
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPatientId, setSelectedPatientId] = useState("");
@@ -360,7 +364,7 @@ export function CriticalPatientMonitor() {
       setLoading(false);
     }, 1000);
 
-    const unsubPatients = patientService.listenCriticalPatients(hospitalId, (list) => {
+    const unsubPatients = patientService.listenCriticalPatients(hospitalId, userData, (list) => {
       setPatients(list);
       if (list.length > 0 && !selectedPatientId) {
         setSelectedPatientId(list[0].id || list[0].patientId);
@@ -372,12 +376,12 @@ export function CriticalPatientMonitor() {
       clearTimeout(timer);
       if (typeof unsubPatients === "function") unsubPatients();
     };
-  }, [hospitalId, selectedPatientId]);
+  }, [hospitalId, userData, selectedPatientId]);
 
   const selectedPatient = patients.find(p => p.id === selectedPatientId || p.patientId === selectedPatientId);
 
   const columns = [
-    { key: "name", label: "Patient" },
+    { key: "name", label: "Patient Name" },
     { key: "room", label: "Room Assigned" },
     { key: "diagnosis", label: "Critical Indication" },
     { key: "oxygenSaturation", label: "Oxygen SpO2", render: (row) => <span className="text-red-400 font-mono font-bold">{row.vitals?.oxygenSaturation || 98}%</span> },
@@ -398,7 +402,7 @@ export function CriticalPatientMonitor() {
         <h1 className="text-3xl font-extrabold tracking-tight text-white flex items-center gap-2">
           <span className="animate-ping text-red-500">🔴</span> Critical Patient Monitor
         </h1>
-        <p className="text-slate-400 text-xs mt-1">Review patients currently flagged with critical vitals or high-risk telemetry alarms alongside live video feeds.</p>
+        <p className="text-slate-400 text-xs mt-1">Review patients currently flagged with critical vitals or high-risk telemetry alarms alongside live video feeds in your doctor workspace.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -407,7 +411,7 @@ export function CriticalPatientMonitor() {
             columns={columns}
             data={patients}
             searchKey="name"
-            searchPlaceholder="Search critical patients..."
+            searchPlaceholder="Search assigned critical patients..."
             loading={loading}
             emptyMessage="No Critical Patients Available"
           />
@@ -446,7 +450,7 @@ export function CriticalPatientMonitor() {
                   )}
                 </>
               ) : (
-                <div className="text-center py-8 text-slate-500 text-xs">No active critical patients.</div>
+                <div className="text-center py-8 text-slate-500 text-xs">No active critical patients available.</div>
               )}
             </CardContent>
           </Card>

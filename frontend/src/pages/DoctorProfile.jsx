@@ -89,22 +89,30 @@ export default function DoctorProfile() {
       setStats(prev => ({ ...prev, criticalCount: doctorCrit.length }));
     }, (err) => console.warn("Critical count listener warning:", err.message));
 
-    // 3. Emergency Alerts count
+    // 3. Emergency Alerts count for this doctor
     const qAlerts = query(
       collection(db, "alerts"),
       where("hospitalId", "==", currentHospitalId)
     );
     const unsubAlerts = onSnapshot(qAlerts, (snap) => {
-      setStats(prev => ({ ...prev, alertsCount: snap.size }));
+      const docAlerts = snap.docs.filter(d => {
+        const data = d.data();
+        return data.doctorId === docId || data.doctorEmail === docEmail || data.createdBy === docId;
+      });
+      setStats(prev => ({ ...prev, alertsCount: docAlerts.length }));
     }, (err) => console.warn("Alerts count listener warning:", err.message));
 
-    // 4. Medical Records count
+    // 4. Medical Records count for this doctor
     const qRecords = query(
       collection(db, "medical_records"),
       where("hospitalId", "==", currentHospitalId)
     );
     const unsubRecords = onSnapshot(qRecords, (snap) => {
-      setStats(prev => ({ ...prev, recordsCount: snap.size }));
+      const docRecords = snap.docs.filter(d => {
+        const data = d.data();
+        return data.doctorId === docId || data.doctorEmail === docEmail || data.doctor === docName;
+      });
+      setStats(prev => ({ ...prev, recordsCount: docRecords.length }));
     }, (err) => console.warn("Records count listener warning:", err.message));
 
     // 5. Treatments

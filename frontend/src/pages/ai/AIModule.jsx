@@ -8,7 +8,7 @@ import { activityService } from "../../services/activityService";
 
 // 9. Live Camera Monitoring
 export function LiveCameraMonitoring() {
-  const { hospitalId } = useAuth();
+  const { hospitalId, userData } = useAuth();
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,16 +17,16 @@ export function LiveCameraMonitoring() {
       setLoading(false);
     }, 1000);
 
-    const unsub = patientService.listenPatients("doctor", hospitalId, null, null, (list) => {
+    const unsub = patientService.listenPatients("doctor", hospitalId, userData, null, (list) => {
       setPatients(list);
       setLoading(false);
     });
 
     return () => {
       clearTimeout(timer);
-      unsub();
+      if (typeof unsub === "function") unsub();
     };
-  }, [hospitalId]);
+  }, [hospitalId, userData]);
 
   if (loading) {
     return (
@@ -41,12 +41,12 @@ export function LiveCameraMonitoring() {
     <div className="space-y-6 animate-fade-in text-slate-100 font-sans">
       <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
         <h1 className="text-3xl font-extrabold tracking-tight text-white">Live Monitoring Wall</h1>
-        <p className="text-slate-400 text-xs mt-1">Multi-camera wall layout rendering real-time camera feeds and device streams.</p>
+        <p className="text-slate-400 text-xs mt-1">Multi-camera wall layout rendering real-time camera feeds for your assigned patients.</p>
       </div>
 
       {patients.length === 0 ? (
         <div className="p-12 bg-slate-900/50 border border-slate-800 rounded-2xl text-center text-slate-500 text-sm">
-          No patients registered in the hospital directory. All feeds standby.
+          No patients registered in your doctor workspace. All feeds standby.
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -68,7 +68,7 @@ export function LiveCameraMonitoring() {
 
 // 10. Activity History (Activity History Logs)
 export function ActivityHistory() {
-  const { hospitalId } = useAuth();
+  const { hospitalId, userData } = useAuth();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -78,15 +78,17 @@ export function ActivityHistory() {
     }, 1000);
 
     const unsub = activityService.listenActivities("doctor", hospitalId, (list) => {
-      setHistory(list);
+      const docId = userData?.uid || userData?.id;
+      const filtered = list.filter(l => !docId || l.doctorId === docId);
+      setHistory(filtered);
       setLoading(false);
     });
 
     return () => {
       clearTimeout(timer);
-      unsub();
+      if (typeof unsub === "function") unsub();
     };
-  }, [hospitalId]);
+  }, [hospitalId, userData]);
 
   const columns = [
     { key: "patientName", label: "Patient" },
@@ -99,7 +101,7 @@ export function ActivityHistory() {
     <div className="space-y-6 animate-fade-in text-slate-100 font-sans">
       <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
         <h1 className="text-3xl font-extrabold tracking-tight text-white">Activity History Logs</h1>
-        <p className="text-slate-400 text-xs mt-1">Review historical patient activities, alerts, monitoring logs, and camera events.</p>
+        <p className="text-slate-400 text-xs mt-1">Review historical patient activities, alerts, and monitoring logs for your workspace.</p>
       </div>
 
       <DataTable
@@ -108,7 +110,7 @@ export function ActivityHistory() {
         searchKey="patientName"
         searchPlaceholder="Search logs..."
         loading={loading}
-        emptyMessage="No Patient Activity Logs Available"
+        emptyMessage="No Activity History Available"
       />
     </div>
   );

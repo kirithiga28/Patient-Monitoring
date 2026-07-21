@@ -18,11 +18,11 @@ export default function Dashboard() {
       setLoading(false);
     }, 1000);
 
-    // Real-time patients listener
+    // Real-time patients listener (ISOLATED TO LOGGED IN DOCTOR)
     const unsubPatients = patientService.listenPatients(
       "doctor",
       hospitalId,
-      null,
+      userData,
       null,
       (patientList) => {
         setPatients(patientList);

@@ -6,7 +6,7 @@ import { DataTable } from "../../components/ui/DataTable";
 
 // 1. Emergency Alerts Command (Code Blue & Critical Incidents Only)
 export function EmergencyAlerts() {
-  const { hospitalId } = useAuth();
+  const { hospitalId, userData } = useAuth();
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -16,16 +16,17 @@ export function EmergencyAlerts() {
     }, 1000);
 
     const unsub = alertService.listenAlerts("doctor", hospitalId, (list) => {
-      setAlerts(list);
+      const docId = userData?.uid || userData?.id;
+      const filtered = list.filter(a => !docId || a.doctorId === docId);
+      setAlerts(filtered);
       setLoading(false);
     });
 
     return () => {
       clearTimeout(timer);
-      unsub();
+      if (typeof unsub === "function") unsub();
     };
-  }, [hospitalId]);
-
+  }, [hospitalId, userData]);
 
   const columns = [
     { key: "id", label: "Alert ID", render: (row) => <span className="font-mono text-[10px] text-slate-400">{row.id || "N/A"}</span> },
@@ -63,7 +64,7 @@ export function EmergencyAlerts() {
     <div className="space-y-6 animate-fade-in text-slate-100 font-sans">
       <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg border-l-4 border-l-red-600">
         <h1 className="text-3xl font-extrabold tracking-tight text-white">Emergency Alerts Command</h1>
-        <p className="text-slate-400 text-xs mt-1">Real-time status of critical room emergencies, telemetry alerts, and alarm logs from the backend.</p>
+        <p className="text-slate-400 text-xs mt-1">Real-time status of critical room emergencies, telemetry alerts, and alarm logs for your assigned patients.</p>
       </div>
 
       <DataTable
@@ -80,7 +81,7 @@ export function EmergencyAlerts() {
 
 // 2. Notification Center
 export function NotificationCenter() {
-  const { hospitalId } = useAuth();
+  const { hospitalId, userData } = useAuth();
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -90,17 +91,18 @@ export function NotificationCenter() {
     }, 1000);
 
     const unsub = notificationService.listenNotifications(hospitalId, (list) => {
-      setNotifications(list);
+      const docId = userData?.uid || userData?.id;
+      const filtered = list.filter(n => !docId || n.doctorId === docId || (userData?.name && n.message && n.message.includes(userData.name)));
+      setNotifications(filtered);
       setLoading(false);
     });
 
     return () => {
       clearTimeout(timer);
-      unsub();
+      if (typeof unsub === "function") unsub();
     };
-  }, [hospitalId]);
+  }, [hospitalId, userData]);
 
-  // Columns for NotificationCenter DataTable
   const columns = [
     { 
       key: "type", 
@@ -109,7 +111,7 @@ export function NotificationCenter() {
         let typeColor = "text-slate-400 bg-slate-950 border border-slate-850";
         if (row.type === "Critical Patient Created" || row.type === "Emergency Alert Created") {
           typeColor = "text-red-400 bg-red-950/20 border border-red-500/25 font-bold animate-pulse";
-        } else if (row.type === "Patient Added") {
+        } else if (row.type === "Patient Added" || row.type === "Patient Registered") {
           typeColor = "text-green-400 bg-green-950/20 border border-green-500/25";
         } else if (row.type === "Patient Updated" || row.type === "Medical Record Updated") {
           typeColor = "text-blue-400 bg-blue-950/20 border border-blue-500/25";
@@ -134,9 +136,9 @@ export function NotificationCenter() {
 
   return (
     <div className="space-y-6 animate-fade-in text-slate-100 font-sans">
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
+      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg border-l-4 border-l-blue-600">
         <h1 className="text-3xl font-extrabold tracking-tight text-white">System Notification Center</h1>
-        <p className="text-slate-400 text-xs mt-1">Consolidated hub tracking all real-time events, system logs, and staff actions.</p>
+        <p className="text-slate-400 text-xs mt-1">Consolidated hub tracking all real-time events, system logs, and actions in your doctor workspace.</p>
       </div>
 
       <DataTable

@@ -20,7 +20,7 @@ export default function Reports() {
     const unsubPatients = patientService.listenPatients(
       "doctor",
       hospitalId,
-      null,
+      userData,
       null,
       (patientList) => {
         setPatients(patientList);
@@ -29,15 +29,17 @@ export default function Reports() {
     );
 
     const unsubAlerts = alertService.listenAlerts("doctor", hospitalId, (alertList) => {
-      setAlerts(alertList);
+      const docId = userData?.uid || userData?.id;
+      const filtered = alertList.filter(a => !docId || a.doctorId === docId);
+      setAlerts(filtered);
     });
 
     return () => {
       clearTimeout(timer);
-      unsubPatients();
-      unsubAlerts();
+      if (typeof unsubPatients === "function") unsubPatients();
+      if (typeof unsubAlerts === "function") unsubAlerts();
     };
-  }, [hospitalId]);
+  }, [hospitalId, userData]);
 
   // Excel (CSV) Download
   const downloadExcel = () => {
@@ -102,58 +104,45 @@ export default function Reports() {
     document.body.removeChild(link);
   };
 
-  // PDF Download using jsPDF
+  // PDF Export
   const downloadPDF = () => {
     const doc = new jsPDF();
-    doc.setFont("Helvetica");
-
-    // Title / Header
-    doc.setFillColor(15, 23, 42); // slate-900
-    doc.rect(0, 0, 210, 40, "F");
-    
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(22);
-    doc.setFont("Helvetica", "bold");
-    doc.text("WELL CARE HOSPITAL", 20, 26);
-    
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("Well Care Hospital - Clinical Report Summary", 14, 15);
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
-    doc.setTextColor(150, 150, 150);
-    doc.text(`Tenant Scope: ${userData?.hospitalName || "Well Care Hospital"} • Date: ${new Date().toLocaleDateString()}`, 20, 34);
+    doc.text(`Generated for: ${userData?.name || "Doctor"} | Date: ${new Date().toLocaleString()}`, 14, 22);
 
-    doc.setTextColor(50, 50, 50);
-    doc.setFontSize(14);
-    
-    let reportTitle = "";
-    if (reportType === "patients") reportTitle = "Patient Directory Census";
-    else if (reportType === "alerts") reportTitle = "Incident Alerts Audit Log";
-    else reportTitle = "System Activity History Log";
-    
-    doc.text(reportTitle, 20, 55);
-    doc.setDrawColor(200, 200, 200);
-    doc.line(20, 58, 190, 58);
-
-    let y = 70;
-    doc.setFontSize(10);
+    let y = 32;
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "bold");
 
     if (reportType === "patients") {
-      patients.forEach((item, index) => {
-        if (y > 270) { doc.addPage(); y = 20; }
-        doc.setFont("Helvetica", "bold");
-        doc.text(`${index + 1}. Patient Name: ${item.name || "Unknown"} (Room: ${item.room || "N/A"})`, 20, y);
-        doc.setFont("Helvetica", "normal");
-        doc.text(`Age: ${item.age || "N/A"} • Diagnosis: ${item.diagnosis || "N/A"} • Status: ${item.status || "N/A"}`, 25, y + 6);
-        doc.text(`Attending Physician: ${item.doctor || "N/A"} • Contact: ${item.contact || "N/A"}`, 25, y + 12);
-        y += 24;
+      doc.text("Patient Census List", 14, y);
+      y += 8;
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      patients.forEach((p, i) => {
+        if (y > 270) {
+          doc.addPage();
+          y = 15;
+        }
+        doc.text(`${i + 1}. ${p.name} (Room ${p.room}) | Diagnosis: ${p.diagnosis} | Status: ${p.status}`, 14, y);
+        y += 6;
       });
     } else {
-      alerts.forEach((item, index) => {
-        if (y > 270) { doc.addPage(); y = 20; }
-        doc.setFont("Helvetica", "bold");
-        doc.text(`${index + 1}. Event: ${item.alertType || "Incident"} (Room: ${item.room || "N/A"})`, 20, y);
-        doc.setFont("Helvetica", "normal");
-        doc.text(`Patient: ${item.patientName || "Unknown"} • Severity: ${item.severity || "N/A"} • Status: ${item.status || "N/A"}`, 25, y + 6);
-        doc.text(`Recorded: ${formatDateTime(item.timestamp)} • Notes: ${item.notes || "No resolution comments."}`, 25, y + 12);
-        y += 24;
+      doc.text("Incident Alerts Summary", 14, y);
+      y += 8;
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      alerts.forEach((a, i) => {
+        if (y > 270) {
+          doc.addPage();
+          y = 15;
+        }
+        doc.text(`${i + 1}. Room ${a.room}: ${a.alertType} [${a.severity}] - Status: ${a.status}`, 14, y);
+        y += 6;
       });
     }
 
@@ -164,19 +153,17 @@ export default function Reports() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-slate-400">
         <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500 mb-2"></div>
-        <p className="text-sm">Retrieving Audit Log...</p>
+        <p className="text-sm">Preparing clinical documentation engine...</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6 font-sans text-slate-100 animate-fade-in pb-12">
+    <div className="space-y-6 animate-fade-in text-slate-100 font-sans">
       <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg">
-        <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-white to-slate-400 bg-clip-text text-transparent">
-          Reports & Audit Center
-        </h1>
+        <h1 className="text-3xl font-extrabold tracking-tight text-white">Clinical Reports & Export Center</h1>
         <p className="text-slate-400 text-xs mt-1">
-          Export clinical history, alert events, and activity logs.
+          Export clinical audit histories, patient telemetry summaries, and incident logs directly to PDF or Excel for your doctor workspace.
         </p>
       </div>
 
@@ -254,7 +241,7 @@ export default function Reports() {
             )}
 
             {((reportType === "patients" && patients.length === 0) || (reportType !== "patients" && alerts.length === 0)) && (
-              <p className="text-center text-slate-500 text-xs py-8">No records match current filters.</p>
+              <p className="text-center text-slate-500 text-xs py-8">No Reports Available</p>
             )}
           </div>
         </div>

@@ -429,9 +429,9 @@ export default function Patients() {
       ) : filteredPatients.length === 0 ? (
         <div className="bg-slate-900 border border-slate-800 p-12 rounded-2xl text-center space-y-3">
           <div className="text-4xl">🏥</div>
-          <h3 className="text-base font-bold text-white">No Assigned Patients Found</h3>
+          <h3 className="text-base font-bold text-white">No Patients Registered Yet</h3>
           <p className="text-slate-400 text-xs max-w-md mx-auto">
-            You currently have no patient records assigned under <span className="text-blue-400 font-semibold">{userData?.name || "your account"}</span>. Click "+ Register New Patient" to add a patient to your database.
+            You currently have no patient records in your doctor workspace (<span className="text-blue-400 font-semibold">{userData?.name || "Logged-in Doctor"}</span>). Click "+ Register New Patient" to add your first patient.
           </p>
         </div>
       ) : (
