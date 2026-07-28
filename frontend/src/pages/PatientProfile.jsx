@@ -22,6 +22,19 @@ export default function PatientProfile({ patient, onBack }) {
   const [localPatient, setLocalPatient] = useState(null);
   const [allPatients, setAllPatients] = useState([]);
   const [selectorLoading, setSelectorLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Keep localPatient in sync with fresh data from allPatients
+  useEffect(() => {
+    if (localPatient && allPatients.length > 0) {
+      const freshPatient = allPatients.find(p => p.id === localPatient.id);
+      if (freshPatient) {
+        setLocalPatient(freshPatient);
+      } else {
+        setLocalPatient(null); // Patient was deleted, return to list!
+      }
+    }
+  }, [allPatients, localPatient]);
 
   // Determine active patient record
   const currentPatient = patient || localPatient;
@@ -56,6 +69,7 @@ export default function PatientProfile({ patient, onBack }) {
     contact: "",
     address: "",
     history: "",
+    allergies: "",
     riskScore: 10,
     admissionDate: ""
   });
@@ -75,16 +89,22 @@ export default function PatientProfile({ patient, onBack }) {
   useEffect(() => {
     if (!patient) {
       setSelectorLoading(true);
+      setError("");
       const timer = setTimeout(() => {
         setSelectorLoading(false);
       }, 1000);
       const unsubscribe = patientService.listenPatients(
         "doctor",
         hospitalId,
+        userData, // Pass userData to enable doctor filtering
         null,
-        null,
-        (list) => {
+        (list, err) => {
           setAllPatients(list);
+          if (err && list.length === 0) {
+            setError(err);
+          } else {
+            setError("");
+          }
           setSelectorLoading(false);
         }
       );
@@ -93,7 +113,7 @@ export default function PatientProfile({ patient, onBack }) {
         unsubscribe();
       };
     }
-  }, [patient, hospitalId]);
+  }, [patient, hospitalId, userData]);
 
   // Sync state with selected patient
   useEffect(() => {
@@ -110,6 +130,7 @@ export default function PatientProfile({ patient, onBack }) {
         contact: currentPatient.contact || "",
         address: currentPatient.address || "",
         history: currentPatient.history || "",
+        allergies: currentPatient.allergies || "",
         riskScore: currentPatient.riskScore || 10,
         admissionDate: currentPatient.admissionDate || ""
       });
@@ -338,7 +359,12 @@ export default function PatientProfile({ patient, onBack }) {
           <p className="text-slate-400 text-xs mt-1">Select a patient below to view and manage their clinical profile, medical records, and vitals history.</p>
         </div>
 
-        {allPatients.length === 0 ? (
+        {error ? (
+          <div className="p-6 text-center bg-red-950/40 border border-red-500/30 rounded-2xl text-red-300 text-sm">
+            <span className="font-bold text-base block mb-2">⚠️ Backend Data Storage Error</span>
+            {error}
+          </div>
+        ) : allPatients.length === 0 ? (
           <div className="p-12 text-center bg-slate-900 border border-slate-800 rounded-2xl text-slate-500 text-sm">
             No patients registered in this hospital. Go to the Patients Directory to add one.
           </div>
@@ -629,6 +655,22 @@ export default function PatientProfile({ patient, onBack }) {
               ) : (
                 <p className="bg-slate-950/20 border border-slate-850 p-4 rounded-xl leading-relaxed text-slate-400">
                   {formData.history || "No medical history documented."}
+                </p>
+              )}
+            </div>
+
+            <div className="space-y-2 text-xs">
+              <h3 className="text-slate-500 font-bold">Known Allergies</h3>
+              {editing ? (
+                <textarea
+                  name="allergies"
+                  value={formData.allergies}
+                  onChange={handleChange}
+                  className="w-full bg-slate-950 border border-slate-800 p-3 rounded-xl h-16 outline-none text-white text-xs"
+                />
+              ) : (
+                <p className="bg-slate-950/20 border border-slate-850 p-4 rounded-xl leading-relaxed text-slate-400">
+                  {formData.allergies || "No known allergies documented."}
                 </p>
               )}
             </div>

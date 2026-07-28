@@ -15,7 +15,7 @@ export function usePatients() {
     const unsubscribe = patientService.listenPatients(
       role,
       hospitalId,
-      userData?.assignedPatients,
+      userData,
       userData?.assignedRooms,
       (patientList) => {
         setPatients(patientList);

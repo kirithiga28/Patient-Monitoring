@@ -4,6 +4,7 @@ import { patientService } from "../services/patientService";
 import { alertService } from "../services/alertService";
 import { jsPDF } from "jspdf";
 import { formatDateTime } from "../utils/dateFormatter";
+import { auth } from "../firebase/config";
 
 export default function Reports() {
   const { role, hospitalId, userData } = useAuth();
@@ -41,8 +42,31 @@ export default function Reports() {
     };
   }, [hospitalId, userData]);
 
+  const logReportActivity = async (format) => {
+    try {
+      const token = userData ? await auth.currentUser?.getIdToken() : "";
+      await fetch("http://localhost:5000/api/activities", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          patientId: "N/A",
+          patientName: "System",
+          activityType: "Report Generated",
+          description: `Generated clinical report (${reportType.toUpperCase()}) in ${format.toUpperCase()} format.`,
+          hospitalId: hospitalId || "WHC-2026-1001"
+        })
+      });
+    } catch (e) {
+      console.warn("Failed to log report generation activity:", e);
+    }
+  };
+
   // Excel (CSV) Download
   const downloadExcel = () => {
+    logReportActivity("csv");
     let headers = [];
     let rows = [];
     let filename = "";
@@ -106,6 +130,7 @@ export default function Reports() {
 
   // PDF Export
   const downloadPDF = () => {
+    logReportActivity("pdf");
     const doc = new jsPDF();
     doc.setFont("helvetica", "bold");
     doc.setFontSize(16);

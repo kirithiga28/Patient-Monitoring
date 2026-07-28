@@ -71,6 +71,11 @@ export function AuthProvider({ children }) {
           unsubUserDoc();
           unsubUserDoc = null;
         }
+        setCurrentUser(null);
+        setUserData(null);
+        localStorage.removeItem("wellcare_doctor_session");
+        localStorage.removeItem("wellcare_user");
+        localStorage.removeItem("wellcare_userdata");
         setLoading(false);
       }
     });
@@ -88,27 +93,16 @@ export function AuthProvider({ children }) {
 
     try {
       // 1. Try Backend REST API first
-      let apiSuccess = false;
-      let apiDoctor = null;
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/doctors/login`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: cleanEmail, password })
-        });
-        const data = await res.json();
-        if (res.ok && data.success && data.doctor) {
-          apiSuccess = true;
-          apiDoctor = data.doctor;
-        } else if (res.status === 401 || res.status === 400) {
-          throw new Error(data.message || "Invalid credentials.");
-        }
-      } catch (backendErr) {
-        if (backendErr.message && (backendErr.message.includes("credentials") || backendErr.message.includes("not found"))) {
-          throw backendErr;
-        }
-        console.warn("Backend API login offline/skipped, attempting Firebase auth:", backendErr.message);
+      const res = await fetch(`${BACKEND_URL}/api/doctors/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: cleanEmail, password })
+      });
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Incorrect email or password.");
       }
+      const apiDoctor = data.doctor;
 
       // 2. Try Firebase Auth
       let user = null;
@@ -116,32 +110,21 @@ export function AuthProvider({ children }) {
         const userCredential = await signInWithEmailAndPassword(auth, cleanEmail, password);
         user = userCredential.user;
       } catch (fbErr) {
-        if (!apiSuccess) {
-          throw new Error("Invalid email or password. Please check your credentials.");
-        }
+        console.error("Firebase Auth login error:", fbErr.message);
+        throw new Error("Incorrect email or password.");
       }
 
-      const doctorId = user?.uid || apiDoctor?.id || `DOC-${Math.floor(1000 + Math.random() * 9000)}`;
+      const doctorId = user?.uid || apiDoctor.id;
       const doctorProfile = {
+        ...apiDoctor,
         id: doctorId,
-        uid: doctorId,
-        name: apiDoctor?.name || user?.displayName || `Dr. ${cleanEmail.split("@")[0]}`,
-        email: cleanEmail,
-        mobile: apiDoctor?.mobile || "+1-555-0199",
-        department: apiDoctor?.department || "General Medicine",
-        specialization: apiDoctor?.specialization || "General Medicine",
-        qualification: apiDoctor?.qualification || "MBBS, MD",
-        hospitalName: "Well Care Hospital",
-        hospitalCode: "WHC-2026-1001",
-        hospitalId: "WHC-2026-1001",
-        profilePhoto: apiDoctor?.profilePhoto || "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150",
-        role: "doctor",
-        createdAt: apiDoctor?.createdAt || new Date().toISOString()
+        uid: doctorId
       };
 
-      setCurrentUser(user || { uid: doctorId, email: cleanEmail });
+      setCurrentUser(user);
       setUserData(doctorProfile);
       localStorage.setItem("wellcare_doctor_session", JSON.stringify(doctorProfile));
+      sessionStorage.setItem("doctor_login_time", new Date().toLocaleTimeString());
 
       return doctorProfile;
     } catch (err) {
@@ -158,78 +141,50 @@ export function AuthProvider({ children }) {
     const cleanEmail = email.trim().toLowerCase();
 
     try {
-      // 1. Send to Backend REST API (with hashed password)
-      let apiDoctor = null;
-      try {
-        const res = await fetch(`${BACKEND_URL}/api/doctors/register`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            email: cleanEmail,
-            password,
-            fullName: extraData.fullName || extraData.name,
-            name: extraData.fullName || extraData.name,
-            mobile: extraData.mobile,
-            medRegNo: extraData.medRegNo,
-            hospitalCode: extraData.hospitalCode || "WHC-2026-1001",
-            department: extraData.department || "General Medicine",
-            qualification: extraData.qualification || "MBBS, MD"
-          })
-        });
+      // 1. Send to Backend REST API
+      const res = await fetch(`${BACKEND_URL}/api/doctors/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: cleanEmail,
+          password,
+          fullName: extraData.fullName || extraData.name,
+          name: extraData.fullName || extraData.name,
+          mobile: extraData.mobile,
+          medRegNo: extraData.medRegNo,
+          hospitalCode: extraData.hospitalCode || "WHC-2026-1001",
+          department: extraData.department || "General Medicine",
+          qualification: extraData.qualification || "MBBS, MD"
+        })
+      });
 
-        const data = await res.json();
-        if (!res.ok || !data.success) {
-          throw new Error(data.message || "Registration failed on backend server.");
-        }
-        apiDoctor = data.doctor;
-      } catch (backendErr) {
-        if (backendErr.message && backendErr.message.includes("already exists")) {
-          throw backendErr;
-        }
-        console.warn("Backend REST API offline/warning:", backendErr.message);
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Registration failed.");
       }
+      const apiDoctor = data.doctor;
 
-      // 2. Create in Firebase Auth & Firestore
+      // 2. Sign in with Firebase Auth client-side
       let user = null;
       try {
-        const userCredential = await createUserWithEmailAndPassword(auth, cleanEmail, password);
+        const userCredential = await signInWithEmailAndPassword(auth, cleanEmail, password);
         user = userCredential.user;
       } catch (fbErr) {
-        if (fbErr.code === "auth/email-already-in-use") {
-          throw new Error("An account with this email address already exists.");
-        }
+        console.error("Firebase Auth sign in after registration failed:", fbErr.message);
+        throw new Error("Registration succeeded, but client login failed: " + fbErr.message);
       }
 
-      const doctorId = user?.uid || apiDoctor?.id || `DOC-${Math.floor(1000 + Math.random() * 9000)}`;
+      const doctorId = apiDoctor.id || user?.uid || `DOC-${Math.floor(1000 + Math.random() * 9000)}`;
       const doctorProfile = {
+        ...apiDoctor,
         id: doctorId,
-        uid: doctorId,
-        name: extraData.fullName || extraData.name || `Dr. ${cleanEmail.split("@")[0]}`,
-        email: cleanEmail,
-        mobile: extraData.mobile || "+1-555-0199",
-        medRegNo: extraData.medRegNo || "MED-89172",
-        department: extraData.department || "General Medicine",
-        specialization: extraData.specialization || "General Medicine",
-        qualification: extraData.qualification || "MBBS, MD",
-        hospitalName: "Well Care Hospital",
-        hospitalCode: extraData.hospitalCode || "WHC-2026-1001",
-        hospitalId: extraData.hospitalCode || "WHC-2026-1001",
-        profilePhoto: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150",
-        role: "doctor",
-        createdAt: new Date().toISOString()
+        uid: doctorId
       };
-
-      if (user?.uid) {
-        try {
-          await setDoc(doc(db, "users", user.uid), doctorProfile, { merge: true });
-        } catch (fsErr) {
-          console.warn("Firestore save warning:", fsErr.message);
-        }
-      }
 
       setCurrentUser(user || { uid: doctorId, email: cleanEmail });
       setUserData(doctorProfile);
       localStorage.setItem("wellcare_doctor_session", JSON.stringify(doctorProfile));
+      sessionStorage.setItem("doctor_login_time", new Date().toLocaleTimeString());
 
       return doctorProfile;
     } catch (err) {
@@ -292,6 +247,23 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     setLoading(true);
     try {
+      const token = userData ? await auth.currentUser?.getIdToken() : "";
+      if (token) {
+        await fetch(`${BACKEND_URL}/api/activities`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            patientId: "N/A",
+            patientName: "System",
+            activityType: "Doctor Logout",
+            description: `Doctor ${userData?.name || "Doctor"} successfully logged out.`,
+            hospitalId: userData?.hospitalId || "WHC-2026-1001"
+          })
+        }).catch(err => console.warn("Failed to log doctor logout:", err));
+      }
       await signOut(auth);
     } catch (err) {
       console.warn("SignOut error:", err);
@@ -299,6 +271,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem("wellcare_doctor_session");
     localStorage.removeItem("wellcare_user");
     localStorage.removeItem("wellcare_userdata");
+    sessionStorage.removeItem("doctor_login_time");
     setCurrentUser(null);
     setUserData(null);
     setLoading(false);

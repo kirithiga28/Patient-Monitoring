@@ -5,7 +5,7 @@ import { patientService } from "../services/patientService";
 import WebcamStream from "../components/WebcamStream";
 
 export default function Cameras() {
-  const { role, hospitalId } = useAuth();
+  const { role, hospitalId, userData } = useAuth();
   const [cameras, setCameras] = useState([]);
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +32,7 @@ export default function Cameras() {
       setLoading(false);
     });
 
-    const unsubPatients = patientService.listenPatients(role, hospitalId, null, null, (patientList) => {
+    const unsubPatients = patientService.listenPatients(role, hospitalId, userData, null, (patientList) => {
       setPatients(patientList);
     });
 
@@ -41,7 +41,7 @@ export default function Cameras() {
       unsubCameras();
       unsubPatients();
     };
-  }, [role, hospitalId]);
+  }, [role, hospitalId, userData]);
 
   const handlePreview = (camera) => {
     if (activePreviewId === camera.id) {

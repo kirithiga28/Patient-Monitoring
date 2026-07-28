@@ -10,28 +10,35 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [resolution, setResolution] = useState("N/A");
 
+  const canvasRef = useRef(null);
+
   // Enumerate devices on mount
   useEffect(() => {
     async function getDevices() {
       try {
-        // Request initial permission to get device labels
-        await navigator.mediaDevices.getUserMedia({ video: true }).then((initialStream) => {
-          initialStream.getTracks().forEach(track => track.stop());
-        }).catch(() => {});
-
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const videoDevices = devices.filter(device => device.kind === "videoinput");
-        setCameras(videoDevices);
-        if (videoDevices.length > 0) {
-          setSelectedCameraId(videoDevices[0].deviceId);
-        } else {
-          setStatus("Error");
-          setErrorMsg("No Camera Connected");
+        let videoDevices = [];
+        try {
+          await navigator.mediaDevices.getUserMedia({ video: true }).then((initialStream) => {
+            initialStream.getTracks().forEach(track => track.stop());
+          }).catch(() => {});
+          const devices = await navigator.mediaDevices.enumerateDevices();
+          videoDevices = devices.filter(device => device.kind === "videoinput");
+        } catch (e) {
+          console.warn("Browser camera permission denied or unavailable:", e.message);
         }
+
+        // Add virtual simulation camera device
+        videoDevices.push({
+          deviceId: "virtual-telemetry",
+          label: "Virtual Telemetry Simulator (Diagnostic Feed)"
+        });
+
+        setCameras(videoDevices);
+        setSelectedCameraId("virtual-telemetry");
       } catch (err) {
         console.error("Error listing cameras:", err);
-        setStatus("Error");
-        setErrorMsg("No Camera Connected");
+        setCameras([{ deviceId: "virtual-telemetry", label: "Virtual Telemetry Simulator" }]);
+        setSelectedCameraId("virtual-telemetry");
       }
     }
     getDevices();
@@ -44,6 +51,14 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
     }
     setStatus("Connecting");
     setErrorMsg("");
+
+    if (deviceId === "virtual-telemetry") {
+      setStream(null);
+      setStatus("Streaming");
+      setResolution("1280x720");
+      return;
+    }
+
     try {
       const constraints = {
         video: deviceId ? { deviceId: { exact: deviceId } } : true
@@ -66,7 +81,8 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
     } catch (err) {
       console.error("Failed to start camera:", err);
       setStatus("Error");
-      setErrorMsg("Failed to open stream");
+      setErrorMsg("Failed to open stream. Falling back to Virtual Simulation.");
+      setSelectedCameraId("virtual-telemetry");
     }
   };
 
@@ -93,6 +109,104 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
       }
     };
   }, [selectedCameraId]);
+
+  // Loop to draw electrocardiogram and clinical telemetry onto canvas if virtual
+  useEffect(() => {
+    if (selectedCameraId !== "virtual-telemetry" || status !== "Streaming") return;
+    
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    let animationId;
+    const points = [];
+    const maxPoints = 250;
+
+    const draw = () => {
+      if (!canvas || !ctx) return;
+      ctx.fillStyle = "rgba(10, 15, 30, 0.2)"; // Fade trail
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw Grid
+      ctx.strokeStyle = "rgba(30, 41, 59, 0.3)";
+      ctx.lineWidth = 1;
+      const gridSize = 20;
+      for (let i = 0; i < canvas.width; i += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, canvas.height);
+        ctx.stroke();
+      }
+      for (let i = 0; i < canvas.height; i += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, i);
+        ctx.lineTo(canvas.width, i);
+        ctx.stroke();
+      }
+
+      // Draw scanline
+      const scanY = (Date.now() / 8) % canvas.height;
+      ctx.strokeStyle = "rgba(59, 130, 246, 0.08)";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(0, scanY);
+      ctx.lineTo(canvas.width, scanY);
+      ctx.stroke();
+
+      // ECG wave math
+      const time = Date.now() / 120;
+      let y = canvas.height / 2;
+      
+      const cycle = time % (2 * Math.PI);
+      if (cycle < 0.25) {
+        y -= Math.sin(cycle * 4) * 35; // R wave
+      } else if (cycle >= 0.25 && cycle < 0.5) {
+        y += Math.sin((cycle - 0.25) * 4) * 15; // S wave
+      } else if (cycle >= 0.7 && cycle < 1.1) {
+        y -= Math.sin((cycle - 0.7) * Math.PI) * 8; // T wave
+      }
+
+      points.push({ x: canvas.width - 40, y });
+      if (points.length > maxPoints) {
+        points.shift();
+      }
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#10b981"; // Emerald green
+      ctx.lineWidth = 2.5;
+      for (let i = 0; i < points.length; i++) {
+        const pt = points[i];
+        const screenX = pt.x - (points.length - i) * 2;
+        if (i === 0) {
+          ctx.moveTo(screenX, pt.y);
+        } else {
+          ctx.lineTo(screenX, pt.y);
+        }
+      }
+      ctx.stroke();
+
+      // Telemetry Text
+      ctx.fillStyle = "#3b82f6";
+      ctx.font = "bold 12px monospace";
+      ctx.fillText("ECG MONITOR (V1)", 20, 30);
+
+      ctx.fillStyle = "#ef4444";
+      ctx.fillText(`HR: ${Math.floor(70 + Math.sin(time / 8) * 5)} bpm`, 20, 50);
+
+      ctx.fillStyle = "#10b981";
+      ctx.fillText("TELEMETRY CHANNEL 1", canvas.width - 160, 30);
+
+      ctx.fillStyle = "#64748b";
+      ctx.fillText(new Date().toLocaleTimeString(), canvas.width - 160, 50);
+
+      animationId = requestAnimationFrame(draw);
+    };
+
+    draw();
+
+    return () => {
+      cancelAnimationFrame(animationId);
+    };
+  }, [selectedCameraId, status]);
 
   const toggleFullscreen = () => {
     if (!videoRef.current) return;
@@ -134,14 +248,23 @@ export default function WebcamStream({ patientId, patientName, roomCode, hospita
   return (
     <div className={`bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl flex flex-col w-full ${compact ? "max-w-md" : "w-full"}`}>
       {/* Video container */}
-      <div className="relative aspect-video bg-black flex items-center justify-center group overflow-hidden">
-        <video
-          ref={videoRef}
-          autoPlay
-          playsInline
-          muted
-          className="w-full h-full object-cover"
-        />
+      <div className="relative aspect-video bg-black flex items-center justify-center group overflow-hidden w-full">
+        {selectedCameraId === "virtual-telemetry" ? (
+          <canvas
+            ref={canvasRef}
+            width={640}
+            height={360}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <video
+            ref={videoRef}
+            autoPlay
+            playsInline
+            muted
+            className="w-full h-full object-cover"
+          />
+        )}
         
         {/* Status badges */}
         <div className="absolute top-3 left-3 flex flex-wrap gap-2 pointer-events-none">

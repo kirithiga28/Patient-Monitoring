@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { treatmentService } from "../services/treatmentService";
+import { activityService } from "../services/activityService";
 import { db } from "../firebase/config";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
 import { Card, CardHeader, CardTitle, CardContent } from "../components/ui/Card";
@@ -27,7 +28,11 @@ export default function DoctorProfile() {
     patientsCount: 0,
     recordsCount: 0,
     criticalCount: 0,
-    alertsCount: 0
+    alertsCount: 0,
+    icuCount: 0,
+    observationCount: 0,
+    todayCount: 0,
+    recoveryRate: 100
   });
 
   // Treatments States
@@ -41,6 +46,16 @@ export default function DoctorProfile() {
     status: "Ongoing"
   });
   const [isSavingTreatment, setIsSavingTreatment] = useState(false);
+  const [profileActivities, setProfileActivities] = useState([]);
+  const [lastActiveTime, setLastActiveTime] = useState(new Date().toLocaleTimeString());
+
+  // Real-time Last Active Clock
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setLastActiveTime(new Date().toLocaleTimeString());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   // Initialize edit form when userData loads
   useEffect(() => {
@@ -69,25 +84,27 @@ export default function DoctorProfile() {
       where("hospitalId", "==", currentHospitalId)
     );
     const unsubPatients = onSnapshot(qPatients, (snap) => {
-      const doctorPatients = snap.docs.filter(d => {
-        const data = d.data();
+      const doctorPatients = snap.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(data => {
         return data.doctor === docName || data.doctorId === docId || data.doctorEmail === docEmail;
       });
-      setStats(prev => ({ ...prev, patientsCount: doctorPatients.length }));
-    }, (err) => console.warn("Patients count listener warning:", err.message));
+      
+      const criticalCount = doctorPatients.filter(p => p.status === "Critical").length;
+      const observationCount = doctorPatients.filter(p => p.status === "Observation").length;
+      const icuCount = doctorPatients.filter(p => p.status === "Critical" || p.room === "101" || p.room === "105" || p.room === "110").length;
+      const todayCount = doctorPatients.filter(p => p.createdAt && new Date(p.createdAt).toDateString() === new Date().toDateString()).length;
+      const stableDischarged = doctorPatients.filter(p => p.status === "Stable" || p.status === "Normal").length;
+      const recoveryRate = doctorPatients.length > 0 ? Math.round((stableDischarged / doctorPatients.length) * 100) : 100;
 
-    // 2. Critical Patients
-    const qCritical = query(
-      collection(db, "critical_patients"),
-      where("hospitalId", "==", currentHospitalId)
-    );
-    const unsubCritical = onSnapshot(qCritical, (snap) => {
-      const doctorCrit = snap.docs.filter(d => {
-        const data = d.data();
-        return data.doctor === docName || data.doctorId === docId;
-      });
-      setStats(prev => ({ ...prev, criticalCount: doctorCrit.length }));
-    }, (err) => console.warn("Critical count listener warning:", err.message));
+      setStats(prev => ({ 
+        ...prev, 
+        patientsCount: doctorPatients.length,
+        criticalCount,
+        observationCount,
+        icuCount,
+        todayCount,
+        recoveryRate
+      }));
+    }, (err) => console.warn("Patients count listener warning:", err.message));
 
     // 3. Emergency Alerts count for this doctor
     const qAlerts = query(
@@ -120,12 +137,18 @@ export default function DoctorProfile() {
       setTreatments(list);
     });
 
+    // 6. Activities listener
+    const unsubActivities = activityService.listenActivities("doctor", currentHospitalId, (activitiesList) => {
+      const filtered = activitiesList.filter(act => act.doctorId === docId || act.doctorName === docName);
+      setProfileActivities(filtered);
+    });
+
     return () => {
       unsubPatients();
-      unsubCritical();
       unsubAlerts();
       unsubRecords();
       unsubTreatments();
+      unsubActivities();
     };
   }, [hospitalId, userData]);
 
@@ -281,6 +304,14 @@ export default function DoctorProfile() {
                   <span className="text-slate-500 font-medium">Created Date</span>
                   <span className="text-slate-400 font-mono text-[11px]">{userData?.createdAt ? new Date(userData.createdAt).toLocaleDateString() : "2026-07-01"}</span>
                 </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500 font-medium">Session Login Time</span>
+                  <span className="text-indigo-400 font-mono text-[11px]">{sessionStorage.getItem("doctor_login_time") || "Just now"}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500 font-medium">Doctor Last Active</span>
+                  <span className="text-emerald-400 font-mono text-[11px]">{lastActiveTime}</span>
+                </div>
               </div>
 
               {/* Edit Profile Toggle Button */}
@@ -385,7 +416,7 @@ export default function DoctorProfile() {
             <CardContent className="space-y-6">
               
               {/* StatCards Row */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <StatCard 
                   title="My Assigned Patients" 
                   value={stats.patientsCount} 
@@ -393,10 +424,10 @@ export default function DoctorProfile() {
                   color="blue" 
                 />
                 <StatCard 
-                  title="Medical Records" 
-                  value={stats.recordsCount} 
-                  icon="📋" 
-                  color="cyan" 
+                  title="Treatments Created" 
+                  value={treatments.length} 
+                  icon="💊" 
+                  color="indigo" 
                 />
                 <StatCard 
                   title="Critical Cases" 
@@ -405,10 +436,34 @@ export default function DoctorProfile() {
                   color="red" 
                 />
                 <StatCard 
-                  title="Emergency Alerts" 
-                  value={stats.alertsCount} 
-                  icon="🆘" 
-                  color="amber" 
+                  title="ICU Cases" 
+                  value={stats.icuCount} 
+                  icon="🏥" 
+                  color="orange" 
+                />
+                <StatCard 
+                  title="Observation Wards" 
+                  value={stats.observationCount} 
+                  icon="👁️" 
+                  color="yellow" 
+                />
+                <StatCard 
+                  title="Reports Generated" 
+                  value={stats.recordsCount} 
+                  icon="📋" 
+                  color="cyan" 
+                />
+                <StatCard 
+                  title="Recovery Rate" 
+                  value={`${stats.recoveryRate}%`} 
+                  icon="📈" 
+                  color="emerald" 
+                />
+                <StatCard 
+                  title="Registered Today" 
+                  value={stats.todayCount} 
+                  icon="📅" 
+                  color="purple" 
                 />
               </div>
 
@@ -484,11 +539,34 @@ export default function DoctorProfile() {
                   </form>
                 )}
 
-                <DataTable
+                 <DataTable
                   columns={treatmentColumns}
                   data={treatments}
                   emptyMessage="No treatment history recorded for this doctor workspace."
                 />
+              </div>
+
+              {/* Recent Activity Logs */}
+              <div className="border-t border-slate-800 pt-6 space-y-4">
+                <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider">
+                  Recent Workspace Activities
+                </h3>
+                <div className="space-y-2 max-h-60 overflow-y-auto pr-1">
+                  {profileActivities.slice(0, 5).map(act => (
+                    <div key={act.id} className="p-3 bg-slate-950/80 border border-slate-800/80 rounded-xl text-xs flex justify-between items-center">
+                      <div>
+                        <p className="font-bold text-slate-200">{act.patientName}</p>
+                        <p className="text-slate-400 text-[10px] mt-0.5">{act.description}</p>
+                      </div>
+                      <span className="text-[10px] text-slate-500 font-mono shrink-0 ml-2">
+                        {act.timestamp ? new Date(act.timestamp).toLocaleTimeString() : "N/A"}
+                      </span>
+                    </div>
+                  ))}
+                  {profileActivities.length === 0 && (
+                    <p className="text-slate-500 text-xs text-center py-4">No recent activities logged.</p>
+                  )}
+                </div>
               </div>
 
             </CardContent>

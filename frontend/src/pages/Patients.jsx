@@ -30,6 +30,7 @@ export default function Patients() {
     address: "",
     diagnosis: "",
     history: "",
+    allergies: "",
     currentMedication: "",
     doctor: "",
     room: "",
@@ -105,6 +106,7 @@ export default function Patients() {
         address: "",
         diagnosis: "",
         history: "",
+        allergies: "",
         currentMedication: "",
         doctor: userData?.name || "",
         room: "",
@@ -323,7 +325,7 @@ export default function Patients() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="text-slate-400 font-bold block mb-1">Medical History</label>
                 <textarea
@@ -331,6 +333,18 @@ export default function Patients() {
                   rows="2"
                   placeholder="e.g. History of high blood pressure and seizure episodes"
                   value={newPatient.history}
+                  onChange={handleFieldChange}
+                  className="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-white outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="text-slate-400 font-bold block mb-1">Allergies</label>
+                <textarea
+                  name="allergies"
+                  rows="2"
+                  placeholder="e.g. Penicillin, Peanuts (or None)"
+                  value={newPatient.allergies}
                   onChange={handleFieldChange}
                   className="w-full bg-slate-950 border border-slate-800 p-2.5 rounded-xl text-white outline-none focus:border-blue-500"
                 />

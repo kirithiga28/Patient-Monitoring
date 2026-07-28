@@ -48,6 +48,8 @@ export const patientService = {
     const doctorEmail = currentDoctor?.email;
     const doctorName = currentDoctor?.name;
 
+    let lastError = null;
+
     const fetchBackendPatients = async () => {
       try {
         let url = `${BACKEND_URL}/api/patients`;
@@ -66,8 +68,12 @@ export const patientService = {
           if (Array.isArray(list)) {
             return list;
           }
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          lastError = errData.message || `Server responded with status ${res.status}`;
         }
       } catch (e) {
+        lastError = "Unable to connect to server: " + e.message;
         console.warn("Backend patient listener warning:", e.message);
       }
       return null;
@@ -103,14 +109,26 @@ export const patientService = {
         patientList = [];
       }
 
-      callback(patientList);
+      callback(patientList, lastError);
     }, async (error) => {
       console.warn("Firestore patient listener warning:", error.message);
+      lastError = error.message || "Firestore permission error";
       const backendList = await fetchBackendPatients();
       if (backendList) {
-        callback(backendList);
+        let patientList = backendList;
+        if (currentDoctor) {
+          patientList = patientList.filter(p => {
+            const isDocId = doctorId && (p.doctorId === doctorId || p.createdBy === doctorId || p.doctor === doctorId);
+            const isDocEmail = doctorEmail && (p.doctorEmail === doctorEmail || p.doctor === doctorEmail);
+            const isDocName = doctorName && (p.doctor === doctorName || p.doctorName === doctorName);
+            return isDocId || isDocEmail || isDocName;
+          });
+        } else {
+          patientList = [];
+        }
+        callback(patientList, lastError);
       } else {
-        callback([]);
+        callback([], lastError);
       }
     });
 
@@ -208,6 +226,7 @@ export const patientService = {
       id: patId,
       patientId: patId,
       name: patientData.name || "Unknown Patient",
+      patientName: patientData.name || "Unknown Patient",
       age: Number(patientData.age) || 0,
       gender: patientData.gender || "Male",
       bloodGroup: patientData.bloodGroup || "O+",
@@ -217,11 +236,14 @@ export const patientService = {
       doctorEmail: docEmail,
       createdBy: docId,
       room: patientData.room || "Room 101",
+      roomNumber: patientData.room || "Room 101",
       contact: patientData.contact || patientData.phone || "N/A",
       phone: patientData.phone || patientData.contact || "N/A",
       address: patientData.address || "N/A",
       diagnosis: patientData.diagnosis || "General Observation",
       history: patientData.history || "No medical history recorded",
+      medicalHistory: patientData.history || "No medical history recorded",
+      allergies: patientData.allergies || "None",
       currentMedication: patientData.currentMedication || patientData.medication || "None prescribed",
       admissionDate: patientData.admissionDate || new Date().toISOString().split("T")[0],
       emergencyContact: patientData.emergencyContact || "N/A",
@@ -239,31 +261,37 @@ export const patientService = {
     };
 
     // 1. Save to Backend REST API
-    let backendSaved = false;
+    let token = null;
     try {
-      const res = await fetch(`${BACKEND_URL}/api/patients`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cleanData)
-      });
-      if (res.ok) {
-        backendSaved = true;
-      }
-    } catch (backendErr) {
-      console.warn("Backend patient create REST API warning:", backendErr.message);
+      // Retrieve auth token if available
+    } catch (_) {}
+
+    const headers = { "Content-Type": "application/json" };
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
     }
 
-    // 2. Save to Firestore
+    const res = await fetch(`${BACKEND_URL}/api/patients`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(cleanData)
+    });
+
+    if (!res.ok) {
+      let errMsg = "Failed to save patient record to backend database.";
+      try {
+        const errData = await res.json();
+        errMsg = errData.message || errMsg;
+      } catch (_) {}
+      throw new Error(errMsg);
+    }
+
+    // 2. Save to Firestore (Frontend Client SDK Backup Write)
     try {
       const docRef = doc(db, COLLECTION, patId);
       await setDoc(docRef, cleanData);
     } catch (fsErr) {
-      console.warn("Firestore patient create warning:", fsErr.message);
-      if (!backendSaved) {
-        const existing = JSON.parse(localStorage.getItem("wellcare_local_patients") || "[]");
-        existing.push(cleanData);
-        localStorage.setItem("wellcare_local_patients", JSON.stringify(existing));
-      }
+      console.warn("Firestore patient client write warning:", fsErr.message);
     }
 
     // Notification trigger
@@ -287,14 +315,28 @@ export const patientService = {
       updatedAt: new Date().toISOString()
     };
 
-    try {
-      await fetch(`${BACKEND_URL}/api/patients/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cleanUpdates)
-      });
-    } catch (e) {
-      console.warn("Backend patient update REST API warning:", e.message);
+    if (cleanUpdates.name) cleanUpdates.patientName = cleanUpdates.name;
+    if (cleanUpdates.patientName) cleanUpdates.name = cleanUpdates.patientName;
+    if (cleanUpdates.room) cleanUpdates.roomNumber = cleanUpdates.room;
+    if (cleanUpdates.roomNumber) cleanUpdates.room = cleanUpdates.roomNumber;
+    if (cleanUpdates.history) cleanUpdates.medicalHistory = cleanUpdates.history;
+    if (cleanUpdates.medicalHistory) cleanUpdates.history = cleanUpdates.medicalHistory;
+    if (cleanUpdates.phone) cleanUpdates.contact = cleanUpdates.phone;
+    if (cleanUpdates.contact) cleanUpdates.phone = cleanUpdates.contact;
+
+    const res = await fetch(`${BACKEND_URL}/api/patients/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(cleanUpdates)
+    });
+
+    if (!res.ok) {
+      let errMsg = "Failed to update patient record on backend.";
+      try {
+        const errData = await res.json();
+        errMsg = errData.message || errMsg;
+      } catch (_) {}
+      throw new Error(errMsg);
     }
 
     try {
@@ -309,10 +351,14 @@ export const patientService = {
 
   // Delete patient record
   async deletePatient(id) {
-    try {
-      await fetch(`${BACKEND_URL}/api/patients/${id}`, { method: "DELETE" });
-    } catch (e) {
-      console.warn("Backend patient delete REST API warning:", e.message);
+    const res = await fetch(`${BACKEND_URL}/api/patients/${id}`, { method: "DELETE" });
+    if (!res.ok) {
+      let errMsg = "Failed to delete patient record on backend.";
+      try {
+        const errData = await res.json();
+        errMsg = errData.message || errMsg;
+      } catch (_) {}
+      throw new Error(errMsg);
     }
 
     try {

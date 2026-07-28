@@ -3,3 +3,7 @@ backend/node_modules/
 frontend/node_modules/
 mobile/node_modules/
 node_modules/
+backend/firebase-credentials.json
+app
+app.md
+app.txt

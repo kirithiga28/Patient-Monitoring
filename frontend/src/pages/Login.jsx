@@ -19,11 +19,52 @@ export default function Login() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailError, setEmailError] = useState("");
 
-  // Email validation regex: accepts any valid email format (gmail, yahoo, outlook, etc.)
+  // Email validation RFC-compliant regex
   const validateEmailFormat = (val) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(val.trim());
+    if (!val || typeof val !== "string") return false;
+    const trimmed = val.trim();
+    if (/\s/.test(trimmed)) return false;
+    if (/\.\./.test(trimmed)) return false;
+    if (trimmed.includes(",")) return false;
+
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+    if (!emailRegex.test(trimmed)) return false;
+
+    const parts = trimmed.split("@");
+    if (parts.length !== 2) return false;
+    const domain = parts[1];
+
+    const domainParts = domain.split(".");
+    if (domainParts.length < 2) return false;
+
+    const tld = domainParts[domainParts.length - 1];
+    if (tld.length < 2) return false;
+    if (tld.toLowerCase() === "cm") return false;
+    if (tld.toLowerCase() === "c") return false;
+
+    const tldRegex = /^[a-zA-Z]{2,6}$/;
+    return tldRegex.test(tld);
+  };
+
+  const handleEmailChange = (val) => {
+    setEmail(val);
+    if (val.length > 0 && !validateEmailFormat(val)) {
+      setEmailError("Please enter a valid email address.");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const handleViewChange = (newView) => {
+    setView(newView);
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
+    setEmailError("");
+    setError("");
+    setSuccess("");
   };
 
   // Password validation: minimum 8 characters (letters, numbers, or combination allowed)
@@ -38,7 +79,7 @@ export default function Login() {
     setSuccess("");
 
     if (!validateEmailFormat(email)) {
-      setError("Please enter a valid email address (e.g., doctor@gmail.com).");
+      setError("Please enter a valid email address.");
       return;
     }
 
@@ -71,7 +112,7 @@ export default function Login() {
     }
 
     if (!validateEmailFormat(email)) {
-      setError("Please enter a valid email address (e.g., doctor@gmail.com).");
+      setError("Please enter a valid email address.");
       return;
     }
 
@@ -173,9 +214,18 @@ export default function Login() {
                 placeholder="doctor@gmail.com"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-950/60 border border-slate-800 focus:border-blue-500/80 p-3 rounded-xl text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition text-xs"
+                onChange={(e) => handleEmailChange(e.target.value)}
+                className={`w-full bg-slate-950/60 p-3 rounded-xl text-white outline-none transition text-xs ${
+                  emailError
+                    ? "border-2 border-red-500 focus:border-red-500 ring-2 ring-red-500/20"
+                    : "border border-slate-800 focus:border-blue-500/80 focus:ring-2 focus:ring-blue-500/20"
+                }`}
               />
+              {emailError && (
+                <p className="text-red-400 text-[10px] font-bold mt-1">
+                  {emailError}
+                </p>
+              )}
             </div>
 
             <div>
@@ -195,14 +245,14 @@ export default function Login() {
             <div className="flex justify-between items-center text-[10px] pt-1">
               <button
                 type="button"
-                onClick={() => { setView("register"); setError(""); setSuccess(""); }}
+                onClick={() => handleViewChange("register")}
                 className="text-blue-400 hover:text-blue-300 transition cursor-pointer font-bold"
               >
                 Create Account (Sign Up)
               </button>
               <button
                 type="button"
-                onClick={() => { setView("forgot"); setError(""); setSuccess(""); }}
+                onClick={() => handleViewChange("forgot")}
                 className="text-slate-400 hover:text-slate-300 transition cursor-pointer"
               >
                 Forgot Password?
@@ -253,9 +303,18 @@ export default function Login() {
                   placeholder="doctor@gmail.com"
                   required
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-slate-950/60 border border-slate-800 focus:border-blue-500/80 p-2.5 rounded-xl text-white outline-none focus:ring-1 focus:ring-blue-500/20 transition text-xs"
+                  onChange={(e) => handleEmailChange(e.target.value)}
+                  className={`w-full bg-slate-950/60 p-2.5 rounded-xl text-white outline-none transition text-xs ${
+                    emailError
+                      ? "border-2 border-red-500 focus:border-red-500 ring-2 ring-red-500/20"
+                      : "border border-slate-800 focus:border-blue-500/80 focus:ring-1 focus:ring-blue-500/20"
+                  }`}
                 />
+                {emailError && (
+                  <p className="text-red-400 text-[10px] font-bold mt-1">
+                    {emailError}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -362,7 +421,7 @@ export default function Login() {
               <span className="text-slate-400">Already registered? </span>
               <button
                 type="button"
-                onClick={() => { setView("login"); setError(""); setSuccess(""); }}
+                onClick={() => handleViewChange("login")}
                 className="text-blue-400 hover:text-blue-300 transition cursor-pointer font-bold"
               >
                 Sign In Instead
@@ -371,7 +430,7 @@ export default function Login() {
 
             <button
               type="submit"
-              disabled={loading || showPasswordLengthError}
+              disabled={loading || showPasswordLengthError || !!emailError || !email || !isPasswordValid}
               className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold hover:from-blue-500 hover:to-cyan-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 shadow-lg shadow-blue-600/20 transition disabled:opacity-50 mt-4 cursor-pointer text-xs uppercase tracking-wider"
             >
               {loading ? (
@@ -398,15 +457,24 @@ export default function Login() {
                 placeholder="doctor@gmail.com"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-950/60 border border-slate-800 focus:border-blue-500/80 p-3 rounded-xl text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition text-xs"
+                onChange={(e) => handleEmailChange(e.target.value)}
+                className={`w-full bg-slate-950/60 p-3 rounded-xl text-white outline-none transition text-xs ${
+                  emailError
+                    ? "border-2 border-red-500 focus:border-red-500 ring-2 ring-red-500/20"
+                    : "border border-slate-800 focus:border-blue-500/80 focus:ring-2 focus:ring-blue-500/20"
+                }`}
               />
+              {emailError && (
+                <p className="text-red-400 text-[10px] font-bold mt-1">
+                  {emailError}
+                </p>
+              )}
             </div>
 
             <div className="flex justify-between items-center text-[10px] pt-1">
               <button
                 type="button"
-                onClick={() => { setView("login"); setError(""); setSuccess(""); }}
+                onClick={() => handleViewChange("login")}
                 className="text-blue-400 hover:text-blue-300 transition cursor-pointer font-bold"
               >
                 Back to Sign In

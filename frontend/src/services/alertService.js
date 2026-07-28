@@ -7,7 +7,7 @@ import {
   where, 
   onSnapshot
 } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { db, auth } from "../firebase/config";
 import { notificationService } from "./notificationService";
 
 const COLLECTION = "alerts";
@@ -80,6 +80,29 @@ export const alertService = {
       `Emergency Alert (${newAlert.alertType}) raised for patient ${newAlert.patientName}.`,
       hId
     );
+
+    // Post activity log "Emergency Alert Generated"
+    try {
+      const token = auth.currentUser ? await auth.currentUser.getIdToken() : "";
+      if (token) {
+        await fetch("http://localhost:5000/api/activities", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            patientId: newAlert.patientId,
+            patientName: newAlert.patientName,
+            activityType: "Emergency Alert Generated",
+            description: `Emergency Alert (${newAlert.alertType}) generated for patient ${newAlert.patientName}.`,
+            hospitalId: hId
+          })
+        });
+      }
+    } catch (e) {
+      console.warn("Failed to log emergency alert activity:", e);
+    }
 
     return { id: docRef.id, ...newAlert };
   },

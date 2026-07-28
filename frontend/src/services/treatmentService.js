@@ -1,7 +1,8 @@
 import { collection, addDoc, query, where, onSnapshot } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { db, auth } from "../firebase/config";
 
 const COLLECTION = "treatments";
+const BACKEND_URL = "http://localhost:5000";
 
 export const treatmentService = {
   // Listen to treatments in real-time, isolated by Doctor UID
@@ -26,20 +27,32 @@ export const treatmentService = {
     });
   },
 
-  // Save a new treatment record
+  // Save a new treatment record via Node.js API
   async addTreatment(treatmentData) {
     try {
-      const docRef = await addDoc(collection(db, COLLECTION), {
-        patientName: treatmentData.patientName || "Unknown Patient",
-        treatmentType: treatmentData.treatmentType || "General Care",
-        diagnosis: treatmentData.diagnosis || "N/A",
-        date: treatmentData.date || new Date().toISOString().split("T")[0],
-        status: treatmentData.status || "Ongoing",
-        doctorId: treatmentData.doctorId,
-        hospitalId: treatmentData.hospitalId || "WHC-2026-1001",
-        createdAt: new Date().toISOString()
+      const user = auth.currentUser;
+      const token = user ? await user.getIdToken() : "";
+
+      const res = await fetch(`${BACKEND_URL}/api/treatments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(treatmentData)
       });
-      return { id: docRef.id, ...treatmentData };
+
+      if (!res.ok) {
+        let msg = "Failed to save treatment record.";
+        try {
+          const d = await res.json();
+          msg = d.message || msg;
+        } catch (_) {}
+        throw new Error(msg);
+      }
+
+      const data = await res.json();
+      return data.treatment;
     } catch (err) {
       console.error("Error adding treatment record:", err);
       throw err;

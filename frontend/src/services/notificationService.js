@@ -1,5 +1,5 @@
 import { collection, addDoc, query, where, onSnapshot } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { db, auth } from "../firebase/config";
 
 const COLLECTION = "notifications";
 
@@ -28,12 +28,37 @@ export const notificationService = {
   // Add a new notification
   async addNotification(type, message, hospitalId) {
     try {
+      const hId = hospitalId || "WHC-2026-1001";
       const docRef = await addDoc(collection(db, COLLECTION), {
         type,
         message,
-        hospitalId: hospitalId || "WHC-2026-1001",
+        hospitalId: hId,
         timestamp: new Date().toISOString()
       });
+
+      // Post activity log "Notification Created"
+      try {
+        const token = auth.currentUser ? await auth.currentUser.getIdToken() : "";
+        if (token) {
+          await fetch("http://localhost:5000/api/activities", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              patientId: "N/A",
+              patientName: "System",
+              activityType: "Notification Created",
+              description: `Notification created: ${message}`,
+              hospitalId: hId
+            })
+          });
+        }
+      } catch (e) {
+        console.warn("Failed to log notification creation activity:", e);
+      }
+
       return { id: docRef.id };
     } catch (err) {
       console.error("Error adding notification:", err);

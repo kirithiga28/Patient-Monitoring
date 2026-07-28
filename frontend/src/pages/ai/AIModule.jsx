@@ -80,7 +80,17 @@ export function ActivityHistory() {
     const unsub = activityService.listenActivities("doctor", hospitalId, (list) => {
       const docId = userData?.uid || userData?.id;
       const filtered = list.filter(l => !docId || l.doctorId === docId);
-      setHistory(filtered);
+      
+      // Sort newest first
+      const sorted = [...filtered].sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+      
+      // Add combined search fields for patientName, activityType, and doctorName
+      const processed = sorted.map(item => ({
+        ...item,
+        combinedSearch: `${item.patientName || ""} ${item.activityType || item.activity || ""} ${item.doctorName || item.doctor || ""}`
+      }));
+      
+      setHistory(processed);
       setLoading(false);
     });
 
@@ -91,10 +101,20 @@ export function ActivityHistory() {
   }, [hospitalId, userData]);
 
   const columns = [
-    { key: "patientName", label: "Patient" },
-    { key: "activity", label: "Logged Patient Activity", className: "font-bold text-green-400" },
-    { key: "confidence", label: "Confidence Score" },
-    { key: "timestamp", label: "Timestamp", className: "font-mono text-slate-400", render: (row) => row.timestamp ? new Date(row.timestamp).toLocaleString() : "--" }
+    { key: "patientName", label: "Patient Name" },
+    { 
+      key: "activityType", 
+      label: "Activity Type", 
+      className: "font-bold text-blue-400",
+      render: (row) => row.activityType || row.activity || "N/A"
+    },
+    { key: "description", label: "Description" },
+    { 
+      key: "timestamp", 
+      label: "Timestamp", 
+      className: "font-mono text-slate-400", 
+      render: (row) => row.timestamp ? new Date(row.timestamp).toLocaleString() : "--" 
+    }
   ];
 
   return (
@@ -107,8 +127,8 @@ export function ActivityHistory() {
       <DataTable
         columns={columns}
         data={history}
-        searchKey="patientName"
-        searchPlaceholder="Search logs..."
+        searchKey="combinedSearch"
+        searchPlaceholder="Search logs by patient, type, or doctor..."
         loading={loading}
         emptyMessage="No Activity History Available"
       />

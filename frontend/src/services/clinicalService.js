@@ -1,5 +1,5 @@
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDoc, onSnapshot, query, where, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase/config";
+import { db, auth } from "../firebase/config";
 import { notificationService } from "./notificationService";
 
 const ADMISSIONS = "admissions";
@@ -116,61 +116,90 @@ export const clinicalService = {
     });
   },
   async addMedicalRecord(data) {
-    const docRef = await addDoc(collection(db, MEDICAL_RECORDS), {
-      ...data,
-      createdAt: new Date().toISOString()
-    });
-    
-    // Fetch patient name if possible
-    let patientName = data.patientName || data.patientId || "Unknown Patient";
-    if (data.patientId && !data.patientName) {
-      try {
-        const patientDoc = await getDoc(doc(db, "patients", data.patientId));
-        if (patientDoc.exists()) {
-          patientName = patientDoc.data().name;
-        }
-      } catch (e) {
-        console.warn("Could not fetch patient name for medical record notification:", e);
+    try {
+      const user = auth.currentUser;
+      const token = user ? await user.getIdToken() : "";
+
+      const res = await fetch(`http://localhost:5000/api/patients/${data.patientId}/records`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to save medical record.");
       }
+
+      const d = await res.json();
+      
+      // Send notification
+      let patientName = data.patientName || data.patientId || "Unknown Patient";
+      await notificationService.addNotification(
+        "Medical Record Updated",
+        `Medical record added for patient ${patientName}.`,
+        data.hospitalId || "WHC-2026-1001"
+      );
+
+      return d.record;
+    } catch (err) {
+      console.error("Error adding medical record:", err);
+      throw err;
     }
-    
-    await notificationService.addNotification(
-      "Medical Record Updated",
-      `Medical record added for patient ${patientName}.`,
-      data.hospitalId || "WHC-2026-1001"
-    );
-    
-    return docRef;
   },
   async updateMedicalRecord(id, data) {
-    await updateDoc(doc(db, MEDICAL_RECORDS, id), data);
-    
-    let hospitalId = data.hospitalId;
-    let patientName = data.patientName || data.patientId;
     try {
-      const recDoc = await getDoc(doc(db, MEDICAL_RECORDS, id));
-      if (recDoc.exists()) {
-        const recData = recDoc.data();
-        hospitalId = hospitalId || recData.hospitalId;
-        const patientId = recData.patientId;
-        if (patientId) {
-          const patientDoc = await getDoc(doc(db, "patients", patientId));
-          if (patientDoc.exists()) {
-            patientName = patientDoc.data().name;
-          }
-        }
+      const user = auth.currentUser;
+      const token = user ? await user.getIdToken() : "";
+
+      const res = await fetch(`http://localhost:5000/api/medical-records/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to update medical record.");
       }
-    } catch (e) {
-      console.warn("Could not fetch medical record details for notification:", e);
+
+      const d = await res.json();
+
+      let patientName = data.patientName || data.patientId || "Unknown Patient";
+      await notificationService.addNotification(
+        "Medical Record Updated",
+        `Medical record updated for patient ${patientName}.`,
+        data.hospitalId || "WHC-2026-1001"
+      );
+
+      return d.record;
+    } catch (err) {
+      console.error("Error updating medical record:", err);
+      throw err;
     }
-    
-    await notificationService.addNotification(
-      "Medical Record Updated",
-      `Medical record updated for patient ${patientName || "Unknown"}.`,
-      hospitalId || "WHC-2026-1001"
-    );
   },
   async deleteMedicalRecord(id) {
-    return deleteDoc(doc(db, MEDICAL_RECORDS, id));
+    try {
+      const user = auth.currentUser;
+      const token = user ? await user.getIdToken() : "";
+
+      const res = await fetch(`http://localhost:5000/api/medical-records/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${token}`
+        }
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to delete medical record.");
+      }
+    } catch (err) {
+      console.error("Error deleting medical record:", err);
+      throw err;
+    }
   }
 };

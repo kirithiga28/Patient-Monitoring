@@ -4,6 +4,10 @@ import { patientService } from "../services/patientService";
 import { cameraService } from "../services/cameraService";
 import WebcamStream from "../components/WebcamStream";
 import { activityService } from "../services/activityService";
+import { alertService } from "../services/alertService";
+import { notificationService } from "../services/notificationService";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { db } from "../firebase/config";
 
 export default function Dashboard() {
   const { hospitalId, userData } = useAuth();
@@ -12,6 +16,9 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [activeWebcamId, setActiveWebcamId] = useState(null);
   const [activities, setActivities] = useState([]);
+  const [alertsCount, setAlertsCount] = useState(0);
+  const [notificationsCount, setNotificationsCount] = useState(0);
+  const [reportsCount, setReportsCount] = useState(0);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -40,13 +47,39 @@ export default function Dashboard() {
       setActivities(activitiesList);
     });
 
+    // Real-time alerts listener
+    const unsubAlerts = alertService.listenAlerts("doctor", hospitalId, (alertList) => {
+      const docId = userData?.uid || userData?.id;
+      const active = alertList.filter(a => (!docId || a.doctorId === docId) && (a.status === "Triggered" || a.status === "Active"));
+      setAlertsCount(active.length);
+    });
+
+    // Real-time notifications listener
+    const unsubNotifications = notificationService.listenNotifications(hospitalId, (notifList) => {
+      const docId = userData?.uid || userData?.id;
+      const filtered = notifList.filter(n => !docId || n.doctorId === docId || (userData?.name && n.message && n.message.includes(userData.name)));
+      setNotificationsCount(filtered.length);
+    });
+
+    // Real-time medical records listener for reports count
+    const qRecords = query(
+      collection(db, "medical_records"),
+      where("hospitalId", "==", hospitalId || "WHC-2026-1001")
+    );
+    const unsubRecords = onSnapshot(qRecords, (snap) => {
+      setReportsCount(snap.docs.length);
+    }, (err) => console.warn("Dashboard records count listener warning:", err.message));
+
     return () => {
       clearTimeout(timer);
       unsubPatients();
       unsubCameras();
       unsubActivities();
+      unsubAlerts();
+      unsubNotifications();
+      unsubRecords();
     };
-  }, [hospitalId]);
+  }, [hospitalId, userData]);
 
   // Auto-start the first configured camera stream if present
   useEffect(() => {
@@ -90,30 +123,40 @@ export default function Dashboard() {
       </div>
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl shadow-lg hover:border-blue-500/50 transition">
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+        <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl shadow-lg hover:border-blue-500/50 transition">
           <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Total Patients</p>
-          <p className="text-3xl font-extrabold text-blue-500 mt-2">{totalPatients}</p>
+          <p className="text-2xl font-extrabold text-blue-500 mt-2">{totalPatients}</p>
         </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl shadow-lg hover:border-red-500/50 transition">
+        <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl shadow-lg hover:border-red-500/50 transition">
           <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Critical Patients</p>
-          <p className="text-3xl font-extrabold text-red-500 mt-2">{criticalPatients}</p>
+          <p className="text-2xl font-extrabold text-red-500 mt-2">{criticalPatients}</p>
         </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl shadow-lg hover:border-yellow-500/50 transition">
-          <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Observation</p>
-          <p className="text-3xl font-extrabold text-yellow-500 mt-2">{observationPatients}</p>
-        </div>
-
-        <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl shadow-lg hover:border-indigo-500/50 transition">
+        <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl shadow-lg hover:border-indigo-500/50 transition">
           <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">ICU Patients</p>
-          <p className="text-3xl font-extrabold text-indigo-500 mt-2">{icuPatients}</p>
+          <p className="text-2xl font-extrabold text-indigo-500 mt-2">{icuPatients}</p>
         </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 p-5 rounded-2xl shadow-lg hover:border-green-500/50 transition">
-          <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Active Cameras</p>
-          <p className="text-3xl font-extrabold text-green-500 mt-2">{activeCamerasCount}</p>
+        <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl shadow-lg hover:border-yellow-500/50 transition">
+          <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Observation</p>
+          <p className="text-2xl font-extrabold text-yellow-500 mt-2">{observationPatients}</p>
+        </div>
+
+        <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl shadow-lg hover:border-orange-500/50 transition">
+          <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Active Alerts</p>
+          <p className="text-2xl font-extrabold text-orange-500 mt-2">{alertsCount}</p>
+        </div>
+
+        <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl shadow-lg hover:border-green-500/50 transition">
+          <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Reports</p>
+          <p className="text-2xl font-extrabold text-green-500 mt-2">{reportsCount}</p>
+        </div>
+
+        <div className="bg-slate-900/60 border border-slate-800 p-4 rounded-2xl shadow-lg hover:border-purple-500/50 transition">
+          <p className="text-slate-400 text-[10px] font-semibold uppercase tracking-wider">Notifications</p>
+          <p className="text-2xl font-extrabold text-purple-500 mt-2">{notificationsCount}</p>
         </div>
       </div>
 
