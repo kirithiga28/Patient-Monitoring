@@ -11,9 +11,9 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { notificationService } from "./notificationService";
+import { API_BASE_URL as BACKEND_URL } from "../config/api";
 
 const COLLECTION = "patients";
-const BACKEND_URL = "http://localhost:5000";
 
 export const patientService = {
   // Fetch single patient by ID

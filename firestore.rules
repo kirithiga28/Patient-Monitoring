@@ -95,5 +95,38 @@ service cloud.firestore {
       allow read: if isAuthenticated();
       allow write: if isAuthenticated();
     }
+
+    // Rules for activities collection
+    match /activities/{activityId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // Rules for audit logs and system configs
+    match /audit_logs/{id} { allow read, write: if isAuthenticated(); }
+    match /backups/{id} { allow read, write: if isAuthenticated(); }
+    match /api_configs/{id} { allow read, write: if isAuthenticated(); }
+    match /security_logs/{id} { allow read, write: if isAuthenticated(); }
+
+    // Rules for staff and scheduling
+    match /schedules/{id} { allow read, write: if isAuthenticated(); }
+    match /appointments/{id} { allow read, write: if isAuthenticated(); }
+    match /shifts/{id} { allow read, write: if isAuthenticated(); }
+    match /mar_records/{id} { allow read, write: if isAuthenticated(); }
+
+    // Rules for emergency code blue
+    match /code_blue/{id} { allow read, write: if isAuthenticated(); }
+
+    // Rules for clinical logs
+    match /admissions/{id} { allow read, write: if isAuthenticated(); }
+    match /discharges/{id} { allow read, write: if isAuthenticated(); }
+    match /transfers/{id} { allow read, write: if isAuthenticated(); }
+    match /prescriptions/{id} { allow read, write: if isAuthenticated(); }
+    match /lab_reports/{id} { allow read, write: if isAuthenticated(); }
+    match /scan_reports/{id} { allow read, write: if isAuthenticated(); }
+
+    // Rules for department infrastructure
+    match /departments/{id} { allow read, write: if isAuthenticated(); }
+    match /rooms/{id} { allow read, write: if isAuthenticated(); }
+    match /beds/{id} { allow read, write: if isAuthenticated(); }
   }
 }

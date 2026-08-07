@@ -9,6 +9,7 @@ import {
 } from "firebase/firestore";
 import { db, auth } from "../firebase/config";
 import { notificationService } from "./notificationService";
+import { API_BASE_URL as BACKEND_URL } from "../config/api";
 
 const COLLECTION = "alerts";
 
@@ -85,7 +86,7 @@ export const alertService = {
     try {
       const token = auth.currentUser ? await auth.currentUser.getIdToken() : "";
       if (token) {
-        await fetch("http://localhost:5000/api/activities", {
+        await fetch(`${BACKEND_URL}/api/activities`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -1,8 +1,8 @@
 import { collection, addDoc, query, where, onSnapshot } from "firebase/firestore";
 import { db, auth } from "../firebase/config";
+import { API_BASE_URL as BACKEND_URL } from "../config/api";
 
 const COLLECTION = "treatments";
-const BACKEND_URL = "http://localhost:5000";
 
 export const treatmentService = {
   // Listen to treatments in real-time, isolated by Doctor UID

@@ -1,6 +1,7 @@
 import { collection, addDoc, updateDoc, deleteDoc, doc, getDoc, onSnapshot, query, where, serverTimestamp } from "firebase/firestore";
 import { db, auth } from "../firebase/config";
 import { notificationService } from "./notificationService";
+import { API_BASE_URL as BACKEND_URL } from "../config/api";
 
 const ADMISSIONS = "admissions";
 const DISCHARGES = "discharges";
@@ -120,7 +121,7 @@ export const clinicalService = {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : "";
 
-      const res = await fetch(`http://localhost:5000/api/patients/${data.patientId}/records`, {
+      const res = await fetch(`${BACKEND_URL}/api/patients/${data.patientId}/records`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -154,7 +155,7 @@ export const clinicalService = {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : "";
 
-      const res = await fetch(`http://localhost:5000/api/medical-records/${id}`, {
+      const res = await fetch(`${BACKEND_URL}/api/medical-records/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -187,7 +188,7 @@ export const clinicalService = {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : "";
 
-      const res = await fetch(`http://localhost:5000/api/medical-records/${id}`, {
+      const res = await fetch(`${BACKEND_URL}/api/medical-records/${id}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${token}`

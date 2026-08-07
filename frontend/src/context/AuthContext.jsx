@@ -8,9 +8,9 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "../firebase/config";
+import { API_BASE_URL as BACKEND_URL } from "../config/api";
 
 const AuthContext = createContext(null);
-const BACKEND_URL = "http://localhost:5000";
 
 export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
@@ -33,6 +33,40 @@ export function AuthProvider({ children }) {
         console.warn("Failed to parse saved doctor session:", e);
       }
     }
+
+    const fetchBackendProfile = async (firebaseUser) => {
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/doctors/profile/${firebaseUser.uid}`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data.success && data.doctor) {
+            const apiDoctor = data.doctor;
+            const fullProfile = {
+              uid: firebaseUser.uid,
+              id: firebaseUser.uid,
+              name: apiDoctor.name || firebaseUser.displayName || "Dr. WellCare",
+              email: firebaseUser.email,
+              mobile: apiDoctor.mobile || apiDoctor.phone || "+1-555-0199",
+              department: apiDoctor.department || apiDoctor.specialization || "General Medicine",
+              specialization: apiDoctor.specialization || apiDoctor.department || "General Medicine",
+              qualification: apiDoctor.qualification || "MBBS, MD",
+              profilePhoto: apiDoctor.profilePhoto || "https://images.unsplash.com/photo-1622253692010-333f2da6031d?w=150",
+              hospitalName: "Well Care Hospital",
+              hospitalCode: apiDoctor.hospitalCode || "WHC-2026-1001",
+              hospitalId: apiDoctor.hospitalCode || "WHC-2026-1001",
+              role: "doctor",
+              createdAt: apiDoctor.createdAt || new Date().toISOString()
+            };
+            setUserData(fullProfile);
+            localStorage.setItem("wellcare_doctor_session", JSON.stringify(fullProfile));
+          }
+        }
+      } catch (e) {
+        console.warn("Failed to fetch doctor profile from backend fallback:", e.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
@@ -60,11 +94,15 @@ export function AuthProvider({ children }) {
             };
             setUserData(fullProfile);
             localStorage.setItem("wellcare_doctor_session", JSON.stringify(fullProfile));
+            setLoading(false);
+          } else {
+            // Fallback to backend REST API if document does not exist in Firestore
+            fetchBackendProfile(user);
           }
-          setLoading(false);
         }, (err) => {
-          console.warn("Firestore snapshot warning:", err.message);
-          setLoading(false);
+          console.warn("Firestore snapshot warning, falling back to backend profile API:", err.message);
+          // Fallback to backend REST API on permission or read error
+          fetchBackendProfile(user);
         });
       } else {
         if (unsubUserDoc) {

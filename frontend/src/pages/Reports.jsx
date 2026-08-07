@@ -5,6 +5,7 @@ import { alertService } from "../services/alertService";
 import { jsPDF } from "jspdf";
 import { formatDateTime } from "../utils/dateFormatter";
 import { auth } from "../firebase/config";
+import { API_BASE_URL as BACKEND_URL } from "../config/api";
 
 export default function Reports() {
   const { role, hospitalId, userData } = useAuth();
@@ -45,7 +46,7 @@ export default function Reports() {
   const logReportActivity = async (format) => {
     try {
       const token = userData ? await auth.currentUser?.getIdToken() : "";
-      await fetch("http://localhost:5000/api/activities", {
+      await fetch(`${BACKEND_URL}/api/activities`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
